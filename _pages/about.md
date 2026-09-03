@@ -77,7 +77,7 @@ Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 
 **AAAI 2027 (CCF-A) 在审** ｜ 第一作者
-- 针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，并针对该场景下标准RL的失效模式对症设计。
+- 针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，解决Agentic RL在超大动作空间下面临的知识腐败与灾难记忆痛点。
 - 提出MCPO将RL适配至仓库级动作空间：**动态身份掩码**迫使策略基于能力而非死记模型名；**轮次级轨迹剪枝**抑制热门候选曝光偏置、将探索导向稀有候选；**反事实优势估计**无需价值网络，把未选中更优候选的机会成本纳入策略梯度。
 - Qwen3-8B取得 **84.25** 综合分 (SOTA)，跨域 **79.99**；以远低推理成本超越GPT-5.4驱动的最强系统与GRPO / DAPO / AEPO等RL基线。
 </div>
