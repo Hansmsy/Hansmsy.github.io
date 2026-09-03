@@ -14,7 +14,7 @@ redirect_from:
 
 我的研究围绕同一个核心问题展开：**当可调用的工具与模型空间是开放、海量且持续演化的，智能体如何做出可靠决策？** 这个问题可以拆成三个递进的层次——先让选择**可解**，再让选择**可学**，最后让学习过程**更稳**。
 
-目前已发表CCF-B一作×1 (EMNLP 2026)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在投×2 (AAAI 2027、ICLR 2027)。
+目前已发表NLP顶会一作×1 (EMNLP 2026)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在投×2 (AAAI 2027、ICLR 2027)。
 
 📮 mashaoyin@zju.edu.cn
 
@@ -46,7 +46,7 @@ redirect_from:
 
 **Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
 
-**EMNLP 2026 Main Conference** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715)
+**EMNLP 2026 Main Conference (NLP顶会)** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715)
 - 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
 - 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。
 - Workability **92.03%**、Reasonability **82.46%**，分别领先当时SOTA **26.51%** 与 **33.25%**，同时token消耗降为 **1/6.9**。

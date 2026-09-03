@@ -94,7 +94,8 @@
   img {
     max-width: 175px;
     min-width: 75px;
-    border-radius: 50%;
+    // 长方形头像：用圆角而非 50%，避开非方图被拉成椭圆
+    border-radius: 10px;
 
     @include breakpoint($large) {
       padding: 5px;
