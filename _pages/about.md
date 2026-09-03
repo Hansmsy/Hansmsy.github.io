@@ -89,10 +89,8 @@ MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 
 **ICLR 2027 (CCF-A) 在审** ｜ 共同一作
-- 在策略蒸馏 (OPD) 已成为推理模型后训练的核心范式，但采样token估计量普遍存在**梯度方差高、优化不稳**的问题。
-- 抓住一个**被浪费掉的方差缩减来源**：group-sampled的OPD本来就已为每个提示采了多条兄弟rollout，标准估计量却把它们彼此独立处理。
-- VR-OPD由两部分耦合而成：**LOO兄弟中心化**以组内留一均值作为基线，在保持期望梯度不变的前提下缩减方差；**有界影响的token重加权**则抑制少数高影响token对梯度的主导。
-- 在**6个数学推理 (ID) 与2个通用推理 (OOD)** 基准上，两组师生配置的**全部8个基准均优于标准OPD**：域内均值 **+1.6~2.0 pts**、域外均值 **+2.3~2.6 pts**。
+- 针对sampled-token OPD梯度方差高、训练不稳的问题，提出VR-OPD：以组内leave-one-out基线在保持期望梯度不变的前提下缩减方差，辅以正确性门控收缩与有界token影响控制，避免同质组过度中心化及极端token梯度主导更新。
+- 在两组师生配置 (Skywork-OR1-Math-7B → R1-Distill-Qwen-1.5B、Qwen3-32B → Qwen3-4B-Base) 的8个基准上**全面优于标准OPD**：域内数学推理平均**+1.6~2.0 pts**，域外通用推理平均**+2.3~2.6 pts**，方差缩减同时改善域外泛化。
 </div>
 </div>
 
