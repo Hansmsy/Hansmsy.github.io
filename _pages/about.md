@@ -24,6 +24,7 @@ redirect_from:
 - *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 - *2025.11*：&nbsp;📄 我在开放状态下智能体优化方向的论文已上传至arXiv ([arXiv:2511.18715](https://arxiv.org/abs/2511.18715))。
+- *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员安全智能防控项目。
 
 # 🧭 研究主线
 
