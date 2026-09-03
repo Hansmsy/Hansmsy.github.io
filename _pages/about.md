@@ -18,7 +18,7 @@ redirect_from:
 
 📮 可以在这里联系我：mashaoyin@zju.edu.cn
 
-<span style="color: #d1453b;">我目前正在寻找秋招的正式工作机会，如果您有合适的岗位，欢迎随时联系我。</span>
+<span style="display: inline-block; background: #d1453b; color: #fff; font-size: 0.72em; font-weight: 700; line-height: 1; letter-spacing: 0.04em; padding: 0.24em 0.45em; border-radius: 0.25em; vertical-align: 0.14em;">NEW</span> <span style="color: #d1453b; font-weight: 700;">我目前正在寻找秋招的正式工作机会，如果您有合适的岗位，欢迎随时联系我。</span>
 
 # 🔥 最近动态
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
