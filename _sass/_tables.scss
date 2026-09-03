@@ -39,3 +39,17 @@ td {
 tr, td, th {
   vertical-align: middle;
 }
+
+/* 研究主线表格：第三列文字长，浏览器自动布局会把前两列压得很窄，
+   这里显式给前两列留出宽度 */
+table.thread-table {
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 18%;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 30%;
+  }
+}
