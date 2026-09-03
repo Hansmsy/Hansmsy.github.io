@@ -12,7 +12,7 @@ redirect_from:
 
 你好，我是**马韶胤 (Shaoyin Ma)**，浙江大学 <img src='images/zju-logo.png' alt='Zhejiang University' style='height: 1.5em; vertical-align: -0.42em;'> 软件工程专业硕士在读 (2024 – 2027)。
 
-我在浙江大学[VIPA实验室](https://www.vipazoo.cn/) (视觉智能与模式分析) 从事研究，导师为宋明黎教授与宋杰教授。
+我在浙江大学[VIPA实验室](https://www.vipazoo.cn/)从事研究，导师为宋明黎教授与宋杰副教授。
 
 我目前的研究兴趣在：**当可调用的工具与模型空间是开放、海量且持续演化的，智能体如何做出可靠决策**？我认为这个问题可以拆成三个递进的层次：先让选择**可解**，再让选择**可学**，最后让学习过程**更稳**。
 
