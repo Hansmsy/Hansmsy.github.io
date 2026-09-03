@@ -8,51 +8,96 @@ redirect_from:
   - /about.html
 ---
 
-{% if site.google_scholar_stats_use_cdn %}
-{% assign gsDataBaseUrl = "https://cdn.jsdelivr.net/gh/" | append: site.repository | append: "@" %}
-{% else %}
-{% assign gsDataBaseUrl = "https://raw.githubusercontent.com/" | append: site.repository | append: "/" %}
-{% endif %}
-{% assign url = gsDataBaseUrl | append: "google-scholar-stats/gs_data_shieldsio.json" %}
-
 <span class='anchor' id='about-me'></span>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. Suspendisse condimentum, libero vel tempus mattis, risus risus vulputate libero, elementum fermentum mi neque vel nisl. Maecenas facilisis maximus dignissim. Curabitur mattis vulputate dui, tincidunt varius libero luctus eu. Mauris mauris nulla, scelerisque eget massa id, tincidunt congue felis. Sed convallis tempor ipsum rhoncus viverra. Pellentesque nulla orci, accumsan volutpat fringilla vitae, maximus sit amet tortor. Aliquam ultricies odio ut volutpat scelerisque. Donec nisl nisl, porttitor vitae pharetra quis, fringilla sed mi. Fusce pretium dolor ut aliquam consequat. Cras volutpat, tellus accumsan mattis molestie, nisl lacus tempus massa, nec malesuada tortor leo vel quam. Aliquam vel ex consectetur, vehicula leo nec, efficitur eros. Donec convallis non urna quis feugiat.
+你好，我是**马韶胤 (Shaoyin Ma)**，浙江大学软件学院软件工程硕士 (2024 – 2027)。
 
-My research interest includes neural machine translation and computer vision. I have published more than 100 papers at the top international AI conferences with total <a href='https://scholar.google.com/citations?user=DhtAFkwAAAAJ'>google scholar citations <strong><span id='total_cit'>260000+</span></strong></a> (You can also use google scholar badge <a href='https://scholar.google.com/citations?user=DhtAFkwAAAAJ'><img src="https://img.shields.io/endpoint?url={{ url | url_encode }}&logo=Google%20Scholar&labelColor=f6f6f6&color=9cf&style=flat&label=citations"></a>).
+我的研究围绕同一个核心问题展开：**当可调用的工具与模型空间是开放、海量且持续演化的，智能体如何做出可靠决策？** 这个问题可以拆成三个递进的层次——先让选择**可解**，再让选择**可学**，最后让学习过程**更稳**。
 
+目前已发表CCF-B一作×1 (EMNLP 2026)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在投×2 (AAAI 2027、ICLR 2027)。
 
-# 🔥 News
-- *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2022.02*: &nbsp;🎉🎉 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+📮 mashaoyin@zju.edu.cn
 
-# 📝 Publications 
+# 🔥 最近动态
+- *2026.05*：&nbsp;💻 入职**阿里巴巴集团**，任大模型应用算法实习生。
+- *2026.02*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
+- *2026.01*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">CVPR 2016</div><img src='images/500x300.png' alt="sym" width="100%"></div></div>
+# 🧭 研究主线
+
+四篇论文不是四件事，而是同一个问题的四个层次。
+
+| 层次 | 问题 | 工作 |
+| :-- | :-- | :-- |
+| **01 让选择可解** | 选择在计算上根本不可行 | **HuggingR⁴**：把一次性检索重构为迭代推理，滑动窗口把上下文消耗封顶为 `O(N·L)`，式子里不含仓库规模，于是计算成本与库规模在结构上解耦 |
+| **02 让选择可学** | 选择策略一直是冻结的，从不改进 | **MCPO**：首次把模型选择形式化为强化学习问题，用动态身份掩码、轮次级轨迹剪枝、反事实优势对症下药 |
+| **03 让训练更稳** | 后训练本身梯度方差高、优化不稳 | **VR-OPD**：兄弟rollout本来就已经采好了，用组内leave-one-out基线在保持期望梯度不变的前提下缩减方差 |
+
+这条线上最有意思的一处闭环：在MCPO的实验里，**最强的免训练基线正是我自己的上一篇工作HuggingR⁴**。同一个基准、同一套指标，唯一的变量就是「选择策略是冻结的，还是学出来的」——我用84.25超过了自己的79.04。
+
+三次工作用的其实是同一种解题习惯：**先找到那个「本来就存在、却没被用上」的结构**，而不是加一个更大的模型或一个新损失项。
+
+# 📝 论文
+
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
-[Deep Residual Learning for Image Recognition](https://openaccess.thecvf.com/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf)
+[HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
 
-**Kaiming He**, Xiangyu Zhang, Shaoqing Ren, Jian Sun
+**Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
 
-[**Project**](https://scholar.google.com/citations?view_op=view_citation&hl=zh-CN&user=DhtAFkwAAAAJ&citation_for_view=DhtAFkwAAAAJ:ALROH1vI_8AC) <strong><span class='show_paper_citations' data='DhtAFkwAAAAJ:ALROH1vI_8AC'></span></strong>
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+**EMNLP 2026 Main Conference** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715)
+- 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
+- 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。
+- Workability **92.03%**、Reasonability **82.46%**，分别领先当时SOTA **26.51%** 与 **33.25%**，同时token消耗降为 **1/6.9**。
 </div>
 </div>
 
-- [Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet](https://github.com), A, B, C, **CVPR 2020**
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACM MM 2026</div><img src='images/gem-arch.jpg' alt="GemTalk" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
 
-# 🎖 Honors and Awards
-- *2021.10* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2021.09* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+[Geometry-guided Emotion Modulation for Controllable and Photorealistic Emotional Talking Face Generation](https://arxiv.org/abs/2608.00663)
 
-# 📖 Educations
-- *2019.06 - 2022.04 (now)*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2015.09 - 2019.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
+Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 
-# 💬 Invited Talks
-- *2021.06*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. 
-- *2021.03*, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet.  \| [\[video\]](https://github.com/)
+**ACM MM 2026** ｜ 共同一作 (\*) ｜ [[arXiv]](https://arxiv.org/abs/2608.00663)
+- 解决情感说话人脸生成中「可控性与真实感难以兼顾」的矛盾。
+- 核心洞察：把隐式情感特征拆成两个正交部分——**方向编码情感类别、幅度编码表达强度**。
+- 因此只要**只校准幅度、绝不旋转方向**，就能让强度连续可控而不损失画质。
+</div>
+</div>
 
-# 💻 Internships
-- *2019.05 - 2020.02*, [Lorem](https://github.com/), China.
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">AAAI 2027</div><img src='images/mcpo-arch.png' alt="MCPO" width="100%"></div></div>
+<div class='paper-box-text' markdown="1">
+
+MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
+
+**Shaoyin Ma**, et al.
+
+**AAAI 2027 在投** ｜ 第一作者
+- **首次把模型选择形式化为一个可学的强化学习问题**。
+- 标准RL在仓库级动作空间会失效，用三个机制对症下药：**动态身份掩码**治身份依赖、**轮次级轨迹剪枝**治曝光偏置、**反事实优势**治缺乏后悔感知 (且无需价值网络)。
+- Qwen3-8B取得 **84.25** 综合分 (SOTA)，跨域 **79.99**。
+</div>
+</div>
+
+- VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines，**ICLR 2027 在投**，共同一作。抓住一个被浪费掉的方差缩减来源：group-sampled的OPD本来就已经采了多条兄弟rollout，却被彼此独立处理；改用组内leave-one-out基线后，8个基准全面优于标准OPD，域内 **+1.6~2.0 pts**、域外 **+2.3~2.6 pts**。
+
+# 🎖 荣誉与奖项
+- 国家发明专利 ×2
+- 蓝桥杯Python程序设计 国家二等奖
+- 中国机器人及人工智能大赛 国家三等奖
+- 本科院系排名前 **3%**
+
+# 📖 教育背景
+- *2024.09 - 2027.06*，**浙江大学** 软件学院，软件工程，工学硕士
+- *2020.09 - 2024.06*，**河南大学** 软件学院，软件工程 (卓越计划)，工学学士
+
+# 💻 实习经历
+- *2026.05 - 2026.09*，**阿里巴巴集团**，大模型应用算法实习生。推动智能体由单轮架构演进至多轮Planner-Subagent协作范式，负责其中一个决策模块；沉淀了图谱约束的决策、SFT + DPO两阶段后训练、Skill自进化闭环三个可复用机制。
+
+# 🛠 专业技能
+- **大模型后训练**：熟悉verl、LLaMA-Factory、ms-swift、vLLM与Hugging Face生态；具备SFT / DPO / RL / OPD实践经验
+- **数据与评测**：后训练数据构建、拒绝采样数据飞轮设计、万级评测基准搭建、奖励设计与LLM-as-Judge
+- **智能体**：熟悉LangChain、LangGraph；多轮智能体设计、Harness与上下文工程、RAG与向量检索
+- **基础与工具**：熟悉Transformer与主流大模型结构设计；Python (熟练)、C/C++、PyTorch，可独立完成模型训练与优化
