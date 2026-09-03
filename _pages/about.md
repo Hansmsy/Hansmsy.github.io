@@ -21,7 +21,7 @@ redirect_from:
 # 🔥 最近动态
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
 - *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
-- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'>，任大模型应用算法实习生，负责构建并优化账户行为分析智能体。
+- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 - *2025.11*：&nbsp;📄 我在开放状态下智能体优化方向的论文已上传至arXiv ([arXiv:2511.18715](https://arxiv.org/abs/2511.18715))。
 
