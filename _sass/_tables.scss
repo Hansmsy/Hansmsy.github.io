@@ -40,16 +40,15 @@ tr, td, th {
   vertical-align: middle;
 }
 
-/* 研究主线表格：第三列文字长，浏览器自动布局会把前两列压得很窄，
-   这里显式给前两列留出宽度 */
+/* 研究主线表格：前两列（层次、问题）强制不折行，列宽由内容决定；
+   第三列占剩余宽度。窄屏下解除 nowrap，避免横向溢出 */
 table.thread-table {
   th:nth-child(1),
-  td:nth-child(1) {
-    width: 18%;
-  }
-
+  td:nth-child(1),
   th:nth-child(2),
   td:nth-child(2) {
-    width: 30%;
+    @include breakpoint($medium) {
+      white-space: nowrap;
+    }
   }
 }
