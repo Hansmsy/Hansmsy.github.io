@@ -49,11 +49,11 @@ redirect_from:
 
 **Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
 
-**EMNLP 2026 Main Conference (NLP顶会)** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715)
+**EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715)
 - 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
 - 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。
 - Workability **92.03%**、Reasonability **82.46%**，分别领先当时SOTA **26.51%** 与 **33.25%**，同时token消耗降为 **1/6.9**。
-- 被滑铁卢大学Renée J. Miller教授列为研究生课程[CS 848 (Summer 2026)](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文。
+- <span style="color: #d1453b;">被滑铁卢大学Renée J. Miller教授列为研究生课程<a href="https://rjmillerlab.github.io/CS848.Summer.2026/W7.html">CS 848 (Summer 2026)</a>的必读论文。</span>
 </div>
 </div>
 
