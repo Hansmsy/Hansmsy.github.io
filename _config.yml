@@ -23,7 +23,7 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 author:
   name             : "马韶胤"
   avatar           : "images/avatar.jpg"
-  bio              : "浙江大学软件学院<br>软件工程硕士"
+  bio              : "软件学院<br>软件工程硕士"
   research         : "开放动态工具空间中的大模型后训练与智能体决策：当可调用的工具与模型持续演化，智能体如何做出可靠选择。"
   location         : "Hangzhou, China"
   employer         :
