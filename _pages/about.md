@@ -10,7 +10,7 @@ redirect_from:
 
 <span class='anchor' id='about-me'></span>
 
-你好，我是**马韶胤 (Shaoyin Ma)**，浙江大学 <img src='images/zju-logo.png' alt='Zhejiang University' style='height: 1.5em; vertical-align: -0.42em;'> 软件工程专业硕士在读 (2024 – 2027)。
+你好，我是**马韶胤 (Shaoyin Ma)**，浙江大学 <img src='/images/zju-logo.png' alt='Zhejiang University' style='height: 1.5em; vertical-align: -0.42em;'> 软件工程专业硕士在读 (2024 – 2027)。
 
 我在浙江大学[VIPA实验室](https://www.vipazoo.cn/)从事研究，导师为宋明黎教授与宋杰副教授。
 
@@ -25,11 +25,11 @@ redirect_from:
 # 🔥 最近动态
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
 - *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
-- *2026.06*：&nbsp;🎓 **HuggingR⁴**被滑铁卢大学 <img src='images/uwaterloo-logo.png' alt='University of Waterloo' style='height: 1.3em; vertical-align: -0.3em;'> Renée J. Miller教授选为研究生课程[CS 848](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文，并在课堂上作专题研讨。
-- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
+- *2026.06*：&nbsp;🎓 **HuggingR⁴**被滑铁卢大学 <img src='/images/uwaterloo-logo.png' alt='University of Waterloo' style='height: 1.3em; vertical-align: -0.3em;'> Renée J. Miller教授选为研究生课程[CS 848](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文，并在课堂上作专题研讨。
+- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 - *2025.11*：&nbsp;📄 我在开放状态下智能体优化方向的论文已上传至arXiv ([arXiv:2511.18715](https://arxiv.org/abs/2511.18715))。
-- *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员安全智能防控项目。
+- *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='/images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员安全智能防控项目。
 
 # 🧭 研究主线
 
@@ -42,7 +42,7 @@ redirect_from:
 
 # 📝 论文
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
@@ -57,7 +57,7 @@ redirect_from:
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACM MM 2026</div><img src='images/gem-arch.jpg' alt="GemTalk" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ACM MM 2026</div><img src='/images/gem-arch.jpg' alt="GemTalk" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [Geometry-guided Emotion Modulation for Controllable and Photorealistic Emotional Talking Face Generation](https://arxiv.org/abs/2608.00663)
@@ -71,7 +71,7 @@ Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">AAAI 2027</div><img src='images/mcpo-arch.png' alt="MCPO" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">AAAI 2027</div><img src='/images/mcpo-arch.png' alt="MCPO" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
@@ -83,7 +83,7 @@ MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 </div>
 </div>
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICLR 2027</div><img src='images/vropd-idea.png' alt="VR-OPD" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">ICLR 2027</div><img src='/images/vropd-idea.png' alt="VR-OPD" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
