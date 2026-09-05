@@ -23,22 +23,46 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">01 ／ 任务</span>
-## 智能体要从200万个模型里挑工具，而这件事目前做不到
+<span class="slide-no">01 ／ 背景与动机</span>
+## 一个好的智能体，得有一个好的工具库
+
+现在的智能体多少都有自己独有的工具：
+
+<div class="cards" markdown="1">
+<div class="card"><span class="card-t">编码智能体</span><span class="card-d">Claude Code、Qoder 这类——读代码、改文件、跑测试</span></div>
+<div class="card"><span class="card-t">电商智能体</span><span class="card-d">读购物车、比价、查物流</span></div>
+<div class="card"><span class="card-t">办公智能体</span><span class="card-d">写文档、做总结、排日程</span></div>
+</div>
+
+<div class="claim" markdown="1">
+但它们都只在**自己的领域**里表现好——一旦跳出领域就迅速变差，因为工具库本身是**专用**的。
+</div>
+
+## 那能不能给它一个足够完备的工具库？
+
+我的选择是 **Hugging Face**：把整个模型仓库当成工具库，让一个大模型去调用里面的所有模型，来完成用户各式各样的日常问题。
 
 <div class="pipe" markdown="1">
 <div class="pipe-step"><span class="pipe-tag">INPUT</span><span class="pipe-name">自然语言请求</span><span class="pipe-desc">「帮我识别这张法文书封上的字」</span></div>
-<div class="pipe-step"><span class="pipe-tag">REPOSITORY</span><span class="pipe-name">Hugging Face</span><span class="pipe-desc">200万+候选，持续演化，元数据不全</span></div>
+<div class="pipe-step"><span class="pipe-tag">TOOL LIBRARY</span><span class="pipe-name">Hugging Face</span><span class="pipe-desc">200万+模型，天然覆盖视觉 / 语言 / 音频 / 多模态</span></div>
 <div class="pipe-step"><span class="pipe-tag">OUTPUT</span><span class="pipe-name">最优模型</span><span class="pipe-desc">能跑、格式对、领域匹配</span></div>
 </div>
 
-和调用一组**固定的API工具**完全不同——候选是海量的、每天在变的、描述还残缺。
+## 但这个工具库不好用，有三个麻烦
+
+- **规模巨大** — 候选数以百万计，不是一组固定的API工具
+- **持续变化** — 每天都在新增与更新，静态的选择策略很快就过时
+- **元数据经常缺失** — 模型卡残缺或含噪，遮蔽了查询到模型的映射
+
+<div class="claim" markdown="1">
+沿用之前的做法——把全部模型卡直接注入prompt——在这个规模下彻底失效。所以我提出了 **HuggingR⁴**：一个渐进式迭代的选择智能体。
+</div>
 
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">02 ／ 痛点</span>
-## 已有做法把所有模型描述塞进提示词，于是token爆炸且还选错
+<span class="slide-no">02 ／ 痛点实证</span>
+## 全部塞进prompt：token爆炸，而且还选错
 
 <div class="stats" markdown="1">
 <div class="stat stat--bad"><span class="stat-num">61,512</span><span class="stat-lab">直接提示消耗的token<br>而且选错了</span></div>
@@ -50,11 +74,11 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
   <figcaption><b>Figure 1</b>　同一个查询，左边把全部描述塞进提示词，右边经多轮推理逐步收窄。</figcaption>
 </figure>
 
-三个结构性困难：
+论文把因此产生的困难归结为三类，它们分别对应后面三个阶段要治的病：
 
-- **信息不对称** — 元数据残缺含噪，遮蔽了查询到模型卡的映射
+- **信息不对称** — 元数据残缺含噪，查询到模型卡的映射被遮蔽
 - **计算不可行** — 候选基数太大，「对全部描述做一次大模型推理」根本跑不动
-- **语义漂移** — 用户口语和模型卡的技术粒度之间，需要多轮才能对齐
+- **语义漂移** — 用户口语与模型卡的技术粒度之间，需要多轮才能对齐
 
 </div>
 

@@ -37,14 +37,17 @@
 
     &:last-child { border-bottom: 0; }
 
-    /* 小标号 */
+    /* 屏号标签：做成带底色的胶囊，讲的时候一眼能看到当前在哪一屏 */
     .slide-no {
       display: inline-block;
-      font-size: .72em;
+      font-size: .95em;
       font-weight: 700;
-      letter-spacing: .12em;
-      color: $info-color;
-      margin-bottom: .5em;
+      letter-spacing: .06em;
+      color: #fff;
+      background: $info-color;
+      padding: .3em .85em;
+      border-radius: 999px;
+      margin-bottom: .85em;
     }
 
     /* 幻灯片主标题 = 这一屏要讲的那句话 */
