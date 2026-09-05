@@ -181,40 +181,29 @@ $$\text{直接提示：} O(\lvert D \rvert \cdot L) \qquad \Longrightarrow \qqua
 
 ### 主结果
 
-单任务数据集，基线为 HuggingGPT，同一底座下对比，「–」表示 API 不支持：
+<div class="stats" markdown="1">
+<div class="stat"><span class="stat-num">93.01<small>%</small></span><span class="stat-lab">Workability<br>较SOTA +17.81</span></div>
+<div class="stat"><span class="stat-num">84.25<small>%</small></span><span class="stat-lab">Reasonability<br>较SOTA +23.13</span></div>
+<div class="stat"><span class="stat-num">6.9<small>×</small></span><span class="stat-lab">token消耗<br>降低倍数</span></div>
+</div>
 
-| LLM底座 | HuggingGPT WR | HuggingGPT RR | HuggingR⁴ WR | HuggingR⁴ RR |
-| :-- | --: | --: | --: | --: |
-| GPT-4o-mini | 65.52 | 49.21 | **92.03** | **82.46** |
-| GPT-4o | 75.20 | 60.70 | 91.14 | 82.09 |
-| GPT-4.1-mini | 66.44 | 50.79 | 91.04 | 82.38 |
-| GPT-4.1 | 74.80 | 60.73 | 91.43 | **83.86** |
-| Qwen3-235b-a22b | 72.54 | 58.46 | 86.90 | 77.85 |
-| Claude-Sonnet-4 | 78.64 | 64.86 | 90.85 | 81.59 |
-| Deepseek-R1 | 78.94 | 66.83 | – | – |
-| Gemini-2.5-Flash | 81.20 | 68.50 | – | – |
-| Qwen2.5-7b | 56.59 | 41.83 | 85.73 | 76.31 |
+<figure>
+  <img src="/images/r4-table1.png" alt="Table 1 主结果">
+  <figcaption><b>Table 1</b>　十个底座上的对比。三组分别是 HuggingGPT（基线）、HuggingR⁴*（去掉精炼与反思的纯检索变体）、HuggingR⁴（完整）。</figcaption>
+</figure>
 
 三条值得主动讲的读法：
 
-- **最均衡的是 GPT-4o-mini** — 92.03 / 82.46，同一底座下绝对提升 **26.51** 与 **33.25** 个百分点
-- **增益来自框架，不是底座** — Qwen2.5-7B 这种小开源模型也从 56.59 → 85.73，绝对提升 **29.14** 个点
-- 多任务场景下 85.03 / 75.73，同样显著优于 HuggingGPT 的 68.08 / 51.44
+- **最好成绩在 GPT-5.4 上**：93.01 / 84.25，较同底座的 HuggingGPT（75.20 / 61.12）绝对提升 **17.81** 与 **23.13** 个百分点
+- **增益来自框架，不是底座** — Qwen2.5-7B 这种小开源模型也从 56.59 / 41.83 提到 85.73 / 76.31，绝对提升 **29.14** 与 **34.48** 个点；GPT-4o-mini 上的提升更是 **26.51** 与 **33.25**
+- **中间那一列是关键对照** — HuggingR⁴* 只做检索就已经大幅超过 HuggingGPT，说明前四个设计各自有效；而从 HuggingR⁴* 到 HuggingR⁴ 又有一次跃升，那是精炼与反思带来的
 
 ### 消融
 
-GPT-4o-mini + text-embedding-3-large。HuggingR⁴\* 为移除精炼与反思的纯检索变体：
-
-| 配置 | Workability | Reasonability |
-| :-- | --: | --: |
-| **HuggingR⁴\*** | 84.77 | 75.56 |
-| 　w/o 多查询增强 | 82.94 | 71.63 |
-| 　w/o 语义蒸馏 | 81.36 | 71.26 |
-| 　w/o 元数据流 | 78.97 | 69.82 |
-| **HuggingR⁴** | **92.03** | **82.46** |
-| 　w/o 失败溯洄 | 88.09 | 77.66 |
-| 　w/o 自反思 | 85.33 | 80.21 |
-| 　w/o 滑动窗口 | 90.98 | 81.30 |
+<figure>
+  <img src="/images/r4-table6.png" alt="Table 6 模块消融">
+  <figcaption><b>Table 6</b>　逐模块消融（GPT-4o-mini + text-embedding-3-large）。上半组以纯检索变体 HuggingR⁴* 为基准，下半组以完整 HuggingR⁴ 为基准。</figcaption>
+</figure>
 
 三个模块分工清晰，**不该用同一把尺子衡量**：
 
@@ -232,7 +221,12 @@ GPT-4o-mini + text-embedding-3-large。HuggingR⁴\* 为移除精炼与反思的
 
 窗口 $N=3$、检索候选 $k=5$、多查询 $K=4$、失败溯洄阈值 $\theta=80\%$、嵌入 text-embedding-3-large、结果取 3 次独立运行平均。
 
-$N$ 的性能峰值其实在 $N=4$ (92.35 / 83.07)，但 $N$ 直接乘在 $O(N \cdot L)$ 上——多处理一整份模型卡只换来约 0.3 个点，所以默认取 3。$k$ 先升后降，$k=5$ 是真峰值，再大候选池噪声过多。
+<figure>
+  <img src="/images/r4-table7.png" alt="Table 7 超参敏感性">
+  <figcaption><b>Table 7</b>　窗口大小 $N$ 与检索候选数 $k$ 的影响。</figcaption>
+</figure>
+
+$N$ 的性能峰值其实不在默认值上，但 $N$ 直接乘在 $O(N \cdot L)$ 上——多处理一整份完整模型卡只换来零点几个点，所以默认取 3 作为效率与性能的平衡点。$k$ 则是先升后降，超过峰值后候选池噪声过多反而下降。
 
 </div>
 </details>
