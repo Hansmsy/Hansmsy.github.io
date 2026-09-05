@@ -5,104 +5,104 @@ author_profile: false
 description: "VR-OPD：用组内leave-one-out基线为在线策略蒸馏缩减梯度方差，在保持期望梯度不变的前提下提升稳定性与泛化。"
 ---
 
-<p style="margin-bottom:1.2em"><a href="/">← 返回主页</a></p>
+<div class="talk" markdown="1">
+
+<div class="talk-head" markdown="1">
 
 # VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 
+<div class="talk-meta" markdown="1">
 **ICLR 2027 (CCF-A) 在审** ｜ 共同一作
+</div>
 
 <div class="paper-tags"><span class="paper-tag">后训练</span><span class="paper-tag">在线策略蒸馏</span><span class="paper-tag">方差缩减</span><span class="paper-tag">训练稳定性</span><span class="paper-tag">推理模型</span></div>
 
----
+<div class="claim" markdown="1">
+**我的贡献**：提出并设计了**正确性门控收缩**。思路借鉴DAPO按组内正确率甄别退化组的做法——DAPO靠动态采样把全对或全错的组直接丢弃，我把这个「丢弃」改造成「**连续收缩**」，让基线强度随组内证据强弱平滑退化，而不是二值地要或不要。
+</div>
 
-## 一句话概括
+</div>
 
-在线策略蒸馏 (OPD) 已成为推理模型后训练的核心范式：用**稠密的token级教师监督**去优化学生自己采样出来的rollout。但sampled-token的OPD估计器**梯度方差高、优化不稳定**。VR-OPD的做法是把一个**本来就存在、却一直被浪费掉的方差缩减来源**用起来。
+<div class="slide" markdown="1">
+<span class="slide-no">01 ／ 背景与动机</span>
+## 在线策略蒸馏已经是推理模型后训练的核心范式
 
-## 核心观察：兄弟rollout已经采了，却被独立处理
+在线策略蒸馏 (OPD) 的做法是：让学生自己采样rollout，再用教师提供的**稠密token级监督**去优化这些rollout。相比在教师数据上做离线蒸馏，它查询的是学生自己分布上探索到的上下文，能缓解曝光偏置与师生上下文错配。
 
-**这是整篇文章的立足点。** 在group-sampled的OPD里，每个prompt**本来就已经采了多条兄弟 (sibling) rollout**。但标准的稠密token估计器**把这些轨迹彼此独立地处理**——teacher reward被分别施加到每条轨迹上，兄弟之间的相关性完全没有被利用。而这恰恰是一个天然的、免费的方差缩减来源。
-{: .notice--info}
+## 但是有一个问题：梯度方差高、优化不稳
 
-![VR-OPD核心思想示意](/images/vropd-idea.png)
+sampled-token的OPD估计器方差很大，训练过程震荡，表现出来就是要靠反复调学习率才能稳住。
 
-**Figure A**　核心思想示意图 (原创绘制，非论文插图，数值为示意)。(a) 组采样OPD的设定：同一prompt已采出 $G$ 条兄弟rollout，teacher提供稠密token监督，但标准做法把它们各自独立打分；(b) 于是每条rollout的信号里混着一个巨大的prompt级公共偏移 (橙色虚线为各组均值)，总方差被这个偏移主导；(c) 组内留一中心化把公共偏移消掉，**同一y轴刻度**下几乎压平。
-{: .notice}
+## 而方差缩减的来源本来就在手里
 
-一旦看到这一点，方法就很自然：用同组**其他**兄弟构造一个基线，把它从当前轨迹的信号里减掉。这就是leave-one-out的思想——关键是**把自己排除在自己的基线之外**，否则基线与被评估的轨迹相关，会引入偏差。
+<div class="claim" markdown="1">
+在group-sampled的OPD里，每个prompt**本来就已经采了多条兄弟rollout**。但标准的稠密token估计器**把它们彼此独立地处理**——teacher reward分别施加到每条轨迹上，兄弟之间的相关性完全没用上。这是一个天然的、免费的方差缩减来源。
+</div>
 
-## 方法：三个组件
+<figure class="fig-lg">
+  <img src="/images/vropd-idea.png" alt="VR-OPD核心思想示意">
+  <figcaption><b>示意图</b>（原创绘制，非论文插图，数值为示意）。(a) 组采样OPD的设定：同一prompt已采出 $G$ 条兄弟rollout，教师提供稠密token监督，但标准做法把它们各自独立打分；(b) 每条rollout的信号里混着一个巨大的prompt级公共偏移（橙色虚线为各组均值），总方差被这个偏移主导；(c) 组内留一中心化把公共偏移消掉，<b>同一y轴刻度</b>下几乎压平。</figcaption>
+</figure>
 
-| 组件 | 作用 |
-| :-- | :-- |
-| **组内留一中心化** | 用同组其他rollout构造组基线，在**保持期望梯度不变**的前提下缩减方差 |
-| **正确性门控收缩** | 按组内正确性的**混杂程度**调节基线强度，避免同质组被过度中心化 |
-| **有界token影响控制 (GIC)** | 对残余的**极端token梯度**做有界重加权，防止个别token主导整次更新 |
+一旦看到这一点，方法就很自然：用同组**其他**兄弟构造一个基线，从当前轨迹的信号里减掉。关键是**把自己排除在自己的基线之外**，否则基线与被评估的轨迹相关，会引入偏差。
+
+</div>
+
+<div class="slide" markdown="1">
+<span class="slide-no">02 ／ 方法</span>
+## 三个组件
+
+<div class="pipe" markdown="1">
+<div class="pipe-step"><span class="pipe-tag">组级</span><span class="pipe-name">组内留一中心化</span><span class="pipe-desc">用同组其他rollout构造基线，在保持期望梯度不变的前提下缩减方差</span></div>
+<div class="pipe-step"><span class="pipe-tag">组级</span><span class="pipe-name">正确性门控收缩</span><span class="pipe-desc">按组内正确性的混杂程度调节基线强度，避免同质组被过度中心化</span></div>
+<div class="pipe-step"><span class="pipe-tag">token级</span><span class="pipe-name">有界影响控制</span><span class="pipe-desc">对残余的极端token梯度做有界重加权，防止个别token主导整次更新</span></div>
+</div>
 
 ### ① 组内留一中心化
 
-提供一个**有理论依据的组基线**：从当前rollout的token级信号中，减去由同组其他兄弟rollout算出的均值。设组内第 $i$ 条轨迹的信号为 $g_i$，则基线为
+从当前rollout的token级信号里，减去由同组其他兄弟算出的均值。设组内第 $i$ 条轨迹的信号为 $g_i$，则
 
 $$b_i = \frac{1}{G-1}\sum_{j \neq i} g_j, \qquad \hat{g}_i = g_i - b_i$$
 
-因为基线与当前轨迹条件独立，**期望梯度不变而方差下降**——这是经典的control variate思路，但此前没有被用在token级的OPD估计器上。
+因为基线与当前轨迹条件独立，**期望梯度不变而方差下降**——经典的control variate思路，但此前没有被用在token级的OPD估计器上。
 
 ### ② 正确性门控收缩
 
-纯留一基线有一个失效场景：**当一组兄弟全对或全错时**，组内几乎没有差异，此时强行中心化会把有用的信号一起减掉，反而损失学习信号。因此用**组内正确性的混杂度**来调度基线强度 (收缩系数 $\lambda$)——组内分歧大时基线强度高，组内同质时收缩基线、保留信号。这是自适应的，而非固定系数。
+纯留一基线有一个失效场景：**一组兄弟全对或全错时**，组内几乎没有差异，此时强行中心化会把有用的信号一起减掉。
+
+所以用**组内正确性的混杂度**去调度基线强度（收缩系数 $\lambda$）：组内分歧大时基线强度高，组内同质时收缩基线、退回接近原始OPD。这是自适应的，而不是固定系数。
 
 ### ③ 有界token影响控制 (GIC)
 
-即使做了组中心化，token级仍可能出现**影响力极端的尾部**：个别token的梯度量级远超其他，单独主导整个更新方向。GIC作为一个**有界影响的安全阀**，对这些高影响token做重加权，把影响力的尾部截住，而不改变整体的优化方向。
+即使做了组中心化，token级仍会出现**影响力极端的尾部**：个别token的梯度量级远超其他，单独主导整个更新方向。GIC作为有界影响的安全阀，对这些高影响token重加权，截住影响力的尾部，而不改变整体优化方向。
 
-论文中把 **VR-OPD (Group CV)** 定义为「只有留一基线 + 正确性门控收缩、不含GIC」的变体，**VR-OPD (full)** 则加上GIC。这个拆分让「组级基线」与「token级稳定器」的贡献可以分开衡量。
-{: .notice--warning}
+论文把 **VR-OPD (Group CV)** 定义为「只有留一基线 + 正确性门控收缩、不含GIC」的变体，**VR-OPD (full)** 则加上GIC。这个拆分让「组级基线」与「token级稳定器」的贡献可以分开衡量。
 
-## 实验结果
+</div>
 
-在**两组师生配置**、共**8个基准**上评测：域内为数学推理 (MATH-500、Olympiad、Minerva、AIME24、AMC、AIME25)，域外为通用推理迁移 (ARC-C、MMLU-Pro)。域内除AIME24 / AIME25 / AMC报告Avg@32外均为Pass@1；域外为Pass@1。Avg. 为组内宏平均。
+<div class="slide" markdown="1">
+<span class="slide-no">03 ／ 实验</span>
+## 数据集与指标
 
-**配置一：Skywork-OR1-Math-7B → DeepSeek-R1-Distill-Qwen-1.5B**
+**两组师生配置**、共**8个基准**。域内为数学推理 (MATH-500、Olympiad、Minerva、AIME24、AMC、AIME25)，域外为通用推理迁移 (ARC-C、MMLU-Pro)。域内除AIME24 / AIME25 / AMC报告Avg@32外均为Pass@1，域外为Pass@1，Avg. 为组内宏平均。训练数据为DAPO-Math-17K。
 
-| 方法 | MATH-500 | Olympiad | Minerva | AIME24 | AMC | AIME25 | 域内Avg | ARC-C | MMLU-Pro | 域外Avg |
-| :-- | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| Student | 77.2 | 34.5 | 29.7 | 20.7 | 51.8 | 19.6 | 38.9 | 23.7 | 11.4 | 17.6 |
-| OPD | 79.0 | 36.8 | 30.3 | 20.9 | 52.1 | 19.9 | 39.8 | 24.5 | 11.8 | 18.2 |
-| VR-OPD (Group CV) | 79.3 | 39.3 | 31.5 | 20.9 | 52.5 | 20.7 | 40.7 | 25.9 | 13.9 | 19.9 |
-| **VR-OPD (full)** | **81.6** | 39.2 | **33.9** | **22.6** | **52.9** | 20.5 | **41.8** | **26.4** | **15.1** | **20.8** |
+### 主结果
 
-**配置二：Qwen3-32B → Qwen3-4B-Base**
+<figure>
+  <img src="/images/vropd-table1.png" alt="Table 1 主结果">
+  <figcaption><b>Table 1</b>　两组师生配置下的域内与域外结果。上半组为 Skywork-OR1-Math-7B → DeepSeek-R1-Distill-Qwen-1.5B，下半组为 Qwen3-32B → Qwen3-4B-Base。粗体最优、下划线次优。</figcaption>
+</figure>
 
-| 方法 | MATH-500 | Olympiad | Minerva | AIME24 | AMC | AIME25 | 域内Avg | ARC-C | MMLU-Pro | 域外Avg |
-| :-- | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| Student | 67.0 | 34.3 | 26.1 | 10.0 | 38.7 | 7.2 | 30.6 | 50.9 | 13.5 | 32.2 |
-| OPD | 78.7 | 42.6 | 36.3 | 14.7 | 45.9 | 12.4 | 38.4 | 55.9 | 50.2 | 53.1 |
-| VR-OPD (Group CV) | 79.8 | 43.8 | **37.9** | 16.4 | 47.0 | 13.0 | 39.7 | 56.3 | 50.1 | 53.2 |
-| **VR-OPD (full)** | **80.2** | **44.5** | 37.5 | **16.4** | **47.9** | **13.2** | **40.0** | **58.3** | **52.5** | **55.4** |
+一个值得主动讲的现象：**域外增益始终大于域内增益**（+2.3~2.6 对 +1.6~2.0）。这不是巧合——方差缩减带来的是更稳定的优化轨迹，而过拟合往往正是不稳定优化的副产物。我们不是在数学题上练得更狠，而是让训练过程本身更健康，因此泛化能力跟着受益。
 
-**两组配置上，VR-OPD (full) 在全部8个基准上均优于标准OPD。** 平均增益：
+### 还在补的部分
 
-- **Skywork → R1-Distill-Qwen-1.5B**：域内39.8 → **41.8 (+2.0)**，域外18.2 → **20.8 (+2.6)**
-- **Qwen3-32B → Qwen3-4B-Base**：域内38.4 → **40.0 (+1.6)**，域外53.1 → **55.4 (+2.3)**
+匹配学习率下的稳定性曲线、以及「留一 vs. 含自身基线」「有无收缩」的逐组件消融，正在补充，将在正式版本中给出。
 
-**一个值得主动讲的现象：域外增益 (+2.3~2.6) 始终大于域内增益 (+1.6~2.0)。** 这不是巧合——方差缩减带来的是更稳定的优化轨迹，而过拟合往往正是不稳定优化的副产物。换句话说，我们不是在数学题上「练得更狠」，而是让训练过程本身更健康，因此**泛化能力跟着受益**。这也是我认为这条工作真正的价值所在。
-{: .notice--success}
+</div>
 
-## 已知局限
+<div class="talk-nav" markdown="1">
+[← GemTalk](/papers/gemtalk/)　·　[返回主页](/)
+</div>
 
-- **理论适用边界**：留一基线的方差缩减定理成立于**未做clipping的sampled-token score-function估计器**、且在兄弟条件独立的假设下。实际实现中若引入clipping，理论保证会被弱化。
-- **门控系数的可测性**：正确性门控的收缩系数 $\lambda$ 依赖组内正确率，而该正确率的估计若包含当前轨迹自身，会破坏严格的留一可测性——无偏性定理严格覆盖的是固定 $\lambda$ 的版本。这是为实现简洁做的有意取舍，可通过改用留一形式的组内正确率来消除。
-- **稳定性诊断与逐组件消融**：匹配学习率下的稳定性曲线与逐组件消融的完整数值将在正式版本中给出。
-
-## 我的贡献
-
-本文为**共同一作**。具体分工可在交流中说明。
-
-## 与研究主线的关系
-
-这是我研究主线的第三层。前两篇让模型选择先**可解** (HuggingR⁴) 再**可学** (MCPO)；一旦要训练，就必须面对后训练本身的问题——**梯度方差高、优化不稳**。VR-OPD处理的正是这一层，而用的还是同一种解题习惯：**找到那个「本来就存在、却没被用上」的结构**——这次是已经采好的兄弟rollout。
-{: .notice--success}
-
----
-
-<p><a href="/papers/gemtalk/">← GemTalk</a>　·　<a href="/">返回主页</a></p>
+</div>
