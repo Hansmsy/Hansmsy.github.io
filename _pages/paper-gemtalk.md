@@ -18,7 +18,7 @@ description: "GemTalk：几何引导的情感调制，让情感说话人脸生�
 <div class="paper-tags"><span class="paper-tag">扩散模型</span><span class="paper-tag">可控生成</span><span class="paper-tag">说话人脸生成</span><span class="paper-tag">多模态</span><span class="paper-tag">情感强度控制</span></div>
 
 <div class="claim" markdown="1">
-**我的贡献**：负责训练与推理策略这一块——冲突感知训练策略、自适应帧间平滑，以及推理期通过编辑面部混合系数实现的连续强度控制。
+**我的贡献**：负责训练与推理策略：1、冲突感知训练策略；2、自适应帧间平滑；3、推理期通过编辑面部混合系数实现的连续强度控制。
 </div>
 
 </div>
