@@ -115,6 +115,11 @@ description: "MCPO：首个把模型选择形式化为强化学习问题的工�
   <figcaption><b>Figure 4</b>　跨域切分下的训练动态（Qwen3-1.7B）。响应长度只统计模型生成的输出token。</figcaption>
 </figure>
 
+这张图有两个值得讲的点：
+
+- **MCPO训练更加稳定** — MCPO的RR快速上升并收敛到明显更高的水平，而GRPO很早就进入平台期、并在低位持续震荡；响应长度也稳定在约780个token，不随训练漂移。
+- **MCPO能有效减少奖励黑客的发生** — GRPO的响应长度一路涨破1000个token，但RR反而更低，是典型的「靠拉长轨迹刷分」；MCPO则在**不依赖更长、更冗长轨迹**的前提下提升选择质量。
+
 <figure>
   <img src="/images/mcpo-table4.png" alt="Table 4 选择行为">
   <figcaption><b>Table 4</b>　跨域切分下的选择行为（Qwen3-1.7B）。RTP 指轮次级轨迹剪枝，长尾模型指低热度候选。</figcaption>
