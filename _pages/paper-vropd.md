@@ -11,6 +11,8 @@ description: "VR-OPD：用组内leave-one-out基线为在线策略蒸馏缩减�
 
 **ICLR 2027 (CCF-A) 在审** ｜ 共同一作
 
+<div class="paper-tags"><span class="paper-tag">后训练</span><span class="paper-tag">在线策略蒸馏</span><span class="paper-tag">方差缩减</span><span class="paper-tag">训练稳定性</span><span class="paper-tag">推理模型</span></div>
+
 ---
 
 ## 一句话概括

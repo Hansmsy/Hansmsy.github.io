@@ -4,6 +4,26 @@
    与主题原有样式完全隔离，仅作用于 .talk 容器内。
    ========================================================================== */
 
+/* ---------- 论文标签：主页卡片与论文页通用，故不限在 .talk 内 ---------- */
+.paper-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .38em;
+  margin: .6em 0 .9em;
+}
+
+.paper-tag {
+  display: inline-block;
+  font-size: .76em;
+  line-height: 1.55;
+  padding: .16em .68em;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: $info-color;
+  background: mix($info-color, #fff, 7%);
+  border: 1px solid mix($info-color, #fff, 24%);
+}
+
 .talk {
   /* ---------- 顶部标题区 ---------- */
   .talk-head {

@@ -50,6 +50,7 @@ redirect_from:
 **Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
 
 **EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715) ｜ <a href="/papers/huggingr4/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+<div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Harness优化</span><span class="paper-tag">模型选择</span><span class="paper-tag">迭代推理</span><span class="paper-tag">RAG</span><span class="paper-tag">评测基准</span></div>
 - 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
 - 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。
 - Workability **93.01%**、Reasonability **84.25%**，分别领先SOTA **17.81** 与 **23.13** 个百分点，同时token消耗降为 **1/6.9**。
@@ -65,6 +66,7 @@ redirect_from:
 Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 
 **ACM MM 2026 (CCF-A) 已录用** ｜ 共同一作 (\*) ｜ [[arXiv]](https://arxiv.org/abs/2608.00663) ｜ <a href="/papers/gemtalk/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+<div class="paper-tags"><span class="paper-tag">扩散模型</span><span class="paper-tag">可控生成</span><span class="paper-tag">说话人脸生成</span><span class="paper-tag">多模态</span><span class="paper-tag">情感强度控制</span></div>
 - 解决情感说话人脸生成中「可控性与真实感难以兼顾」的矛盾。
 - 核心洞察：把隐式情感特征拆成两个正交部分——**方向编码情感类别、幅度编码表达强度**。
 - 因此只要**只校准幅度、绝不旋转方向**，就能让强度连续可控而不损失画质。
@@ -77,6 +79,7 @@ Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 
 **AAAI 2027 (CCF-A) 在审** ｜ 第一作者 ｜ <a href="/papers/mcpo/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+<div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">后训练</span><span class="paper-tag">模型选择</span><span class="paper-tag">奖励设计</span><span class="paper-tag">跨域泛化</span></div>
 - 针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，解决Agentic RL在超大动作空间下面临的知识腐败与灾难记忆痛点。
 - 提出MCPO将RL适配至仓库级动作空间：**动态身份掩码**迫使策略基于能力而非死记模型名；**轮次级轨迹剪枝**抑制热门候选曝光偏置、将探索导向稀有候选；**反事实优势估计**无需价值网络，把未选中更优候选的机会成本纳入策略梯度。
 - Qwen3-8B取得 **84.25** 综合分 (SOTA)，跨域 **79.99**；以远低推理成本超越GPT-5.4驱动的最强系统与GRPO / DAPO / AEPO等RL基线。
@@ -89,6 +92,7 @@ MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 
 **ICLR 2027 (CCF-A) 在审** ｜ 共同一作 ｜ <a href="/papers/vropd/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+<div class="paper-tags"><span class="paper-tag">后训练</span><span class="paper-tag">在线策略蒸馏</span><span class="paper-tag">方差缩减</span><span class="paper-tag">训练稳定性</span><span class="paper-tag">推理模型</span></div>
 - 针对sampled-token OPD梯度方差高、训练不稳的问题，提出VR-OPD：以组内leave-one-out基线在保持期望梯度不变的前提下缩减方差，辅以正确性门控收缩与有界token影响控制，避免同质组过度中心化及极端token梯度主导更新。
 - 在两组师生配置 (Skywork-OR1-Math-7B → R1-Distill-Qwen-1.5B、Qwen3-32B → Qwen3-4B-Base) 的8个基准上**全面优于标准OPD**：域内数学推理平均**+1.6~2.0 pts**，域外通用推理平均**+2.3~2.6 pts**，方差缩减同时改善域外泛化。
 </div>

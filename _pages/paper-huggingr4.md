@@ -20,6 +20,8 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 <span style="color:#c53030">入选滑铁卢大学Renée J. Miller教授研究生课程 <a href="https://rjmillerlab.github.io/CS848.Summer.2026/W7.html">CS 848</a> 必读论文，并作课堂专题研讨</span>
 </div>
 
+<div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Harness优化</span><span class="paper-tag">模型选择</span><span class="paper-tag">迭代推理</span><span class="paper-tag">RAG</span><span class="paper-tag">评测基准</span></div>
+
 </div>
 
 <div class="slide" markdown="1">
