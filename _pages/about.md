@@ -103,7 +103,7 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-box">
 <div class="exp-logo"><img src="/images/alibaba-logo.png" alt="阿里巴巴集团"></div>
 <div class="exp-body" markdown="1">
-<div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生<span class="exp-date">2026.05 – 2026.09</span></div>
+<div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
 <div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">Planner-Subagent</span><span class="paper-tag">图谱约束决策</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">Skill自进化</span></div>
 - 推动智能体由**单轮架构演进至多轮Planner-Subagent协作范式**，负责其中一个决策模块的构建与优化。
 - 沉淀三个可复用机制：**图谱约束的决策**、**SFT + DPO两阶段后训练**、**Skill自进化闭环**。
