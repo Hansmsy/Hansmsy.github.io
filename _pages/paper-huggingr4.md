@@ -58,32 +58,21 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 沿用之前的做法——把全部模型卡直接注入prompt——在这个规模下彻底失效。所以我提出了 **HuggingR⁴**：一个渐进式迭代的选择智能体。
 </div>
 
-</div>
-
-<div class="slide" markdown="1">
-<span class="slide-no">02 ／ 痛点实证</span>
-## 全部塞进prompt：token爆炸，而且还选错
-
-<div class="stats" markdown="1">
-<div class="stat stat--bad"><span class="stat-num">61,512</span><span class="stat-lab">直接提示消耗的token<br>而且选错了</span></div>
-<div class="stat"><span class="stat-num">8,934</span><span class="stat-lab">HuggingR⁴消耗的token<br>并且选对了</span></div>
-</div>
-
 <figure>
   <img src="/images/r4-prompt.jpg" alt="直接提示与HuggingR⁴的对比">
   <figcaption><b>Figure 1</b>　同一个查询，左边把全部描述塞进提示词，右边经多轮推理逐步收窄。</figcaption>
 </figure>
 
-论文把因此产生的困难归结为三类，它们分别对应后面三个阶段要治的病：
+这三个特性共同导致三类结构性困难，它们分别对应后续三个阶段的设计目标：
 
 - **信息不对称** — 元数据残缺含噪，查询到模型卡的映射被遮蔽
-- **计算不可行** — 候选基数太大，「对全部描述做一次大模型推理」根本跑不动
-- **语义漂移** — 用户口语与模型卡的技术粒度之间，需要多轮才能对齐
+- **计算不可行** — 候选基数太大，对全部描述做一次大模型推理在成本上不可行
+- **语义漂移** — 用户口语与模型卡的技术粒度之间存在距离，需多轮分解才能对齐
 
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">03 ／ 核心主张</span>
+<span class="slide-no">02 ／ 核心主张</span>
 
 <div class="claim" markdown="1">
 不要把模型选择当作**一次性检索**，把它当作**迭代推理过程**。
@@ -124,7 +113,7 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">04 ／ 为什么能扩展</span>
+<span class="slide-no">03 ／ 为什么能扩展</span>
 ## 上下文消耗被封顶在窗口内，式子里不含仓库规模
 
 <div class="claim" markdown="1">
@@ -141,7 +130,7 @@ $$\text{直接提示：} O(\lvert D \rvert \cdot L) \qquad \Longrightarrow \qqua
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">05 ／ 结果</span>
+<span class="slide-no">04 ／ 结果</span>
 ## 同一底座下，两项指标绝对提升26.51与33.25个百分点
 
 <div class="stats" markdown="1">
@@ -203,7 +192,7 @@ $N$ 的性能峰值其实在 $N=4$ (92.35 / 83.07)，但 $N$ 直接乘在 $O(N \
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">06 ／ 消融</span>
+<span class="slide-no">05 ／ 消融</span>
 ## 三个模块各治一种病，不该用同一把尺子衡量
 
 <div class="cards" markdown="1">
@@ -237,7 +226,7 @@ GPT-4o-mini + text-embedding-3-large。HuggingR⁴* 为移除精炼与反思的�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">07 ／ 基准</span>
+<span class="slide-no">06 ／ 基准</span>
 ## 顺手建了这个方向上目前最大的评测基准
 
 <div class="stats" markdown="1">
@@ -253,7 +242,7 @@ GPT-4o-mini + text-embedding-3-large。HuggingR⁴* 为移除精炼与反思的�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">08 ／ 局限</span>
+<span class="slide-no">07 ／ 局限</span>
 ## 三个我自己认为还没解决的问题
 
 - **多任务仍有明显回落** — 85.03 / 75.73 对比单任务的 92.03 / 82.46。瓶颈在任务规划与依赖编排，这块我们直接沿用了 HuggingGPT，没有改进。
