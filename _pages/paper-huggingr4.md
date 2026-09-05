@@ -114,13 +114,18 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 
 这是整个框架里**唯一负责可扩展性**的机制，也是我认为最值得细讲的一个。
 
-问题是：Stage I 只在模型标识与蒸馏元数据上推理，很可能停在一个「看起来合适、但缺少只存在于深层文档里的那个具体功能」的**局部最优**。Stage III 的零信任审计（检查张量约束、许可限制、硬件要求）会发现这种错配——但发现之后怎么办？
+<figure>
+  <img src="/images/r4-window.png" alt="滑动窗口策略">
+  <figcaption><b>Figure 4</b>　滑动窗口策略。仓库被看作一排按初始语义相似度降序排列的候选，每个方块是一个模型——<b>方块的颜色编码的是系统对该模型卡的访问权限</b>：无访问 / 仅模型ID / 完整模型卡 / 已选中。这张图把「成本为何可控」讲得比公式直观。</figcaption>
+</figure>
 
-传统做法是终止或者全局重来。滑动窗口给的是**第三条路：状态空间转移**。
+看颜色就能看出机制：绝大多数候选始终是**无访问**的，Stage I 只给 $k=5$ 个候选**模型ID级**的信息，Stage II 只对其中 $N=3$ 个开放**完整模型卡**。昂贵的大模型阅读始终只发生在那 3 个方块上。
+
+那如果这 3 个都不合格呢？Stage III 的零信任审计（张量约束、许可限制、硬件要求）会发现这种错配——传统做法是终止或者全局重来，而滑动窗口给的是**第三条路：状态空间转移**。
 
 <div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">冻结</span><span class="pipe-desc">当前候选窗口标记为「已耗尽」，缓存进推理历史，避免重复处理</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">前滑</span><span class="pipe-desc">选择窗口在全局排序列表上向前滑动 $N$ 个位置</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">冻结</span><span class="pipe-desc">当前窗口标记为「已耗尽」，缓存进推理历史，避免重复处理</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">前滑</span><span class="pipe-desc">窗口在全局排序列表上向前滑动 $N$ 个位置（图中的 <code>K += N</code>）</span></div>
 <div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">递归恢复</span><span class="pipe-desc">重新进入 Stage I，但此时已带着<b>先前失败轨迹</b>的上下文</span></div>
 </div>
 
