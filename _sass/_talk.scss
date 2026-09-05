@@ -1,0 +1,271 @@
+/* ==========================================================================
+   TALK — 面向口头讲解的版式（论文详情页专用）
+   设计目标：一屏一个论点、提示词而非整句、数字一眼可抓、图占主位。
+   与主题原有样式完全隔离，仅作用于 .talk 容器内。
+   ========================================================================== */
+
+.talk {
+  /* ---------- 顶部标题区 ---------- */
+  .talk-head {
+    padding: 0 0 1.4em;
+    border-bottom: 3px solid $info-color;
+    margin-bottom: 0;
+
+    h1 {
+      font-size: 1.55em;
+      line-height: 1.35;
+      margin: 0 0 .55em;
+      font-weight: 700;
+    }
+
+    .talk-authors {
+      font-size: .92em;
+      color: $light-gray;
+      margin-bottom: .5em;
+    }
+
+    .talk-meta {
+      font-size: .92em;
+      line-height: 2.1;
+    }
+  }
+
+  /* ---------- 幻灯片块 ---------- */
+  .slide {
+    padding: 1.9em 0 1.7em;
+    border-bottom: 1px solid $border-color;
+
+    &:last-child { border-bottom: 0; }
+
+    /* 小标号 */
+    .slide-no {
+      display: inline-block;
+      font-size: .72em;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: $info-color;
+      margin-bottom: .5em;
+    }
+
+    /* 幻灯片主标题 = 这一屏要讲的那句话 */
+    h2 {
+      font-size: 1.3em;
+      line-height: 1.45;
+      margin: 0 0 .9em;
+      padding: 0;
+      border: 0;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 1.02em;
+      margin: 1.2em 0 .5em;
+      font-weight: 700;
+    }
+
+    /* 提示词列表：比正文更大更疏，方便扫读 */
+    ul, ol {
+      margin: .6em 0;
+      li {
+        font-size: 1em;
+        line-height: 1.75;
+        margin-bottom: .45em;
+      }
+    }
+  }
+
+  /* ---------- 一句话主张（大字） ---------- */
+  .claim {
+    font-size: 1.16em;
+    line-height: 1.75;
+    font-weight: 600;
+    padding: .95em 1.15em;
+    background: mix($info-color, #fff, 7%);
+    border-left: 4px solid $info-color;
+    border-radius: 3px;
+    margin: .2em 0 1.1em;
+  }
+
+  /* ---------- 数字卡（结果一眼可抓） ---------- */
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8em;
+    margin: 1em 0 1.2em;
+  }
+
+  .stat {
+    flex: 1 1 130px;
+    text-align: center;
+    padding: .95em .7em .85em;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    background: #fff;
+
+    .stat-num {
+      display: block;
+      font-size: 1.72em;
+      font-weight: 800;
+      line-height: 1.1;
+      color: $info-color;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-lab {
+      display: block;
+      font-size: .78em;
+      color: $light-gray;
+      margin-top: .4em;
+      line-height: 1.45;
+    }
+
+    &.stat--bad .stat-num { color: #a0aec0; }
+  }
+
+  /* ---------- 流程条（阶段推进） ---------- */
+  .pipe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55em;
+    margin: 1em 0 1.2em;
+    align-items: stretch;
+  }
+
+  .pipe-step {
+    flex: 1 1 150px;
+    padding: .8em .85em;
+    border: 1px solid $border-color;
+    border-top: 3px solid $info-color;
+    border-radius: 4px;
+    background: #fff;
+
+    .pipe-tag {
+      display: block;
+      font-size: .68em;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: $light-gray;
+    }
+
+    .pipe-name {
+      display: block;
+      font-size: 1.02em;
+      font-weight: 700;
+      margin: .25em 0 .3em;
+    }
+
+    .pipe-desc {
+      display: block;
+      font-size: .84em;
+      line-height: 1.6;
+      color: $text-color;
+    }
+  }
+
+  /* ---------- 卡片组（并列要点） ---------- */
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8em;
+    margin: 1em 0 1.1em;
+  }
+
+  .card {
+    flex: 1 1 200px;
+    padding: .9em 1em;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    background: #fff;
+
+    .card-t {
+      display: block;
+      font-weight: 700;
+      font-size: .98em;
+      margin-bottom: .35em;
+    }
+
+    .card-d {
+      display: block;
+      font-size: .87em;
+      line-height: 1.65;
+      color: $text-color;
+    }
+
+    /* 带增减幅的证据卡 */
+    .card-delta {
+      display: inline-block;
+      font-size: 1.12em;
+      font-weight: 800;
+      color: #c53030;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: .3em;
+    }
+  }
+
+  /* ---------- 图 ---------- */
+  figure {
+    margin: 1em 0 1.1em;
+
+    img {
+      width: 100%;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+    }
+
+    figcaption {
+      font-size: .82em;
+      line-height: 1.6;
+      color: $light-gray;
+      margin-top: .55em;
+      text-align: left;
+    }
+  }
+
+  /* ---------- 可展开细节：讲的时候收起，读的时候展开 ---------- */
+  details {
+    margin: .9em 0 1.1em;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    background: mix($info-color, #fff, 3%);
+
+    summary {
+      cursor: pointer;
+      padding: .6em .9em;
+      font-size: .88em;
+      font-weight: 600;
+      color: $info-color;
+      list-style: none;
+
+      &::-webkit-details-marker { display: none; }
+      &::before { content: "▸ "; }
+    }
+
+    &[open] summary::before { content: "▾ "; }
+
+    .details-body {
+      padding: 0 .9em .9em;
+      font-size: .9em;
+      line-height: 1.75;
+
+      table { font-size: .95em; }
+      p:last-child, ul:last-child { margin-bottom: 0; }
+    }
+  }
+
+  /* ---------- 页脚导航 ---------- */
+  .talk-nav {
+    margin: 1.8em 0 .5em;
+    padding-top: 1.2em;
+    border-top: 1px solid $border-color;
+    font-size: .92em;
+  }
+}
+
+/* 窄屏：卡片与流程条改为单列堆叠 */
+@media (max-width: 700px) {
+  .talk {
+    .stat, .pipe-step, .card { flex-basis: 100%; }
+    .talk-head h1 { font-size: 1.3em; }
+    .slide h2 { font-size: 1.15em; }
+  }
+}
