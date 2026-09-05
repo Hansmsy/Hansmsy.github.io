@@ -103,9 +103,7 @@ description: "MCPO：首个把模型选择形式化为强化学习问题的工�
   <figcaption><b>Table 5</b>　每次查询的推理效率（随机切分）。响应长度为模型生成的平均输出token数。</figcaption>
 </figure>
 
-<details markdown="1">
-<summary>展开：超参敏感性、训练动态与选择行为</summary>
-<div class="details-body" markdown="1">
+### 超参敏感性、训练动态与选择行为
 
 <figure>
   <img src="/images/mcpo-fig3.png" alt="Figure 3 超参敏感性">
@@ -121,31 +119,6 @@ description: "MCPO：首个把模型选择形式化为强化学习问题的工�
   <img src="/images/mcpo-table4.png" alt="Table 4 选择行为">
   <figcaption><b>Table 4</b>　跨域切分下的选择行为（Qwen3-1.7B）。RTP 指轮次级轨迹剪枝，长尾模型指低热度候选。</figcaption>
 </figure>
-
-</div>
-</details>
-
-</div>
-
-<div class="slide" markdown="1">
-<span class="slide-no">04 ／ 与HuggingR⁴的关系</span>
-## 同一条主线上的连续两步
-
-- **HuggingR⁴ 解决「可解」** — 不训练，用渐进式推理让百万级模型库上的选择变得可行，并把token开销与库规模解耦
-- **MCPO 解决「可学」** — 把冻结的提示换成可优化的策略，从自身决策反馈中持续改进
-
-<div class="claim" markdown="1">
-MCPO 的实验里，**最强的免训练基线正是我自己的上一篇工作 HuggingR⁴**。同一个基准、同一套指标，唯一的变量就是「选择策略是冻结的，还是学出来的」。
-</div>
-
-</div>
-
-<div class="slide" markdown="1">
-<span class="slide-no">05 ／ 局限</span>
-## 两个还没解决的问题
-
-- **候选库持续演化下的增量更新** — 现在的策略是在一个时间切片的候选池上训练的，库每天都在增删，如何低成本地增量更新而不重训，还没有解决。
-- **依赖金标签构造反事实优势** — 反事实优势的监督信号来自金标签，这在有标注的基准上成立，但在缺少金标签的真实场景里如何近似，仍是开放问题。
 
 </div>
 
