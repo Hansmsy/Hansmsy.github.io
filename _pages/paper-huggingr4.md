@@ -139,7 +139,6 @@ $$\text{直接提示：} O(\lvert D \rvert \cdot L) \qquad \Longrightarrow \qqua
   <figcaption><b>Figure 3</b>　token消耗随候选数的变化（对数坐标）。蓝线（直接提示）与橙线（HuggingGPT）持续上升，红线（HuggingR⁴）与绿线（仅检索变体）几乎水平。30候选时四个点分别是 61,512 / 8,878 / 2,344 / 344 —— <b>斜率差就是 $O(\lvert D \rvert \cdot L)$ 与 $O(N \cdot L)$ 的可视化</b>。</figcaption>
 </figure>
 
-在30个候选时，token较直接提示减少 **85.6%**；而随着候选数继续增长，这个差距还会拉大——因为一边是常数，一边是线性。
 
 </div>
 
@@ -167,22 +166,11 @@ $$\text{直接提示：} O(\lvert D \rvert \cdot L) \qquad \Longrightarrow \qqua
 
 ### 主结果
 
-<div class="stats" markdown="1">
-<div class="stat"><span class="stat-num">93.01<small>%</small></span><span class="stat-lab">Workability<br>较SOTA +17.81</span></div>
-<div class="stat"><span class="stat-num">84.25<small>%</small></span><span class="stat-lab">Reasonability<br>较SOTA +23.13</span></div>
-<div class="stat"><span class="stat-num">6.9<small>×</small></span><span class="stat-lab">token消耗<br>降低倍数</span></div>
-</div>
-
 <figure>
   <img src="/images/r4-table1.png" alt="Table 1 主结果">
   <figcaption><b>Table 1</b>　十个底座上的对比。三组分别是 HuggingGPT（基线）、HuggingR⁴*（去掉精炼与反思的纯检索变体）、HuggingR⁴（完整）。</figcaption>
 </figure>
 
-三条值得主动讲的读法：
-
-- **最好成绩在 GPT-5.4 上**：93.01 / 84.25，较同底座的 HuggingGPT（75.20 / 61.12）绝对提升 **17.81** 与 **23.13** 个百分点
-- **增益来自框架，不是底座** — Qwen2.5-7B 这种小开源模型也从 56.59 / 41.83 提到 85.73 / 76.31，绝对提升 **29.14** 与 **34.48** 个点；GPT-4o-mini 上的提升更是 **26.51** 与 **33.25**
-- **中间那一列是关键对照** — HuggingR⁴* 只做检索就已经大幅超过 HuggingGPT，说明前四个设计各自有效；而从 HuggingR⁴* 到 HuggingR⁴ 又有一次跃升，那是精炼与反思带来的
 
 ### 消融
 
@@ -191,15 +179,6 @@ $$\text{直接提示：} O(\lvert D \rvert \cdot L) \qquad \Longrightarrow \qqua
   <figcaption><b>Table 6</b>　逐模块消融（GPT-4o-mini + text-embedding-3-large）。上半组以纯检索变体 HuggingR⁴* 为基准，下半组以完整 HuggingR⁴ 为基准。</figcaption>
 </figure>
 
-三个模块分工清晰，**不该用同一把尺子衡量**：
-
-<div class="cards" markdown="1">
-<div class="card"><span class="card-delta">RR −4.80</span><span class="card-t">失败溯洄</span><span class="card-d">精炼阶段前的最大精度贡献者，专治元数据缺失导致的错配</span></div>
-<div class="card"><span class="card-delta">WR −6.70</span><span class="card-t">自反思</span><span class="card-d">主要拦功能性不匹配，与它审计张量约束 / 许可 / 硬件的职责一致</span></div>
-<div class="card"><span class="card-delta">约 −1</span><span class="card-t">滑动窗口</span><span class="card-d"><b>效率组件而非精度组件</b>：以约1个点换取成本与仓库规模完全解耦</span></div>
-</div>
-
-滑动窗口这条尤其要讲清楚——移除它精度几乎不掉，但token会从常数变成线性。**它的价值不在这张精度表里。**
 
 <details markdown="1">
 <summary>展开：关键超参与取值理由</summary>
@@ -225,7 +204,7 @@ $N$ 的性能峰值其实不在默认值上，但 $N$ 直接乘在 $O(N \cdot L)
 
 - **多任务仍有明显回落** — 85.03 / 75.73 对比单任务的 92.03 / 82.46。瓶颈在任务规划与依赖编排，这块我们直接沿用了 HuggingGPT，没有改进。
 - **对底座的推理风格敏感** — Claude-Sonnet-4 在反思阶段**过度分析**，筛得太严而淘汰了本该合适的候选；Qwen3-235B 则在 Stage I **迭代过多难收敛**。反思的严格度目前由底座「性格」决定，而不是一个可控参数——这是我认为最值得形式化的问题。
-- **规模验证靠的是结构而非实测** — token 恒定的趋势实验里确立了，但可扩展性的主要依据是 $O(N \cdot L)$ 这个结构性保证，不是在超大仓库上的端到端实测。
+- **没有对大模型进行针对性微调**。
 
 </div>
 
