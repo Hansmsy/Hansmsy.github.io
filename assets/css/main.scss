@@ -88,6 +88,62 @@
 
 }
 
+/* 实习经历卡片：logo 在左、内容在右，与上方 .paper-box 保持同一视觉节奏 */
+.exp-box {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    border-bottom: 1px #efefef solid;
+    padding: 1.6em 0;
+
+    .exp-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: .9em;
+        img {
+            /* logo 宽高比各异，同时限宽限高并用 contain，避免被拉伸 */
+            max-width: 160px;
+            max-height: 54px;
+            width: auto;
+            object-fit: contain;
+        }
+    }
+
+    .exp-body { width: 100%; }
+
+    .exp-title {
+        font-weight: 700;
+        font-size: 1.06em;
+        line-height: 1.5;
+        margin-bottom: .2em;
+    }
+
+    .exp-date {
+        float: right;
+        font-weight: 400;
+        font-size: .86em;
+        color: #7a8288;
+        font-variant-numeric: tabular-nums;
+    }
+
+    @include breakpoint($medium) {
+        .exp-logo {
+            width: 160px;
+            min-width: 160px;
+            margin-bottom: 0;
+            padding-top: .3em;
+            justify-content: left;
+        }
+
+        .exp-body {
+            width: calc(100% - 160px);
+            padding-left: 1.8em;
+        }
+    }
+}
+
 $scroll_offset : 2em;
 h1:before, .anchor:before { 
     content: ''; 

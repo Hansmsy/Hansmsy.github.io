@@ -98,6 +98,26 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 </div>
 </div>
 
+# 💻 实习经历
+
+<div class="exp-box">
+<div class="exp-logo"><img src="/images/alibaba-logo.png" alt="阿里巴巴集团"></div>
+<div class="exp-body" markdown="1">
+<div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生<span class="exp-date">2026.05 – 2026.09</span></div>
+<div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">Planner-Subagent</span><span class="paper-tag">图谱约束决策</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">Skill自进化</span></div>
+- 推动智能体由**单轮架构演进至多轮Planner-Subagent协作范式**，负责其中一个决策模块的构建与优化。
+- 沉淀三个可复用机制：**图谱约束的决策**、**SFT + DPO两阶段后训练**、**Skill自进化闭环**。
+</div>
+</div>
+
+<div class="exp-box">
+<div class="exp-logo"><img src="/images/csg-logo.png" alt="中国南方电网"></div>
+<div class="exp-body" markdown="1">
+<div class="exp-title">中国南方电网　｜　算法实习生<span class="exp-date">2025.06 起</span></div>
+- 参与**电网作业人员安全智能防控**项目，负责算法侧工作。
+</div>
+</div>
+
 # 🎖 荣誉与奖项
 - 国家发明专利 ×2
 - 蓝桥杯Python程序设计 国家二等奖
@@ -109,9 +129,6 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 # 📖 教育背景
 - *2024.09 - 2027.06*，**浙江大学** 软件学院，软件工程，工学硕士
 - *2020.09 - 2024.06*，**河南大学** 软件学院，软件工程 (卓越计划)，工学学士
-
-# 💻 实习经历
-- *2026.05 - 2026.09*，**阿里巴巴集团**，大模型应用算法实习生。推动智能体由单轮架构演进至多轮Planner-Subagent协作范式，负责其中一个决策模块；沉淀了图谱约束的决策、SFT + DPO两阶段后训练、Skill自进化闭环三个可复用机制。
 
 # 🛠 专业技能
 - **大模型后训练**：熟悉verl、LLaMA-Factory、ms-swift、vLLM与Hugging Face生态；具备SFT / DPO / RL / OPD实践经验
