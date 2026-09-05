@@ -25,7 +25,7 @@ description: "GemTalk：几何引导的情感调制，让情感说话人脸生�
 
 <div class="slide" markdown="1">
 <span class="slide-no">01 ／ 背景与动机</span>
-## 情感说话人脸生成有两条路线，各有一个死结
+## 目前情感说话人脸生成有两条路线：显式驱动与隐式驱动
 
 <div class="cards" markdown="1">
 <div class="card"><span class="card-t">显式驱动</span><span class="card-d">用3DMM或blendshape系数直接驱动。强度可控，但表情是「贴」上去的，参考脸与驱动音频的情感一冲突就会崩</span></div>
