@@ -1,4 +1,14 @@
 <script src="{{ '/assets/js/main.min.js' | relative_url }}"></script>
 
-{% include analytics.html %}
-{% include fetch_google_scholar_stats.html %}
+{% comment %}
+  Google Analytics 只在真正配置了 tracking id 时才加载。
+  主题原来无条件引入，而 site.google_analytics_id 为空，
+  结果每次访问都会向 googletagmanager 请求一个 id 为空的脚本。
+
+  Google Scholar 统计脚本已移除：它读取的是 google_scholar_crawler workflow
+  产出到 google-scholar-stats 分支的 gs_data.json，该 workflow 早前已删除，
+  文件不存在，保留只会让每次访问多一次 404。
+{% endcomment %}
+{% if site.google_analytics_id and site.google_analytics_id != "" %}
+  {% include analytics.html %}
+{% endif %}
