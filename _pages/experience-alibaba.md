@@ -116,33 +116,25 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 
 <div class="slide" markdown="1">
 <span class="slide-no">03 ／ 两阶段后训练</span>
-## 后训练最难的不是训练本身，是高质量轨迹从哪来
+## 建立拒绝采样数据飞轮
 
 <div class="pipe" markdown="1">
 <div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">多轨迹采样</span><span class="pipe-desc">对同一任务采样多条候选轨迹</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">自动执行验证</span><span class="pipe-desc">让它们真实执行，用执行结果作为客观标签</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">质量评分</span><span class="pipe-desc">据此筛选出用于SFT与偏好对构造的数据</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">真实执行</span><span class="pipe-desc">每条轨迹真实跑一遍，拿到执行结果</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">打分与拒绝</span><span class="pipe-desc">结果错的直接丢弃，其余按覆盖率与节点数打分</span></div>
 </div>
 
-关键在第二步：标签既不依赖人工主观判断，也不依赖模型自评，而是**来自环境的真实反馈**。
+评分分两层：**最终判断是否正确是硬门槛**，错的直接丢弃；通过门槛的再看两项——**关键路径覆盖率**越高越好，**运行节点个数**越少越好。前者衡量看得准不准，后者衡量看得省不省。
 
-## 为什么是DPO而不是RL
+打分既不依赖人工主观判断，也不依赖模型自评，而是**来自真实执行结果**。
 
-这个问题我被追问过很多次——毕竟我自己的论文做的正是强化学习。答案是场景约束下的取舍，而不是技术上的退让：
+## SFT数据与DPO正负样本对
 
-- **RL需要高频、低成本的奖励信号**。在论文的模型选择场景里，我可以直接用选择的正确性构造奖励，采样成本可控。
-- **但业务场景下，一条完整轨迹必须真实执行才知道好坏**，采样成本与延迟都高一个量级，且线上环境不允许大规模在线探索。
-- **DPO只需要离线的偏好对**，正好可以用执行验证的结果来构造，样本效率与工程风险都更可控。
+高分轨迹直接作为**SFT数据**；同一任务下的高分与低分轨迹配成**DPO的正负样本对**。两个阶段用的是同一份采样，只是取用方式不同。
 
 ## 把论文里的掩码思想迁移过来
 
 我把 [MCPO](/papers/mcpo/) 里的**掩码**思想迁移到了这里，设计了图谱扰动：训练时对图谱施加扰动以模拟状态漂移，迫使策略去学习**底层能力**，而不是死记特定的路径形态。
-
-<div class="claim" markdown="1">
-这个迁移之所以成立，是因为掩码的本质**不依赖强化学习**——它要解决的是「策略记住了表面标识却没学到能力」这个问题，因此可以平移到DPO的数据构造环节。
-
-**真正可复用的不是算法，而是算法背后的问题诊断。**
-</div>
 
 </div>
 
