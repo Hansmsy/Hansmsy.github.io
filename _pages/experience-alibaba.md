@@ -32,20 +32,20 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 <div class="pipe-step"><span class="pipe-tag">下层</span><span class="pipe-name">Subagent</span><span class="pipe-desc">只被按需调用，执行具体子任务并回传结果</span></div>
 </div>
 
-## 但多轮引入了新问题：可走的路径全被塞进上下文
+## 但多轮引入了新问题：所有已确认特征都被塞进上下文
 
-当时的做法是**把下一步所有可行路径都放进上下文**，交给Planner自己判断。这带来三个后果：
+当时的做法是**把所有已确认特征都放进上下文**，交给Planner自己判断下一步看什么。这带来三个后果：
 
 <div class="cards" markdown="1">
-<div class="card"><span class="card-t">上下文线性膨胀</span><span class="card-d">上下文规模直接跟可行路径总数挂钩，路径一多就吃满窗口</span></div>
-<div class="card"><span class="card-t">决策方差高</span><span class="card-d">大量无关候选淹没关键信息，Planner每轮的选择都不稳定</span></div>
-<div class="card"><span class="card-t">无效探索多</span><span class="card-d">走错的分支要靠后续轮次纠正，链路被拉长、错误调用增加</span></div>
+<div class="card"><span class="card-t">上下文线性膨胀</span><span class="card-d">上下文规模直接跟已确认特征数挂钩，特征一多就吃满窗口</span></div>
+<div class="card"><span class="card-t">决策方差高</span><span class="card-d">大量无判别力的特征淹没关键信息，Planner每轮的选择都不稳定</span></div>
+<div class="card"><span class="card-t">无效探索多</span><span class="card-d">看错方向要靠后续轮次纠正，链路被拉长、subagent调用增加</span></div>
 </div>
 
 ## 我负责的部分
 
 <div class="claim" markdown="1">
-我负责**Planner模块**与其中一个**子决策模块**的优化，目标是**减少无效探索**——让Planner在受约束的候选集上做选择，使上下文规模与可行路径总数解耦，并提升关键路径的命中率与多轮决策的稳定性。
+我负责**Planner模块**与其中一个**子决策模块**的优化，目标是**减少无效探索**：让Planner在一个受约束的候选集上做选择，而不是面对全部已确认特征。这样上下文规模与特征总数解耦，关键路径的命中率与多轮决策的稳定性也随之提升。
 </div>
 
 具体做了三件事：
@@ -60,18 +60,18 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 <span class="slide-no">02 ／ 图谱约束的决策</span>
 ## 前提：旧架构遗留了一份无缺失的特征矩阵
 
-旧架构不做选择，每个账户都会把全部subagent执行一遍。代价是延迟与成本，但它同时产出了一份**无缺失的特征矩阵**：每个账户的每个特征都有取值，且配有事后确认的真标签。数据既无缺失、也不存在选择偏差，因此可以在其上无偏地估计任意两个特征之间的条件判别关系。
+旧架构不做选择，每个账户都会把全部subagent执行一遍，代价是延迟与成本。但它同时留下了一份**无缺失的特征矩阵**：每个账户的每个特征都有取值，且配有事后确认的真标签。
 
 <div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">构建图谱</span><span class="pipe-desc">节点是特征、对应一到多个subagent，边权是条件信息增益</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">计算边权</span><span class="pipe-desc">已看过某特征后，再看下一个还能消掉多少标签不确定性</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">检索排序</span><span class="pipe-desc">按单位成本信息量排序，只取Top-N特征进上下文</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 4</span><span class="pipe-name">增量维护</span><span class="pipe-desc">保留少量全量采样流量，周期性重估边权</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">构建图谱</span><span class="pipe-desc">节点是特征，边权是条件信息增益</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">计算边权</span><span class="pipe-desc">已看过某特征后，再看下一个能消掉多少不确定性</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">检索排序</span><span class="pipe-desc">按单位成本信息量取Top-N进上下文</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 4</span><span class="pipe-name">增量维护</span><span class="pipe-desc">保留1%全量采样，周期性重估</span></div>
 </div>
 
 ### ① 构建图谱
 
-**节点是一个特征**，背后对应一到多个subagent；**边刻画的是特征之间的先后价值关系**。数据来源就是上面那份历史全量特征矩阵与事后标签，不需要Agent重新跑一遍。
+**节点是一个特征**，背后对应一到多个subagent；**边刻画特征之间的先后价值关系**。数据就是上面那份历史特征矩阵与事后标签，不需要重新跑Agent。
 
 ### ② 边权：条件信息增益
 
@@ -79,21 +79,11 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 
 $$w(u \to v) = H(Y \mid X_u) - H(Y \mid X_u,\, X_v) = I(Y; X_v \mid X_u)$$
 
-读法很直白：**已经看过特征$u$之后，再看特征$v$，还能再消掉多少关于标签的不确定性。**
+读法很直白：**已经看过特征$u$之后，再看特征$v$，还能再消掉多少关于标签的不确定性。** 没有判别力的特征、以及与已看过的特征冗余的特征，都会因此落到零附近。
 
-一个量同时解决三件事：
-
-<div class="cards" markdown="1">
-<div class="card"><span class="card-t">没有判别力</span><span class="card-d">$I = 0$当且仅当已知$u$时$X_v$与标签独立。这类特征权重恰为零，<b>自动被排除</b></span></div>
-<div class="card"><span class="card-t">与已看过的冗余</span><span class="card-d">$X_v$与$X_u$说的是同一件事时$I \approx 0$，<b>即使$X_v$单独看判别力很强</b></span></div>
-<div class="card"><span class="card-t">判别力强且互补</span><span class="card-d">$I$大，排在前面。「不看没用的」与「不看重复的」<b>由同一个量给出</b></span></div>
-</div>
-
-小样本时这个估计并不可靠。估计需按特征取值分格统计，格内只有几个样本时它们的标签往往恰好一致，算出的条件熵接近零、判别力看上去满格，实际上只是噪声。所以格内样本不足时不采用该估计，而是**退回该特征在旧风控体系里已有的异常分**：
+**异常分回退机制**：格内样本不足时该估计会虚高，此时按样本量把权重连续地从信息增益切换到该特征已有的异常分。
 
 $$w(u \to v) = \lambda_{uv}\,\hat{I}(Y; X_v \mid X_u) + (1 - \lambda_{uv})\,\tilde{a}(v)$$
-
-$\lambda_{uv}$由格内样本量决定，样本充足时取1、不足时趋0；$\tilde{a}(v)$是已有异常分归一化到同一量纲后的值。
 
 <div class="echo" markdown="1">
 <span class="echo-tag">↔ 与我的论文呼应</span>
@@ -108,18 +98,18 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 
 「减少无效探索」因此有了精确含义：**用更少的subagent调用达到同样的判别力。**
 
-只把score最高的Top-N个特征放进上下文交给Planner。这一步直接针对上一屏的三个后果：进入上下文的不再是全部已确认特征，而是一个**固定大小**的候选集，上下文规模与特征总数解耦。
-
 ### ④ 增量维护
 
-反爬属于**对抗场景**，爬虫策略持续演化，今天没有判别力的特征明天可能成为最强特征，因此边权必须周期性重估。而新架构只执行Top-N，新数据中未被选中的特征没有取值、无法用于估计，所以需要保留约1%的账户继续走全量路径。
+反爬属于**对抗场景**，爬虫策略持续演化，今天没有判别力的特征明天可能成为最强特征，因此边权必须周期性重估。
+
+但新架构只执行Top-N，未被选中的特征没有取值、无法用于估计，所以要保留约1%的账户继续走全量路径。
 
 <div class="echo" markdown="1">
 <span class="echo-tag">↔ 与我的论文呼应</span>
-不保留这部分无偏采样，图谱会自我强化：它判定不重要的特征将不再被采集，也就不再有被重新评估的机会。这与MCPO里轮次级轨迹剪枝要治的病是同一个：**抑制自我强化的曝光偏置**。区别只在于MCPO作用于策略的采样，这里作用于数据的采集。
+图谱判定不重要的特征将不再被采集，也就不再有机会被重新评估。这与MCPO里轮次级轨迹剪枝要治的病是同一个——**抑制自我强化的曝光偏置**，只是MCPO作用于策略采样，这里作用于数据采集。
 </div>
 
-维护动作很简单：按固定周期，把这1%账户的全量特征与事后标签并入历史数据，重新计算一遍边权。
+做法很简单：按固定周期把这1%账户的全量特征与事后标签并入历史数据，重算一遍边权。
 
 图谱本身会变，策略侧也得为此做好准备——这就是下一屏「图谱扰动」的动机。
 
