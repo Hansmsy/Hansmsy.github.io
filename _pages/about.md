@@ -29,7 +29,7 @@ redirect_from:
 - *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 - *2025.11*：&nbsp;📄 我在开放状态下智能体优化方向的论文已上传至arXiv ([arXiv:2511.18715](https://arxiv.org/abs/2511.18715))。
-- *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='/images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员安全智能防控项目。
+- *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='/images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员人身安全防控项目。
 
 # 🧭 研究主线
 
@@ -104,7 +104,7 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-logo"><img src="/images/alibaba-logo.png" alt="阿里巴巴集团"></div>
 <div class="exp-body" markdown="1">
 <div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
-<div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">Planner-Subagent</span><span class="paper-tag">图谱约束决策</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">Skill自进化</span></div>
+<div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
 - 推动智能体由**单轮架构演进至多轮Planner-Subagent协作范式**，负责其中一个决策模块的构建与优化。
 - 沉淀三个可复用机制：**图谱约束的决策**、**SFT + DPO两阶段后训练**、**Skill自进化闭环**。
 </div>
@@ -113,8 +113,12 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-box">
 <div class="exp-logo"><img src="/images/csg-logo.png" alt="中国南方电网"></div>
 <div class="exp-body" markdown="1">
-<div class="exp-title">中国南方电网　｜　算法实习生<span class="exp-date">2025.06 起</span></div>
-- 参与**电网作业人员安全智能防控**项目，负责算法侧工作。
+<div class="exp-title">中国南方电网　｜　数字变电事业部　｜　算法实习生<span class="exp-date">2025.06 – 2025.11</span></div>
+<div class="paper-tags"><span class="paper-tag">计算机视觉</span><span class="paper-tag">步态识别</span><span class="paper-tag">单目测距</span><span class="paper-tag">数据集构建</span><span class="paper-tag">部署落地</span></div>
+- 参与**电网作业人员人身安全防控**项目，负责**步态识别**与**空间快速测距**两个子模块的方案设计与落地。
+- **数据侧**：参与多个变电站真实作业场景的数据采集与标注，构建复杂工况下的步态识别与测距数据集。
+- **算法侧**：设计并实现步态识别算法 (成果转化为一篇第一作者论文) 与基于单目的空间快速测距算法。
+- **工程侧**：完成推理接口封装、系统联调与部署落地，推动相关模块在测试端与生产端上线。
 </div>
 </div>
 

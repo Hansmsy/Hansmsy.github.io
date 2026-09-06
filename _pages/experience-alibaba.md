@@ -160,7 +160,10 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 
 这样既绕开了上下文长度限制，也让归纳过程可以并行。
 
-## 最终结果
+</div>
+
+<div class="slide" markdown="1">
+<span class="slide-no">05 ／ 最终结果</span>
 
 <div class="stats" markdown="1">
 <div class="stat"><span class="stat-num">24<small>%</small></span><span class="stat-lab">端到端任务耗时<br>降低</span></div>
