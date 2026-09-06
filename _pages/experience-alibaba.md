@@ -136,11 +136,13 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 
 我把 [MCPO](/papers/mcpo/) 里的**掩码**思想迁移到了这里，设计了图谱扰动：训练时对图谱施加扰动以模拟状态漂移，迫使策略去学习**底层能力**，而不是死记特定的路径形态。
 
+掩码要解决的是「策略记住了表面标识而没学到能力」，**这个问题与用什么算法优化无关**，所以能从RL平移到DPO的数据构造。
+
 </div>
 
 <div class="slide" markdown="1">
 <span class="slide-no">04 ／ Skill自进化闭环</span>
-## 让能力持续演进，而不是每次失败都靠人工补规则
+## 由人工业务知识驱动的Skill自进化迭代循环
 
 <div class="pipe" markdown="1">
 <div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">失败归因</span><span class="pipe-desc">从执行轨迹与失败案例中收集触发信号</span></div>
@@ -157,12 +159,6 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 - **上游LLM作为Reduce阶段**：只聚合这些已被压缩过的模式，合成或更新技能
 
 这样既绕开了上下文长度限制，也让归纳过程可以并行。
-
-### 验证是强制门控，不是可选项
-
-<div class="claim" markdown="1">
-新生成或更新的技能**必须**通过批量回归验证才能部署。跳过验证会直接导致技能退化与行为不可靠——自动化回归在这里是合入前的硬约束，而不是「有空再做」的优化项。
-</div>
 
 </div>
 
