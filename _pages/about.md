@@ -120,7 +120,7 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="paper-tags"><span class="paper-tag">计算机视觉</span><span class="paper-tag">步态识别</span><span class="paper-tag">单目测距</span><span class="paper-tag">数据集构建</span><span class="paper-tag">部署落地</span></div>
 - 参与**电网作业人员人身安全防控**项目，负责**步态识别**与**空间快速测距**两个子模块的方案设计与落地。
 - **数据侧**：参与多个变电站真实作业场景的数据采集与标注，构建复杂工况下的步态识别与测距数据集。
-- **算法侧**：设计并实现步态识别算法 (成果转化为一篇第一作者论文) 与基于单目的空间快速测距算法。
+- **算法侧**：设计并实现步态识别算法与基于单目的空间快速测距算法；前者整理为预印本 *Multi-view Consistency for Gait Recognition in the Wild* (第一作者, Preprint)。
 - **工程侧**：完成推理接口封装、系统联调与部署落地，推动相关模块在测试端与生产端上线。
 </div>
 </div>
@@ -132,10 +132,6 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 - 蓝桥杯C++程序设计 省级二等奖
 - 中国大学生计算机设计大赛 省级二等奖
 - 互联网+大学生创新创业大赛 省级三等奖
-
-# 📖 教育背景
-- *2024.09 - 2027.06*，**浙江大学** 软件学院，软件工程，工学硕士
-- *2020.09 - 2024.06*，**河南大学** 软件学院，软件工程 (卓越计划)，工学学士
 
 # 🛠 专业技能
 - **大模型后训练**：熟悉verl、LLaMA-Factory、ms-swift、vLLM与Hugging Face生态；具备SFT / DPO / RL / OPD实践经验
