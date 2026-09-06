@@ -61,22 +61,42 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 ## 不让模型在开放空间里自由生成动作，而是在受约束的候选路径中做选择
 
 <div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">离线归纳</span><span class="pipe-desc">从历史高质量轨迹中归纳出领域图谱</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">增量维护</span><span class="pipe-desc">新的高质量轨迹持续并入，避免图谱僵化</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">检索排序</span><span class="pipe-desc">每步决策检索并排序Top-N可执行路径</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 4</span><span class="pipe-name">收敛选择</span><span class="pipe-desc">开放式动作生成 → 候选路径选择</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">设计与构建图谱</span><span class="pipe-desc">步骤作节点、步骤间的共性关系作边，分在线与离线两路</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">检索排序</span><span class="pipe-desc">每步决策在图谱上按边权排序，只取Top-N进上下文</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">增量维护</span><span class="pipe-desc">新的高质量轨迹持续并入、边权随之更新，避免图谱僵化</span></div>
 </div>
+
+### ① 设计与构建图谱
+
+图谱的结构很简单：**把步骤当作节点，把步骤之间的共性关系当作边**。难的是边从哪来。我分两路构建：
+
+<div class="cards" markdown="1">
+<div class="card"><span class="card-t">在线构建</span><span class="card-d">提取旧Agent上真实跑过的轨迹，先筛出成功的，再归纳步骤与步骤的共性关系；边权按共现概率赋值，<b>出现得越多权重越大</b></span></div>
+<div class="card"><span class="card-t">离线构建</span><span class="card-d">针对长尾与不容易发生的步骤人工合成轨迹，送进Agent实跑测试，<b>测试成功才并入图谱</b></span></div>
+</div>
+
+两路的分工很清楚：**在线保证图谱贴合真实分布**，但真实流量里几乎采不到的长尾它盖不到；**离线就是去补那部分**，而且不是拍脑袋补——合成轨迹必须真实跑通才能进图谱，这一条是硬约束。
+
+### ② 检索排序
+
+每步决策时在图谱上检索可走路径，按边权排序，**只把Top-N放进上下文**。
+
+这一步直接对决上一屏那三个后果：进上下文的不再是全部可行路径，而是一个**固定大小**的候选集，于是上下文规模与可行路径总数解耦，开放式动作生成也收敛成了候选路径选择。
+
+### ③ 增量维护
+
+新产生的高质量轨迹持续并入，边权随之更新。图谱不是一次构建就冻住的静态资产，否则业务一变它就失效。
 
 ### 这里的取舍
 
 把动作生成收敛为路径选择，确实**牺牲了一部分理论上限**——图谱覆盖不到的全新路径无法被直接命中。
 
-但在对**错误调用容忍度极低**的场景里，开放生成的方差是不可接受的。所以是主动用可控性换稳定性，并用两个设计对冲覆盖不足：**增量维护**让图谱不僵化，**Top-N候选**而非硬性Top-1剪枝保留了选择空间。
+但在对**错误调用容忍度极低**的场景里，开放生成的方差是不可接受的。所以是主动用可控性换稳定性，并用三个设计对冲覆盖不足：**离线构建**补长尾、**增量维护**防僵化、**Top-N候选**而非硬性Top-1剪枝保留选择空间。
 
 ### 这个设计的固有风险
 
 <div class="claim" markdown="1">
-图谱从历史**成功**轨迹归纳而来，天然存在**幸存者偏差**：它擅长复现已知的有效模式，但对全新路径的召回能力有限。
+图谱的主体仍然来自历史**成功**轨迹，所以**幸存者偏差**只是被缓解、没有被消除：它擅长复现已知的有效模式，对完全没被构想过的路径仍然召回不到。
 </div>
 
 这也正是下一屏「图谱扰动」的动机来源。
