@@ -9,40 +9,49 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 
 <div class="talk-head" markdown="1">
 
-# 多轮Planner-Subagent智能体的决策约束与自进化
+# 阿里巴巴集团 · 大模型应用算法实习
 
 <div class="talk-meta" markdown="1">
-**阿里巴巴集团** ｜ 大模型应用算法实习生 ｜ 2026.05 – 2026.09
+**2026.05 – 2026.09** ｜ 大模型应用算法实习生 ｜ 负责Planner模块与子决策模块的优化
 </div>
 
-<div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">Planner-Subagent</span><span class="paper-tag">图谱约束决策</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
-
-<div class="claim" markdown="1">
-本页只讲**可公开的通用方法论与技术取舍**，不含公司内部数据、业务指标与系统实现细节。
-</div>
+<div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
 
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">01 ／ 背景与动机</span>
-## 单轮架构在三类问题上有结构性困难
+<span class="slide-no">01 ／ 背景与我的贡献</span>
+## 原来的智能体是单轮的：每次运行都要把所有Agent跑一遍
 
-单轮的做法是一次性把工具描述与上下文全部塞进提示词，让模型直接给出决策。任务一复杂，三个问题就同时出现：
+单轮架构里没有任务分解，一次运行会把全部Agent依次执行一遍，并把工具描述与上下文一次性塞进提示词。任务一复杂，延迟与token开销就随Agent数量线性增长，而其中绝大多数Agent对当前这个任务其实是无关的。
 
-<div class="cards" markdown="1">
-<div class="card"><span class="card-t">候选动作空间大</span><span class="card-d">可选动作多，一次性决策的方差高</span></div>
-<div class="card"><span class="card-t">决策链路长</span><span class="card-d">任务需要多步推进，单轮无法表达步骤间的依赖</span></div>
-<div class="card"><span class="card-t">状态持续变化</span><span class="card-d">环境本身在演化，基于静态快照做的规划很快失效</span></div>
-</div>
-
-## 于是转向多轮Planner-Subagent协作
+## 于是推进多轮Planner-Subagent架构
 
 <div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">上层</span><span class="pipe-name">Planner</span><span class="pipe-desc">负责任务分解与调度，决定下一步做什么</span></div>
-<div class="pipe-step"><span class="pipe-tag">下层</span><span class="pipe-name">Subagent</span><span class="pipe-desc">负责具体子任务的执行，并把结果回传</span></div>
+<div class="pipe-step"><span class="pipe-tag">上层</span><span class="pipe-name">Planner</span><span class="pipe-desc">负责任务分解与调度，每轮只决定下一步做什么</span></div>
+<div class="pipe-step"><span class="pipe-tag">下层</span><span class="pipe-name">Subagent</span><span class="pipe-desc">只被按需调用，执行具体子任务并回传结果</span></div>
 </div>
 
-我负责其中一个决策模块的构建与优化。下面三个机制，是我认为**可以脱离具体业务复用**的部分。
+## 但多轮引入了新问题：可走的路径全被塞进上下文
+
+当时的做法是**把下一步所有可行路径都放进上下文**，交给Planner自己判断。这带来三个后果：
+
+<div class="cards" markdown="1">
+<div class="card"><span class="card-t">上下文线性膨胀</span><span class="card-d">上下文规模直接跟可行路径总数挂钩，路径一多就吃满窗口</span></div>
+<div class="card"><span class="card-t">决策方差高</span><span class="card-d">大量无关候选淹没关键信息，Planner每轮的选择都不稳定</span></div>
+<div class="card"><span class="card-t">无效探索多</span><span class="card-d">走错的分支要靠后续轮次纠正，链路被拉长、错误调用增加</span></div>
+</div>
+
+## 我负责的部分
+
+<div class="claim" markdown="1">
+我负责**Planner模块**与其中一个**子决策模块**的优化，目标是**减少无效探索**——让Planner在受约束的候选集上做选择，使上下文规模与可行路径总数解耦，并提升关键路径的命中率与多轮决策的稳定性。
+</div>
+
+具体分算法与工程两条线：
+
+- **算法侧**：图谱约束的决策；把论文里的掩码思想迁移为图谱扰动，用于偏好数据构造
+- **工程侧**：以真实执行结果为标签的数据流水线；Map-Reduce式的技能合成与回归门控
 
 </div>
 
