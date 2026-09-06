@@ -109,6 +109,30 @@
     margin: .2em 0 1.1em;
   }
 
+  /* ---------- 与自己论文的呼应 ----------
+     这是讲的时候最强的记忆点，用暖色与蓝色的 .claim 区分开，
+     避免两种性质不同的强调块在一屏里混成一片 */
+  .echo {
+    padding: .85em 1.1em;
+    background: #fffaf0;
+    border-left: 4px solid #d69e2e;
+    border-radius: 0 3px 3px 0;
+    font-size: .97em;
+    line-height: 1.75;
+    margin: .2em 0 1.1em;
+
+    .echo-tag {
+      display: block;
+      font-size: .78em;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: #b7791f;
+      margin-bottom: .25em;
+    }
+
+    p:last-child { margin-bottom: 0; }
+  }
+
   /* ---------- 数字卡（结果一眼可抓） ---------- */
   .stats {
     display: flex;
