@@ -105,8 +105,11 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-body" markdown="1">
 <div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
 <div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
-- 推动智能体由**单轮架构演进至多轮Planner-Subagent协作范式**，负责其中一个决策模块的构建与优化。
-- 沉淀三个可复用机制：**图谱约束的决策**、**SFT + DPO两阶段后训练**、**Skill自进化闭环**。
+- 参与**账户行为分析智能体**的架构演进，推动其由**单轮架构**升级为**多轮Planner-Subagent协作范式**，负责Planner模块与其中一个子决策模块的优化。
+- **图谱约束的决策**：以特征为节点、条件信息增益为边权构建图谱，每步只将单位成本信息量最高的Top-N特征送入上下文，使上下文规模与特征总数解耦。
+- **Planner模型后训练**：搭建拒绝采样数据飞轮，以真实执行结果打分并构造SFT数据与DPO正负样本对；迁移论文中的掩码思想设计图谱扰动，提升策略在状态漂移下的稳健性。
+- **Skill自进化框架**：由人工业务知识驱动的迭代循环，Map-Reduce式分层归纳失败模式，批量回归验证通过后方可合入技能库。
+- 端到端任务耗时降低约 **24%**，四项核心业务指标平均提升 **4.07%**。
 </div>
 </div>
 
