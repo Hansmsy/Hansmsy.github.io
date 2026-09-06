@@ -62,10 +62,6 @@ description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Suba
 
 旧架构不做选择，每个账户都会把全部subagent执行一遍。代价是延迟与成本，但它同时产出了一份**无缺失的特征矩阵**：每个账户的每个特征都有取值，且配有事后确认的真标签。数据既无缺失、也不存在选择偏差，因此可以在其上无偏地估计任意两个特征之间的条件判别关系。
 
-<div class="claim" markdown="1">
-新架构的全部前提就在这里：**离线一次性估出各特征的判别力，在线即不必再全量执行。**
-</div>
-
 <div class="pipe" markdown="1">
 <div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">构建图谱</span><span class="pipe-desc">节点是特征、对应一到多个subagent，边权是条件信息增益</span></div>
 <div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">计算边权</span><span class="pipe-desc">已看过某特征后，再看下一个还能消掉多少标签不确定性</span></div>
@@ -93,9 +89,15 @@ $$w(u \to v) = H(Y \mid X_u) - H(Y \mid X_u,\, X_v) = I(Y; X_v \mid X_u)$$
 <div class="card"><span class="card-t">判别力强且互补</span><span class="card-d">$I$大，排在前面。「不看没用的」与「不看重复的」<b>由同一个量给出</b></span></div>
 </div>
 
+小样本时这个估计并不可靠。估计需按特征取值分格统计，格内只有几个样本时它们的标签往往恰好一致，算出的条件熵接近零、判别力看上去满格，实际上只是噪声。所以格内样本不足时不采用该估计，而是**退回该特征在旧风控体系里已有的异常分**：
+
+$$w(u \to v) = \lambda_{uv}\,\hat{I}(Y; X_v \mid X_u) + (1 - \lambda_{uv})\,\tilde{a}(v)$$
+
+$\lambda_{uv}$由格内样本量决定，样本充足时取1、不足时趋0；$\tilde{a}(v)$是已有异常分归一化到同一量纲后的值。
+
 <div class="echo" markdown="1">
 <span class="echo-tag">↔ 与我的论文呼应</span>
-估计时需按特征取值分格统计。某个格子里只有几个样本时，这几个样本的标签往往恰好一致，算出的条件熵接近零、判别力看上去满格——实际上只是噪声。因此互信息的经验估计在小样本上**系统性偏高**，需要按格内样本量把估计值往零收缩。这与VR-OPD里的正确性门控收缩是同一个判断：**证据弱就退回基线**，只是这次的基线是「没有信息量」。
+这与VR-OPD里的正确性门控收缩**结构完全一致**：证据弱时退回一个**已有的、可用的基线**，而不是退回零。VR-OPD退回的是原始OPD，这里退回的是旧风控体系已有的异常分。
 </div>
 
 ### ③ 检索排序
@@ -108,33 +110,16 @@ $$\mathrm{score}(v) = \frac{I(Y; X_v \mid X_u)}{\mathrm{cost}(v)}$$
 
 只把score最高的Top-N个特征放进上下文交给Planner。这一步直接针对上一屏的三个后果：进入上下文的不再是全部已确认特征，而是一个**固定大小**的候选集，上下文规模与特征总数解耦。
 
-已确认多个特征时，取最保守的那一个条件：
+### ④ 增量维护
 
-$$w(v \mid S) = \min_{u \in S} \; I(Y; X_v \mid X_u)$$
-
-每确认一个新特征就与之前取一次最小值，代价是$O(\lvert S \rvert)$，没有新增参数。严格的准则应当条件在整个已确认集合上，但那需要指数量级的联合统计、估不出来——**这正是用成对图谱而不是全条件表的原因**。这一类做法在特征选择里叫mRMR，即最大相关最小冗余。
-
-### ④ 增量维护与周期性重估
-
-反爬属于**对抗场景**，爬虫策略持续演化，今天没有判别力的特征明天可能成为最强特征，因此边权必须周期性重估。而新架构只执行Top-N，新数据中未被选中的特征没有取值、无法用于估计，所以需要保留约1%的账户继续走全量路径，作为无缺失的重估数据源。
+反爬属于**对抗场景**，爬虫策略持续演化，今天没有判别力的特征明天可能成为最强特征，因此边权必须周期性重估。而新架构只执行Top-N，新数据中未被选中的特征没有取值、无法用于估计，所以需要保留约1%的账户继续走全量路径。
 
 <div class="echo" markdown="1">
 <span class="echo-tag">↔ 与我的论文呼应</span>
 不保留这部分无偏采样，图谱会自我强化：它判定不重要的特征将不再被采集，也就不再有被重新评估的机会。这与MCPO里轮次级轨迹剪枝要治的病是同一个：**抑制自我强化的曝光偏置**。区别只在于MCPO作用于策略的采样，这里作用于数据的采集。
 </div>
 
-重估按固定周期进行，分四步：
-
-<div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">积累全量样本</span><span class="pipe-desc">走全量路径的账户等事后标签落定后入库，滚动保留最近一个时间窗口</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">重算边权</span><span class="pipe-desc">在该窗口上重新估计全部特征对的条件信息增益，得到候选新图谱</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">离线回放</span><span class="pipe-desc">在留出的全量样本上模拟：若只看新图谱选出的前k个特征，判别性能是多少</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 4</span><span class="pipe-name">门控生效</span><span class="pipe-desc">不低于旧图谱才替换，否则保留旧图谱并告警</span></div>
-</div>
-
-第三步能做成完全离线，正是因为全量样本里每个特征都有取值：**可以直接模拟「只看其中k个特征」的结果，不需要真的上线跑一遍。** 评估指标用固定预算下的判别性能，例如在允许的误报率下的召回率。这与04屏Skill自进化里「验证是强制门控」是同一条纪律：任何自动更新的资产，进生产前必须过一次离线回归。
-
-另外，若某个特征的信息增益出现跨窗口的显著跃变，通常意味着对手策略发生了变化，这本身就是一个需要人工介入确认的信号。
+维护动作很简单：按固定周期，把这1%账户的全量特征与事后标签并入历史数据，重新计算一遍边权。
 
 图谱本身会变，策略侧也得为此做好准备——这就是下一屏「图谱扰动」的动机。
 
