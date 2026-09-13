@@ -92,12 +92,6 @@ $$\mathbb{E}[B\nabla_\theta\log\pi_\theta(y\mid x)\mid x] = 0$$
 <div class="card"><span class="card-t">全对或全错：减弱基线作用</span><span class="card-d">收缩基线，保留更多原始OPD信号，而不直接丢弃整组</span></div>
 </div>
 
-用一个**说明设计思路的式子**表示，具体门控函数以方法定义为准：
-
-$$\tilde{s}_i = s_i - \lambda_i b_i$$
-
-其中$\lambda_i$控制基线强度；减小它，更新更接近原始OPD。
-
 <div class="echo" markdown="1">
 <span class="echo-tag">与DAPO的联系</span>
 借鉴DAPO通过正确性甄别同质组的思路。但OPD在全对或全错的组中仍有教师token监督，因此采用**连续调节基线强度**，替代直接过滤整组。两者改变的对象不同：一个调节基线，一个筛选训练组。
