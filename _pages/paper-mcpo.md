@@ -67,7 +67,7 @@ $$\mathrm{OC}_{t,k} = \max_{m^- \in \mathcal{U}_{t,k}} r^{\mathrm{cf}}(m^-)$$
 
 $$A^{\mathrm{CF}}_{t,k} = \frac{1}{\sigma_{t,k}}\left[(R_{t,k}-b_{t,k})-\lambda\max\left(0,\mathrm{OC}_{t,k}-R_{t,k}\right)\right]$$
 
-其中$\mathcal{U}_{t,k}$是精炼子步骤的未选候选集，$r^{\mathrm{cf}}$按相同ORM标准用金标签评分；$R_{t,k}$是从该子步骤开始的累计回报，$b_{t,k}$与$\sigma_{t,k}$是同一查询下$G$条rollout回报的均值与标准差。$\lambda$控制惩罚强度，实验取**0.5**；只有$\mathrm{OC}_{t,k}>R_{t,k}$时才触发惩罚。
+其中 $$\mathcal{U}_{t,k}$$ 是精炼子步骤的未选候选集，$$r^{\mathrm{cf}}$$ 按相同ORM标准用金标签评分；$$R_{t,k}$$ 是从该子步骤开始的累计回报，$$b_{t,k}$$ 与 $$\sigma_{t,k}$$ 是同一查询下 $$G$$ 条rollout回报的均值与标准差。$$\lambda$$ 控制惩罚强度，实验取**0.5**；只有 $$\mathrm{OC}_{t,k}>R_{t,k}$$ 时才触发惩罚。
 
 **关键性质：不需要价值网络。** 反事实优势直接由金标签算出。这与GRPO的组内基线有本质区别——GRPO衡量「这条轨迹比同组其他轨迹好多少」，而反事实优势衡量「**相对于本可以选到的最优候选，你亏了多少**」，是一个带金标签监督的后悔项。
 {: .notice--info}
