@@ -26,20 +26,22 @@ description: "VR-OPD：利用已有兄弟rollout构造留一基线，以正确�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">01 ／ 任务与动机</span>
-## 学生自己生成，教师逐token指导；我们改善训练信号的稳定性
+<span class="slide-no">01 ／ 背景与动机</span>
+## 在线策略蒸馏：让教师指导学生自己生成的回答
 
-在线策略蒸馏 (On-Policy Distillation, OPD) 让教师在**学生实际访问到的上下文**上提供监督，相比只学习教师预生成的离线答案，有助于缓解师生上下文错配。
+在线策略蒸馏 (On-Policy Distillation, OPD) 的做法是：让学生自己采样rollout，再用教师提供的**稠密token级监督**去优化这些rollout。相比只学习教师预生成的离线答案，它让教师在**学生实际访问到的上下文**上提供指导，有助于缓解师生上下文错配。
 
-<div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">采样</span><span class="pipe-name">学生生成回答</span><span class="pipe-desc">同一个问题采出G条兄弟rollout</span></div>
-<div class="pipe-step"><span class="pipe-tag">监督</span><span class="pipe-name">教师评价token</span><span class="pipe-desc">在学生生成的前缀上提供稠密监督</span></div>
-<div class="pipe-step"><span class="pipe-tag">优化</span><span class="pipe-name">更新学生参数</span><span class="pipe-desc">用采样得到的蒸馏信号构造梯度估计</span></div>
+## 但是，稠密监督仍然存在采样方差
+
+教师逐token提供监督，并不意味着梯度估计没有噪声。学生采到的回答不同、访问到的前缀不同，得到的蒸馏信号也会变化。我们关注的sampled-token OPD估计器因此存在采样波动，可能造成更新震荡、增加稳定优化的难度。
+
+## 而方差缩减的线索，就在已经采出的兄弟回答中
+
+<div class="claim" markdown="1">
+在group-sampled OPD中，同一问题已经采出多条兄弟rollout。标准做法分别计算每条回答的蒸馏信号，没有利用同组其他回答来构造基线。这些回答共享同一个问题，能够帮助估计该问题下监督信号的公共水平，为方差缩减提供信息，**无需额外生成兄弟回答**。
 </div>
 
-**研究对象**：sampled-token OPD估计器的采样波动，而不是所有蒸馏方法。
-
-**切入点**：在已有组采样设置下，用其他回答的信息构造基线，降低梯度波动，**无需额外生成兄弟回答**。
+由此得到我们的切入点：用同组**其他**回答构造基线，从当前回答的监督信号中减去；希望在保留原始期望梯度的前提下，减少采样波动。接下来要解决的关键问题，就是**为什么必须把当前回答排除在自己的基线之外**。
 
 </div>
 
