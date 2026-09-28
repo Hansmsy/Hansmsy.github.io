@@ -49,8 +49,6 @@ redirect_from:
 
 [HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
 
-**Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
-
 <span class="oral-badge">Oral</span> **EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715) ｜ <a href="/papers/huggingr4/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Harness优化</span><span class="paper-tag">模型选择</span><span class="paper-tag">迭代推理</span><span class="paper-tag">RAG</span><span class="paper-tag">评测基准</span></div>
 - **动机：**面向Hugging Face等超大规模开放模型仓库的**Model-as-Tools搜索、选择与推荐**问题，针对候选规模大、模型描述不完整及全量提示开销高的难点，将模型选择建模为**迭代推理过程**。
@@ -64,8 +62,6 @@ redirect_from:
 <div class='paper-box-text' markdown="1">
 
 [Geometry-guided Emotion Modulation for Controllable and Photorealistic Emotional Talking Face Generation](https://arxiv.org/abs/2608.00663)
-
-Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 
 **ACM MM 2026 (CCF-A) 已录用** ｜ 共同一作 (\*) ｜ [[arXiv]](https://arxiv.org/abs/2608.00663) ｜ <a href="/papers/gemtalk/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">扩散模型</span><span class="paper-tag">可控生成</span><span class="paper-tag">说话人脸生成</span><span class="paper-tag">多模态</span><span class="paper-tag">情感强度控制</span></div>
