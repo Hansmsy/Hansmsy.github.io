@@ -28,7 +28,7 @@ redirect_from:
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
 - *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
 - *2026.06*：&nbsp;🎓 **HuggingR⁴**被滑铁卢大学 <img src='/images/uwaterloo-logo.png' alt='University of Waterloo' style='height: 1.3em; vertical-align: -0.3em;'> Renée J. Miller教授选为研究生课程[CS 848](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文，并在课堂上作专题研讨。
-- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
+- *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
 - *2025.11*：&nbsp;📄 我在开放状态下智能体优化方向的论文已上传至arXiv ([arXiv:2511.18715](https://arxiv.org/abs/2511.18715))。
 - *2025.06*：&nbsp;💻 我加入**中国南方电网** <img src='/images/csg-logo.png' alt='China Southern Power Grid' style='height: 1.3em; vertical-align: -0.3em;'> 担任算法实习生，参与电网作业人员人身安全防控项目。
@@ -101,7 +101,7 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-box">
 <div class="exp-logo"><img src="/images/alibaba-logo.png" alt="阿里巴巴集团"></div>
 <div class="exp-body" markdown="1">
-<div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
+<div class="exp-title">阿里巴巴集团　｜　大模型算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
 <div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
 - **工作背景：**面向淘天账户行为分析场景，针对候选动作空间大、决策链路长、业务状态持续变化导致的规划不稳定问题，负责推动智能体由单轮Agent架构演进至**多轮Planner-Subagent协作范式**，并进一步构建**自进化管道**。
 - <b class="method-label">图谱增强决策：</b>提出图谱约束的决策方法，从大盘高质量轨迹中离线归纳并增量维护业务图谱；每步决策时检索并排序**Top-N可执行路径**，将开放式动作生成收敛为**候选路径选择**，关键路径召回率达**93%**，减少无效探索与错误调用。

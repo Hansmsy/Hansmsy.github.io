@@ -2,17 +2,17 @@
 title: "阿里巴巴实习"
 permalink: /experience/alibaba/
 author_profile: false
-description: "阿里巴巴集团大模型应用算法实习：多轮Planner-Subagent智能体的决策约束、两阶段后训练与Skill自进化闭环。"
+description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent智能体的决策约束、两阶段后训练与Skill自进化闭环。"
 ---
 
 <div class="talk" markdown="1">
 
 <div class="talk-head" markdown="1">
 
-# 阿里巴巴集团 · 大模型应用算法实习
+# 阿里巴巴集团 · 大模型算法实习
 
 <div class="talk-meta" markdown="1">
-**阿里安全部-账户行为算法团队** ｜ **2026.05 – 2026.09** ｜ 大模型应用算法实习生 ｜ 负责Planner模块与子决策模块的优化
+**阿里安全部-账户行为算法团队** ｜ **2026.05 – 2026.09** ｜ 大模型算法实习生 ｜ 负责Planner模块与子决策模块的优化
 </div>
 
 <div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
