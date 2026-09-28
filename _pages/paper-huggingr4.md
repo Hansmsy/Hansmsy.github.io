@@ -2,7 +2,7 @@
 title: "HuggingR⁴"
 permalink: /papers/huggingr4/
 author_profile: false
-description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重构为迭代推理的框架，EMNLP 2026 Main Conference 录用。"
+description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重构为迭代推理的框架，EMNLP 2026 Main Conference Oral 录用。"
 ---
 
 <div class="talk" markdown="1">
@@ -16,7 +16,7 @@ description: "HuggingR⁴：首个把仓库级模型选择从一次性检索重�
 </div>
 
 <div class="talk-meta" markdown="1">
-**EMNLP 2026 Main Conference** ｜ 第一作者 ｜ [arXiv:2511.18715](https://arxiv.org/abs/2511.18715) ｜ [PDF](https://arxiv.org/pdf/2511.18715)<br>
+<span class="oral-badge">Oral</span> **EMNLP 2026 Main Conference** ｜ 第一作者 ｜ [arXiv:2511.18715](https://arxiv.org/abs/2511.18715) ｜ [PDF](https://arxiv.org/pdf/2511.18715)<br>
 <span style="color:#c53030">入选滑铁卢大学Renée J. Miller教授研究生课程 <a href="https://rjmillerlab.github.io/CS848.Summer.2026/W7.html">CS 848</a> 必读论文，并作课堂专题研讨</span>
 </div>
 

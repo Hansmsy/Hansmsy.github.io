@@ -16,7 +16,7 @@ redirect_from:
 
 我目前的研究兴趣在：**当可调用的工具与模型空间是开放、海量且持续演化的，智能体如何做出可靠决策**？我认为这个问题可以拆成三个递进的层次：先让选择**可解**，再让选择**可学**，最后让学习过程**更稳**。
 
-目前已发表NLP顶会一作×1 (EMNLP 2026)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在审×2 (AAAI 2027、ICLR 2027)。
+目前已发表NLP顶会一作×1 (EMNLP 2026 <span class="oral-badge">Oral</span>)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在审×2 (AAAI 2027、ICLR 2027)。
 
 📮 可以在这里联系我：mashaoyin@zju.edu.cn
 
@@ -24,7 +24,7 @@ redirect_from:
 
 # 🔥 最近动态
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
-- *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
+- *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 <span class="oral-badge">Oral</span> (第一作者)。
 - *2026.06*：&nbsp;🎓 **HuggingR⁴**被滑铁卢大学 <img src='/images/uwaterloo-logo.png' alt='University of Waterloo' style='height: 1.3em; vertical-align: -0.3em;'> Renée J. Miller教授选为研究生课程[CS 848](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文，并在课堂上作专题研讨。
 - *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
@@ -42,14 +42,14 @@ redirect_from:
 
 # 📝 论文
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge badge--oral">EMNLP 2026 · Oral</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
 
 **Shaoyin Ma**, Chenggong Hu, Huiqiong Wang, Li Sun, Mingli Song, Jie Song
 
-**EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715) ｜ <a href="/papers/huggingr4/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+<span class="oral-badge">Oral</span> **EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715) ｜ <a href="/papers/huggingr4/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Harness优化</span><span class="paper-tag">模型选择</span><span class="paper-tag">迭代推理</span><span class="paper-tag">RAG</span><span class="paper-tag">评测基准</span></div>
 - 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
 - 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。

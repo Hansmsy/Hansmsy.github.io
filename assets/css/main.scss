@@ -164,3 +164,22 @@ h1:before, .anchor:before {
     background-color: #00369f;
     font-size: .8em;
 }
+
+/* Oral 标识：用于主页与论文详情页。 */
+.oral-badge {
+    display: inline-block;
+    padding: .12em .55em;
+    border-radius: .3em;
+    background-color: #8000c8;
+    color: #fff;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1.5;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+
+.badge.badge--oral {
+    background-color: #8000c8;
+    font-weight: 700;
+}
