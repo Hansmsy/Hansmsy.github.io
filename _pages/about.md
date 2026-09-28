@@ -44,7 +44,7 @@ redirect_from:
 
 # 📝 论文
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026 · Oral</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
@@ -80,7 +80,7 @@ Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 
 MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 
-**AAAI 2027 (CCF-A) 在审** ｜ 第一作者 ｜ <a href="/papers/mcpo/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
+**AAAI 2027 (CCF-A) 在审** ｜ **已通过第一轮审稿** ｜ 第一作者 ｜ <a href="/papers/mcpo/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">后训练</span><span class="paper-tag">模型选择</span><span class="paper-tag">奖励设计</span><span class="paper-tag">跨域泛化</span></div>
 - 针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，解决Agentic RL在超大动作空间下面临的知识腐败与灾难记忆痛点。
 - 提出MCPO将RL适配至仓库级动作空间：**动态身份掩码**迫使策略基于能力而非死记模型名；**轮次级轨迹剪枝**抑制热门候选曝光偏置、将探索导向稀有候选；**反事实优势估计**无需价值网络，把未选中更优候选的机会成本纳入策略梯度。

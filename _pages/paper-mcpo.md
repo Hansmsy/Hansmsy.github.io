@@ -12,7 +12,7 @@ description: "MCPO：首个把模型选择形式化为强化学习问题的工�
 # MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 
 <div class="talk-meta" markdown="1">
-**AAAI 2027 (CCF-A) 在审** ｜ 第一作者
+**AAAI 2027 (CCF-A) 在审** ｜ **已通过第一轮审稿** ｜ 第一作者
 </div>
 
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">后训练</span><span class="paper-tag">模型选择</span><span class="paper-tag">奖励设计</span><span class="paper-tag">跨域泛化</span></div>
