@@ -53,9 +53,9 @@ redirect_from:
 
 <span class="oral-badge">Oral</span> **EMNLP 2026 Main Conference (NLP顶会) 已录用** ｜ 第一作者 ｜ [[arXiv]](https://arxiv.org/abs/2511.18715) ｜ <a href="/papers/huggingr4/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Harness优化</span><span class="paper-tag">模型选择</span><span class="paper-tag">迭代推理</span><span class="paper-tag">RAG</span><span class="paper-tag">评测基准</span></div>
-- 首个把仓库级模型选择**从一次性检索重构为迭代推理**的框架，四个阶段协同：Reasoning→Retrieval→Refinement→Reflection。
-- 构建含**14,399条**用户请求、覆盖**37个**任务类别的大规模评测基准。
-- Workability **93.01%**、Reasonability **84.25%**，分别领先SOTA **17.81** 与 **23.13** 个百分点，同时token消耗降为 **1/6.9**。
+- **动机：**面向Hugging Face等超大规模开放模型仓库的**Model-as-Tools搜索、选择与推荐**问题，针对候选规模大、模型描述不完整及全量提示开销高的难点，将模型选择建模为**迭代推理过程**。
+- **方法：**提出渐进式智能体框架**HuggingR⁴**，融合推理、检索、精炼与反思四类能力。以**双流检索与逐步推理**联合驱动候选筛选，通过细粒度语义精炼、元认知反思提升选择质量；利用**滑动窗口**控制每轮上下文规模，避免全量载入模型描述带来的Token开销。构建**首个大规模模型选择数据集ModelSelect-Bench**，覆盖**37类任务、14,399条请求**。
+- **成果：**在多种LLM上达到SOTA：workability **92.03%**、reasonability **82.46%**，同时token消耗降低**6.9倍**。
 - <span style="color: #d1453b;">被滑铁卢大学Renée J. Miller教授列为研究生课程<a href="https://rjmillerlab.github.io/CS848.Summer.2026/W7.html">CS 848 (Summer 2026)</a>的必读论文，并在课堂上作专题研讨。</span>
 </div>
 </div>
@@ -69,9 +69,8 @@ Chenggong Hu\*, **Shaoyin Ma**\*, Yi Wang, Li Sun, Mingli Song, Jie Song
 
 **ACM MM 2026 (CCF-A) 已录用** ｜ 共同一作 (\*) ｜ [[arXiv]](https://arxiv.org/abs/2608.00663) ｜ <a href="/papers/gemtalk/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">扩散模型</span><span class="paper-tag">可控生成</span><span class="paper-tag">说话人脸生成</span><span class="paper-tag">多模态</span><span class="paper-tag">情感强度控制</span></div>
-- 解决情感说话人脸生成中「可控性与真实感难以兼顾」的矛盾。
-- 核心洞察：把隐式情感特征拆成两个正交部分——**方向编码情感类别、幅度编码表达强度**。
-- 因此只要**只校准幅度、绝不旋转方向**，就能让强度连续可控而不损失画质。
+- **方法：**面向说话人脸生成中可控性与真实感难以兼顾的问题，提出情感调制框架**GemTalk**：以显式面部混合系数调制隐式表征、赋予其几何感知能力，实现情感强度**连续可控而不损失画质**；辅以冲突感知训练与自适应平滑策略。
+- **成果：**在MEAD + RAVDESS上FVD与情感准确率优于SOTA **5.96% / 8.15%**；在无情感数据集上亦优于多数方法。
 </div>
 </div>
 
@@ -82,9 +81,9 @@ MCPO: Masked and Counterfactual Policy Optimization for Agentic Model Selection
 
 **AAAI 2027 (CCF-A) 在审** ｜ **已通过第一轮审稿** ｜ 第一作者 ｜ <a href="/papers/mcpo/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">大模型智能体</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">后训练</span><span class="paper-tag">模型选择</span><span class="paper-tag">奖励设计</span><span class="paper-tag">跨域泛化</span></div>
-- 针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，解决Agentic RL在超大动作空间下面临的知识腐败与灾难记忆痛点。
-- 提出MCPO将RL适配至仓库级动作空间：**动态身份掩码**迫使策略基于能力而非死记模型名；**轮次级轨迹剪枝**抑制热门候选曝光偏置、将探索导向稀有候选；**反事实优势估计**无需价值网络，把未选中更优候选的机会成本纳入策略梯度。
-- Qwen3-8B取得 **84.25** 综合分 (SOTA)，跨域 **79.99**；以远低推理成本超越GPT-5.4驱动的最强系统与GRPO / DAPO / AEPO等RL基线。
+- **动机：**针对海量模型仓库中智能体选型依赖冻结大模型提示、无法从自身决策反馈中改进的问题，**首次将模型选择形式化为强化学习问题**，解决Agentic RL在超大动作空间下面临的知识腐败与灾难记忆痛点。
+- **方法：**提出**MCPO**将RL适配至大型动作空间：**动态身份掩码**迫使策略基于能力而非死记模型名；**轮次级轨迹剪枝**抑制热门候选曝光偏置、将探索导向稀有候选；**反事实优势估计**引入博弈论，把未选中更优候选的机会成本纳入策略。
+- **成果：**Qwen3-8B策略在最大模型选择基准取得**84.25%**综合分 (**SOTA**)，以远低推理成本超越GPT-5.4驱动的最强系统 (79.04%) 与GRPO/DAPO/AEPO等RL基线；跨域划分**79.99%**，对未见候选泛化显著。
 </div>
 </div>
 
@@ -95,8 +94,9 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 
 **ICLR 2027 (CCF-A) 在审** ｜ 共同一作 ｜ <a href="/papers/vropd/" target="_blank" rel="noopener"><b>详细介绍 ↗</b></a>
 <div class="paper-tags"><span class="paper-tag">后训练</span><span class="paper-tag">在线策略蒸馏</span><span class="paper-tag">方差缩减</span><span class="paper-tag">训练稳定性</span><span class="paper-tag">推理模型</span></div>
-- 针对sampled-token OPD梯度方差高、训练不稳的问题，提出VR-OPD：以组内leave-one-out基线在保持期望梯度不变的前提下缩减方差，辅以正确性门控收缩与有界token影响控制，避免同质组过度中心化及极端token梯度主导更新。
-- 在两组师生配置 (Skywork-OR1-Math-7B → R1-Distill-Qwen-1.5B、Qwen3-32B → Qwen3-4B-Base) 的8个基准上**全面优于标准OPD**：域内数学推理平均**+1.6~2.0 pts**，域外通用推理平均**+2.3~2.6 pts**，方差缩减同时改善域外泛化。
+- **动机：**Sampled-token OPD梯度方差高、训练不稳定，借鉴GRPO的组内相对思想，通过组级基线降低策略梯度方差。
+- **方法：**提出**VR-OPD**：以组内**leave-one-out基线**在保持期望梯度不变的前提下缩减方差，辅以正确性门控收缩与有界token影响控制，避免同质组过度中心化及极端token梯度主导更新。
+- **成果：**在两组师生配置 (Skywork-OR1-Math-7B → R1-Distill-Qwen-1.5B、Qwen3-32B → Qwen3-4B-Base) 的8个基准上**全面优于标准OPD**：域内数学推理平均**+1.6~2.0 pts**，域外通用推理平均**+2.3~2.6 pts**，方差缩减同时改善域外泛化。
 </div>
 </div>
 
@@ -107,11 +107,11 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-body" markdown="1">
 <div class="exp-title">阿里巴巴集团　｜　大模型应用算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
 <div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
-- 参与**账户行为分析智能体**的架构演进，推动其由**单轮架构**升级为**多轮Planner-Subagent协作范式**，负责Planner模块与其中一个子决策模块的优化。
-- **图谱约束的决策**：以特征为节点、条件信息增益为边权构建图谱，每步只将单位成本信息量最高的Top-N特征送入上下文，使上下文规模与特征总数解耦。
-- **Planner模型后训练**：搭建拒绝采样数据飞轮，以真实执行结果打分并构造SFT数据与DPO正负样本对；迁移论文中的掩码思想设计图谱扰动，提升策略在状态漂移下的稳健性。
-- **Skill自进化框架**：由人工业务知识驱动的迭代循环，Map-Reduce式分层归纳失败模式，批量回归验证通过后方可合入技能库。
-- 端到端任务耗时降低约 **24%**，四项核心业务指标平均提升 **4.07%**。
+- **工作背景：**面向淘天账户行为分析场景，针对候选动作空间大、决策链路长、业务状态持续变化导致的规划不稳定问题，负责推动智能体由单轮Agent架构演进至**多轮Planner-Subagent协作范式**，并进一步构建**自进化管道**。
+- <b class="method-label">图谱增强决策：</b>提出图谱约束的决策方法，从大盘高质量轨迹中离线归纳并增量维护业务图谱；每步决策时检索并排序**Top-N可执行路径**，将开放式动作生成收敛为**候选路径选择**，关键路径召回率达**93%**，减少无效探索与错误调用。
+- <b class="method-label">策略冷启动：</b>搭建「多轨迹采样→自动执行验证→质量评分」数据生产流水线，筛选高质量轨迹完成**SFT + DPO两阶段后训练**；并迁移本人论文MCPO的掩码思想，设计**图谱扰动算法**模拟业务变化，缓解业务变化造成的状态偏移。
+- <b class="method-label">双重帕累托前沿自进化机制：</b>构建「**失败定位→分路优化→双重筛选**」闭环：Harness侧借鉴SkillOpt的mini-batch机制迭代更新；模型侧通过**轨迹增殖**针对性采样SFT与RL数据；最终按正常与异常账户分析质量保留互补版本。同时提出<b class="method-label">轮次自适应奖励机制</b>，根据各轮决策状态动态调整奖励分布，提升多轮策略优化的稳定性。
+- **业务成效：**截至目前端到端任务耗时降低约**24%**，四项核心业务指标平均提升**4.07%**。
 </div>
 </div>
 
@@ -120,10 +120,10 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-body" markdown="1">
 <div class="exp-title">中国南方电网　｜　数字变电事业部　｜　算法实习生<span class="exp-date">2025.06 – 2025.11</span></div>
 <div class="paper-tags"><span class="paper-tag">计算机视觉</span><span class="paper-tag">步态识别</span><span class="paper-tag">单目测距</span><span class="paper-tag">数据集构建</span><span class="paper-tag">部署落地</span></div>
-- 参与**电网作业人员人身安全防控**项目，负责**步态识别**与**空间快速测距**两个子模块的方案设计与落地。
-- **数据侧**：参与多个变电站真实作业场景的数据采集与标注，构建复杂工况下的步态识别与测距数据集。
-- **算法侧**：设计并实现步态识别算法与基于单目的空间快速测距算法；前者整理为预印本 *Multi-view Consistency for Gait Recognition in the Wild* (第一作者, Preprint)。
-- **工程侧**：完成推理接口封装、系统联调与部署落地，推动相关模块在测试端与生产端上线。
+- **主要工作：**参与电网作业人员人身安全防控项目，负责步态识别与空间快速测距子模块的方案设计与落地。
+- **数据侧：**参与多个变电站真实作业场景的数据采集与标注，构建复杂工况下的步态识别与测距数据集。
+- **算法侧：**设计并实现步态识别算法 (成果转化为一篇第一作者论文) 及基于单目的空间快速测距算法。
+- **工程侧：**完成推理接口封装、系统联调与部署落地，推动相关模块在测试端及生产端上线。
 </div>
 </div>
 
