@@ -23,8 +23,10 @@ redirect_from:
 <span style="display: inline-block; background: #d1453b; color: #fff; font-size: 0.72em; font-weight: 700; line-height: 1; letter-spacing: 0.04em; padding: 0.24em 0.45em; border-radius: 0.25em; vertical-align: 0.14em;">NEW</span> <span style="color: #d1453b; font-weight: 700;">我目前正在寻找秋招的正式工作机会，如果您有合适的岗位，欢迎随时联系我。</span>
 
 # 🔥 最近动态
+- *2026.09*：&nbsp;🎤 我的论文 **HuggingR⁴** 被 **EMNLP 2026** 推选为口头汇报 (<span class="oral-badge">Oral</span>)，我将于 **10月26日** 在**布达佩斯 Expo F6** 进行口头汇报。
+- *2026.09*：&nbsp;🎉 **MCPO** 已通过 **AAAI 2027 第一轮审稿**。
 - *2026.08*：&nbsp;📄 我与合作者在虚拟人脸情感迁移方向的论文已上传至arXiv ([arXiv:2608.00663](https://arxiv.org/abs/2608.00663))。
-- *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 <span class="oral-badge">Oral</span> (第一作者)。
+- *2026.07*：&nbsp;🎉🎉 **HuggingR⁴** 被 **EMNLP 2026 Main Conference** 接收 (第一作者)。
 - *2026.06*：&nbsp;🎓 **HuggingR⁴**被滑铁卢大学 <img src='/images/uwaterloo-logo.png' alt='University of Waterloo' style='height: 1.3em; vertical-align: -0.3em;'> Renée J. Miller教授选为研究生课程[CS 848](https://rjmillerlab.github.io/CS848.Summer.2026/W7.html)的必读论文，并在课堂上作专题研讨。
 - *2026.05*：&nbsp;💻 我加入**阿里巴巴集团** <img src='/images/alibaba-logo.png' alt='Alibaba' style='height: 1em; vertical-align: -0.14em;'> 实习，方向为大模型应用算法，负责构建并优化账户行为分析智能体。
 - *2026.05*：&nbsp;🎉🎉 **GemTalk** 被 **ACM MM 2026** 接收 (共同一作)。
@@ -42,7 +44,7 @@ redirect_from:
 
 # 📝 论文
 
-<div class='paper-box'><div class='paper-box-image'><div><div class="badge badge--oral">EMNLP 2026 · Oral</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
+<div class='paper-box'><div class='paper-box-image'><div><div class="badge">EMNLP 2026</div><img src='/images/r4-workflow.png' alt="HuggingR4" width="100%"></div></div>
 <div class='paper-box-text' markdown="1">
 
 [HuggingR⁴: A Progressive Reasoning Framework for Discovering Optimal Model Companions](https://arxiv.org/abs/2511.18715)
