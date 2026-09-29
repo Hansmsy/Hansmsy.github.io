@@ -279,6 +279,12 @@
     &.fig-lg img {
       max-height: 82vh;
     }
+
+    &.exp-overview img {
+      width: 100%;
+      height: auto;
+      max-height: none;
+    }
   }
 
   /* ---------- 可展开细节：讲的时候收起，读的时候展开 ---------- */
