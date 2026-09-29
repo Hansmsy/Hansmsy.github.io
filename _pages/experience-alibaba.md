@@ -129,24 +129,19 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">04 ／ Skill自进化闭环</span>
-## 由人工业务知识驱动的Skill自进化迭代循环
+<span class="slide-no">04 ／ 双重帕累托前沿自进化机制</span>
 
-<div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">失败归因</span><span class="pipe-desc">从执行轨迹与失败案例中收集触发信号</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">技能合成</span><span class="pipe-desc">Map-Reduce式分层归纳失败模式</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">批量验证</span><span class="pipe-desc">调度Subagent做自动化回归测试</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 4</span><span class="pipe-name">回归合入</span><span class="pipe-desc">通过验证方可合入统一的技能库</span></div>
-</div>
+<figure class="exp-overview">
+  <img src="{{ '/images/alibaba-self-evolution.png' | relative_url }}?v=20260929-v2" alt="自进化框架：失败定位后，Harness侧通过mini-batch积累、模块掩码与用户分组帕累托筛选迭代；模型侧通过轨迹增殖进行SFT，或自适应调整奖励进行RLHF">
+</figure>
 
-### 为什么要Map-Reduce分层
+面向持续变化的业务场景，结合 [GEPA](https://arxiv.org/abs/2507.19457) 的反思与帕累托候选保留思想，以及 [SkillOpt](https://github.com/microsoft/SkillOpt) 的mini-batch更新机制，设计**失败定位、分路优化与版本筛选**的自进化闭环。
 
-因为**单个大模型的上下文窗口装不下批量的失败数据**，所以做了角色分离：
+- **失败定位**：结合执行轨迹、工具反馈与状态信息，区分模型侧的规划、调用与终止错误，以及Harness侧的工具、Skill、检索、记忆与上下文问题。
+- **Harness自进化**：逐例分析失败case，累计到一个mini-batch后提出更新。先通过模块掩码控制修改范围、评估并筛选候选，再按**常规用户与异常用户的分析质量**构建完整版本的帕累托前沿，保留具有互补优势的版本。
+- **模型侧优化**：知识型错位进入**轨迹增殖模块**，半自动生成针对性样本与轨迹用于SFT；动作型错误进入**自适应奖励优化模块**，根据当前缺口分布调整预设奖励权重，进行RLHF。
 
-- **下游LLM作为Map阶段**：分batch并行处理失败案例，抽取失败模式
-- **上游LLM作为Reduce阶段**：只聚合这些已被压缩过的模式，合成或更新技能
-
-这样既绕开了上下文长度限制，也让归纳过程可以并行。
+更新后的Harness与模型回流业务执行，持续收集新的失败case，进入下一轮迭代。
 
 </div>
 
