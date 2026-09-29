@@ -23,6 +23,7 @@ text{font-family:'Microsoft YaHei','PingFang SC',sans-serif;fill:#1c3a5b;font-si
 </g>
 <g class="center" style="font-weight:700"><text x="245" y="158">H0</text><text x="388" y="158">H1</text><text x="531" y="158">H2</text><text x="674" y="158">H3</text></g>
 <text x="459" y="213" class="small center">持续优化并保留前沿候选</text>
+<text x="465" y="242" class="small center" style="fill:#3068a6">前期扩大探索，后期收紧修改预算</text>
 
 <text x="32" y="319" class="title">模型</text>
 <text x="32" y="350" class="small">天级训练</text>
