@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+<title id="title">双时间尺度异步协同</title>
+<desc id="desc">Harness在小时级从H0更新到H1、H2和H3；模型在固定H0与R0快照下进行天级训练，得到M1。训练结束后比较旧模型与H3、新模型与H0、新模型与H3，并在验证通过后灰度发布。若不兼容，则在目标Harness下补充采样和适配。</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#557694"/></marker>
+<marker id="green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2b796a"/></marker>
+</defs>
+<style>
+text{font-family:'Microsoft YaHei','PingFang SC',sans-serif;fill:#1c3a5b;font-size:21px}
+.title{font-size:25px;font-weight:700}.small{font-size:18px;fill:#687b8f}.center{text-anchor:middle}
+.line{fill:none;stroke:#557694;stroke-width:2.5;marker-end:url(#arrow)}
+.green{fill:none;stroke:#2b796a;stroke-width:2.5;marker-end:url(#green)}
+</style>
+<rect width="1200" height="600" fill="white"/>
+<text x="32" y="40" class="title">独立迭代，组合验证后同步</text>
+<text x="32" y="74" class="small">训练快照固定；版本数量与时间跨度仅作示意</text>
+
+<text x="32" y="139" class="title">Harness</text>
+<text x="32" y="170" class="small">小时级更新</text>
+<path class="line" d="M204 150H715"/>
+<g fill="#edf5fc" stroke="#3068a6" stroke-width="2.5">
+<circle cx="245" cy="150" r="30"/><circle cx="388" cy="150" r="30"/><circle cx="531" cy="150" r="30"/><circle cx="674" cy="150" r="30"/>
+</g>
+<g class="center" style="font-weight:700"><text x="245" y="158">H0</text><text x="388" y="158">H1</text><text x="531" y="158">H2</text><text x="674" y="158">H3</text></g>
+<text x="459" y="213" class="small center">持续优化并保留前沿候选</text>
+
+<text x="32" y="319" class="title">模型</text>
+<text x="32" y="350" class="small">天级训练</text>
+<path d="M245 182V257" fill="none" stroke="#8da4ba" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<rect x="208" y="264" width="400" height="115" rx="5" fill="#f0f7f3" stroke="#2b796a" stroke-width="2.5"/>
+<text x="408" y="302" class="center" style="font-weight:700">固定 Harness H0 + 奖励 R0</text>
+<text x="408" y="338" class="center">模型 M0 持续采样与训练</text>
+<text x="408" y="364" class="small center">不混入 H1 / H2 / H3 的更新</text>
+<path class="green" d="M608 322H640"/>
+<circle cx="674" cy="322" r="32" fill="#e4f2eb" stroke="#2b796a" stroke-width="2.5"/>
+<text x="674" y="330" class="center" style="font-weight:700;fill:#2b796a">M1</text>
+
+<path class="line" d="M708 150H752V226H800"/>
+<path class="green" d="M708 322H752V278H800"/>
+<rect x="808" y="132" width="350" height="260" rx="5" fill="#f8fafc" stroke="#99b0c6" stroke-width="2"/>
+<text x="983" y="173" class="title center">模型 × Harness 组合评测</text>
+<text x="835" y="220">M0 + H3</text><text x="976" y="220" class="small">当前基线</text>
+<text x="835" y="264">M1 + H0</text><text x="976" y="264" class="small">模型训练收益</text>
+<text x="835" y="308">M1 + H3</text><text x="976" y="308" class="small">新组合兼容性</text>
+<path d="M831 333H1134" stroke="#dce5ed" stroke-width="1.5"/>
+<text x="983" y="366" class="small center">常规 / 异常用户质量 + 执行成本</text>
+<path class="green" d="M1060 392V455"/>
+<text x="1082" y="429" class="small">通过</text>
+<text x="1060" y="488" class="center" style="font-size:24px;font-weight:700;fill:#2b796a">灰度发布</text>
+
+<path d="M901 393V440H687" fill="none" stroke="#a9793e" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<text x="777" y="429" class="small center" style="fill:#a9793e">不兼容</text>
+<text x="643" y="475" class="center" style="fill:#a9793e;font-weight:700">目标 Harness 下补采样与适配</text>
+<text x="643" y="507" class="small center">完成后重新进行组合评测</text>
+<path d="M32 541H1158" stroke="#dce5ed" stroke-width="1.5"/>
+<text x="32" y="574" class="small">轨迹记录模型、Harness、奖励与环境版本；SFT 数据重验复用，RL 数据限制策略滞后与不兼容混用。</text>
+</svg>
