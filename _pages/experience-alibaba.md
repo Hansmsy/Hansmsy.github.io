@@ -93,7 +93,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">03 ／ 两阶段后训练</span>
+<span class="slide-no">03 ／ 策略冷启动</span>
 ## 建立拒绝采样数据飞轮
 
 <div class="pipe" markdown="1">
