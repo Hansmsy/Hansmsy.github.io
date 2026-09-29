@@ -94,27 +94,33 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 
 <div class="slide" markdown="1">
 <span class="slide-no">03 ／ 策略冷启动</span>
-## 建立拒绝采样数据飞轮
+### 动机：建立稳定的多轮规划策略
+
+图谱提供了候选范围，Planner仍需要学会如何选择检测路径、利用执行反馈以及适时终止。以**Qwen3.8-27B**为学生模型，采用**教师示范SFT + 学生轨迹DPO**完成策略冷启动。
+
+### 教师示范：筛选Max优质轨迹进行SFT
+
+使用**Qwen-3.8 Max**生成多轮规划与工具调用轨迹，经真实执行验证后，筛选判断正确、证据充分、调用有效的轨迹训练27B，使其掌握任务规划与执行流程。失败轨迹不进入SFT示范集。
 
 <div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">多轨迹采样</span><span class="pipe-desc">对同一任务采样多条候选轨迹</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">真实执行</span><span class="pipe-desc">每条轨迹真实跑一遍，拿到执行结果</span></div>
-<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">打分与拒绝</span><span class="pipe-desc">结果错的直接丢弃，其余按覆盖率与节点数打分</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 1</span><span class="pipe-name">教师示范</span><span class="pipe-desc">Max生成轨迹，经执行验证后筛选SFT数据</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 2</span><span class="pipe-name">学生采样</span><span class="pipe-desc">SFT后的27B对同一任务采样多条轨迹</span></div>
+<div class="pipe-step"><span class="pipe-tag">STEP 3</span><span class="pipe-name">偏好优化</span><span class="pipe-desc">依据执行结果构建偏好对，进行DPO训练</span></div>
 </div>
 
-评分分两层：**最终判断是否正确是硬门槛**，错的直接丢弃；通过门槛的再看两项——**关键路径覆盖率**越高越好，**运行节点个数**越少越好。前者衡量看得准不准，后者衡量看得省不省。
+### 学生采样：围绕自身决策构建DPO偏好对
 
-打分既不依赖人工主观判断，也不依赖模型自评，而是**来自真实执行结果**。
+由**完成SFT后的27B**在同一任务、同一初始环境下采样多条轨迹，分别执行并比较结果，构建chosen / rejected偏好对。以学生自身轨迹为主，让训练覆盖其实际会遇到的错误与低效路径。
 
-## SFT数据与DPO正负样本对
+偏好判定以**真实执行结果**为主要依据：
 
-高分轨迹直接作为**SFT数据**；同一任务下的高分与低分轨迹配成**DPO的正负样本对**。两个阶段用的是同一份采样，只是取用方式不同。
+1. **先比较正确性与证据充分性**：优先判断正确、关键证据完整的轨迹，将有学习价值的误判、漏判或关键调用失败轨迹保留为rejected。
+2. **质量相当时再比较成本**：优先冗余调用更少、耗时更低的轨迹，避免策略通过减少必要检查来追求低成本。
+3. **筛除模糊偏好，补充难例**：质量差异不明确时不强行配对；学生全部失败时，可由Max生成或修正轨迹，经执行验证后补充chosen。Max辅助评审，模型来源本身不决定优劣。
 
-## 把论文里的掩码思想迁移过来
+### 图谱扰动：适应业务变化
 
-我把 [MCPO](/papers/mcpo/) 里的**掩码**思想迁移到了这里，设计了图谱扰动：训练时对图谱施加扰动以模拟状态漂移，迫使策略去学习**底层能力**，而不是死记特定的路径形态。
-
-掩码要解决的是「策略记住了表面标识而没学到能力」，**这个问题与用什么算法优化无关**，所以能从RL平移到DPO的数据构造。
+迁移本人论文 [MCPO](/papers/mcpo/) 的掩码思想，在训练数据构造中引入**图谱扰动**，模拟业务状态变化，减少策略对固定路径的依赖。同一偏好对使用一致的初始图谱与环境条件，保证轨迹之间的比较有效。
 
 </div>
 
