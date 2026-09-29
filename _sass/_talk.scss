@@ -86,6 +86,13 @@
       font-weight: 700;
     }
 
+    h2.mechanism-heading {
+      font-size: 1.5em;
+      font-weight: 800;
+      color: #1c3a5b;
+      margin: 1.5em 0 .7em;
+    }
+
     /* 提示词列表：比正文更大更疏，方便扫读 */
     ul, ol {
       margin: .6em 0;

@@ -143,7 +143,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 
 更新后的Harness与模型回流业务执行，持续收集新的失败case，进入下一轮迭代。
 
-### 双时间尺度异步协同
+<h2 class="mechanism-heading">双时间尺度异步协同</h2>
 
 <figure class="exp-overview">
   <img src="{{ '/images/alibaba-async-coordination.svg' | relative_url }}?v=2" alt="双时间线：Harness按小时迭代并逐步收紧修改幅度，模型基于固定Harness与奖励快照进行天级训练，最后组合评测并灰度发布，不兼容时补充采样与适配">
@@ -159,12 +159,20 @@ Harness可在小时级完成更新，模型训练则通常需要天级周期。�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">05 ／ 最终结果</span>
+<span class="slide-no">05 ／ 评估结果</span>
 
-<div class="stats" markdown="1">
-<div class="stat"><span class="stat-num">24<small>%</small></span><span class="stat-lab">端到端任务耗时<br>降低</span></div>
-<div class="stat"><span class="stat-num">4.07<small>%</small></span><span class="stat-lab">四项核心业务指标<br>平均提升</span></div>
-</div>
+截至目前，**端到端任务耗时降低约24%**，**四项核心业务指标平均提升4.07%**。
+
+### 补充评估维度
+
+除已有业务结果外，进一步从以下维度评估策略与系统更新：
+
+- **分析质量**：分别统计常规用户误报率、异常用户识别精确率与召回率，关注两类用户表现，避免总体均值掩盖单组退化。
+- **决策与执行质量**：评估关键路径SOP覆盖率、工具调用成功率、无效与重复调用率，以及证据不足时的提前终止率，判断策略是否完整、高效地完成必要检查。
+- **时延与成本**：统计端到端耗时的中位数与P95、每任务Token消耗及工具调用次数，并结合任务成功率衡量效率收益。
+- **自进化稳定性**：在固定留出集上比较更新前后的常规与异常用户质量、历史失败case修复率及原有成功任务的退化率，评估新模型与不同Harness版本组合的兼容性。
+
+上述补充维度用于后续评估，暂不列未完成统计的数值。
 
 </div>
 
