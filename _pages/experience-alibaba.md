@@ -29,7 +29,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 <div class="slide" markdown="1">
 <span class="slide-no">智能体架构</span>
 <figure class="exp-overview">
-  <img src="{{ '/images/alibaba-agent-architecture.png' | relative_url }}" alt="用户信息与指令输入Planner，Planner按需调度多个Subagent，每个Subagent配置多个Skill与Tool，执行结果与证据回传用于多轮决策">
+  <img src="{{ '/images/alibaba-agent-architecture.png' | relative_url }}?v=df686b9" alt="用户信息与指令输入Planner，Planner按需调度多个Subagent，每个Subagent配置多个Skill与Tool，执行结果与证据回传用于多轮决策，满足终止条件后输出标签">
 </figure>
 </div>
 
