@@ -15,7 +15,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 **阿里安全部-账户行为算法团队** ｜ **2026.05 – 2026.09** ｜ 大模型算法实习生 ｜ 负责Planner模块与子决策模块的优化
 </div>
 
-<div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
+<div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">图谱增强决策</span><span class="paper-tag">策略冷启动</span><span class="paper-tag">双重帕累托自进化</span><span class="paper-tag">异步协同</span></div>
 
 </div>
 

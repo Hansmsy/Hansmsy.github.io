@@ -102,7 +102,7 @@ VR-OPD: Variance Reduction for On-Policy Distillation with Group Baselines
 <div class="exp-logo"><img src="/images/alibaba-logo.png" alt="阿里巴巴集团"></div>
 <div class="exp-body" markdown="1">
 <div class="exp-title">阿里巴巴集团　｜　大模型算法实习生　｜　<a href="/experience/alibaba/" target="_blank" rel="noopener">详细介绍 ↗</a><span class="exp-date">2026.05 – 2026.09</span></div>
-<div class="paper-tags"><span class="paper-tag">智能体</span><span class="paper-tag">SFT + DPO</span><span class="paper-tag">数据飞轮</span><span class="paper-tag">Skill自进化</span></div>
+<div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">图谱增强决策</span><span class="paper-tag">策略冷启动</span><span class="paper-tag">双重帕累托自进化</span><span class="paper-tag">异步协同</span></div>
 - **工作背景：**面向淘天账户行为分析场景，针对候选动作空间大、决策链路长、业务状态持续变化导致的规划不稳定问题，负责推动智能体由单轮Agent架构演进至**多轮Planner-Subagent协作范式**，并进一步构建**自进化管道**。
 - <b class="method-label">图谱增强决策：</b>提出图谱约束的决策方法，从大盘高质量轨迹中离线归纳并增量维护业务图谱；每步决策时检索并排序**Top-N可执行路径**，将开放式动作生成收敛为**候选路径选择**，关键路径召回率达**93%**，减少无效探索与错误调用。
 - <b class="method-label">策略冷启动：</b>搭建「多轨迹采样→自动执行验证→质量评分」数据生产流水线，筛选高质量轨迹完成**SFT + DPO两阶段后训练**；并迁移本人论文MCPO的掩码思想，设计**图谱扰动算法**模拟业务变化，缓解业务变化造成的状态偏移。
