@@ -77,8 +77,8 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 3. **保持图谱有效**：样本不足时结合已有异常分回退；保留少量全量探索数据，周期性更新边权，让暂时未被选中的特征仍有机会重新进入候选集。
 
 <figure class="exp-overview">
-  <img src="{{ '/images/alibaba-graph-examples.svg' | relative_url }}?v=1" alt="三个图谱示例：历史数据形成特征图谱，第一轮筛选起始候选，已知请求频率后优先补充访问间隔信息而非重复频率指标">
-  <figcaption>图谱与候选选择示意。节点名称仅用于解释流程，图中仅展示部分连接。</figcaption>
+  <img src="{{ '/images/alibaba-graph-examples.svg' | relative_url }}?v=2" alt="圆形节点图谱：从已确定的请求频率向外扩展，以绿色节点和粗箭头突出访问间隔、行为序列等高增益检测候选，以灰色虚线表示低增益候选">
+  <figcaption>从已确定特征向外扩展，优先筛选新增增益较高的检测特征。节点名称与增益高低仅作示意，图中展示部分连接。</figcaption>
 </figure>
 
 ### 增益怎么理解：多查一项，能减少多少不确定性
