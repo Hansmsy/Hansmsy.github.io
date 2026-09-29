@@ -94,6 +94,10 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 
 <div class="slide" markdown="1">
 <span class="slide-no">03 ／ 策略冷启动</span>
+<figure class="exp-overview">
+  <img src="{{ '/images/alibaba-policy-warm-start.png' | relative_url }}?v=20260929-v2" alt="策略冷启动流程：左侧Max教师优质轨迹用于SFT，右侧SFT后的27B采样构建DPO偏好对，比较结果正确性、关键路径SOP覆盖情况和执行成本">
+</figure>
+
 ### 动机：建立稳定的多轮规划策略
 
 图谱提供了候选范围，Planner仍需要学会如何选择检测路径、利用执行反馈以及适时终止。以**Qwen3.8-27B**为学生模型，采用**教师示范SFT + 学生轨迹DPO**完成策略冷启动。
