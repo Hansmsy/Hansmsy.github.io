@@ -22,10 +22,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 <div class="slide" markdown="1">
 <span class="slide-no">项目总览</span>
 <figure class="exp-overview">
-  <a href="{{ '/images/alibaba-overview.png' | relative_url }}" target="_blank" rel="noopener">
-    <img src="{{ '/images/alibaba-overview.png' | relative_url }}" alt="账户行为分析智能体项目总览：图谱增强决策、策略冷启动与双重帕累托前沿自进化机制">
-  </a>
-  <figcaption>点击图片查看原图。</figcaption>
+  <img src="{{ '/images/alibaba-overview.png' | relative_url }}" alt="账户行为分析智能体项目总览：图谱增强决策、策略冷启动与双重帕累托前沿自进化机制">
 </figure>
 </div>
 
