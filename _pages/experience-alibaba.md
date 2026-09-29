@@ -20,46 +20,39 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">项目总览</span>
+<span class="slide-no">工作总览</span>
 <figure class="exp-overview">
-  <img src="{{ '/images/alibaba-overview.png' | relative_url }}" alt="账户行为分析智能体项目总览：图谱增强决策、策略冷启动与双重帕累托前沿自进化机制">
+  <img src="{{ '/images/alibaba-overview.png' | relative_url }}" alt="账户行为分析智能体工作总览：图谱增强决策、策略冷启动与双重帕累托前沿自进化机制">
 </figure>
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">01 ／ 背景与我的贡献</span>
-## 原来的智能体是单轮的：每次运行都要把所有Agent跑一遍
+<span class="slide-no">01 ／ 背景与目标</span>
+## 业务背景：账户行为分析
 
-单轮架构里没有任务分解，一次运行会把全部Agent依次执行一遍，并把工具描述与上下文一次性塞进提示词。任务一复杂，延迟与token开销就随Agent数量线性增长，而其中绝大多数Agent对当前这个任务其实是无关的。
+面向淘天账户行为分析场景，智能体需要综合用户的多维信息，输出**四项业务标签**，为账户风险判断提供依据。在强对抗环境下，账户行为与异常模式持续变化，系统既要保证分析质量，也要控制执行耗时与调用成本。
 
-## 于是推进多轮Planner-Subagent架构
+原有系统采用**单轮Agent架构**，每个账户都执行全部Subagent，缺少按需选择与动态规划能力。为减少冗余调用，推动系统向**多轮Planner-Subagent协作范式**演进：由Planner根据当前证据规划下一步，按需调度Subagent，并结合返回结果继续决策。
 
-<div class="pipe" markdown="1">
-<div class="pipe-step"><span class="pipe-tag">上层</span><span class="pipe-name">Planner</span><span class="pipe-desc">负责任务分解与调度，每轮只决定下一步做什么</span></div>
-<div class="pipe-step"><span class="pipe-tag">下层</span><span class="pipe-name">Subagent</span><span class="pipe-desc">只被按需调用，执行具体子任务并回传结果</span></div>
-</div>
+## 核心问题：如何让多轮决策高效、稳定且持续适应业务
 
-## 但多轮引入了新问题：所有已确认特征都被塞进上下文
-
-当时的做法是**把所有已确认特征都放进上下文**，交给Planner自己判断下一步看什么。这带来三个后果：
+多轮架构赋予了系统选择能力，也对规划策略提出了新的要求：
 
 <div class="cards" markdown="1">
-<div class="card"><span class="card-t">上下文线性膨胀</span><span class="card-d">上下文规模直接跟已确认特征数挂钩，特征一多就吃满窗口</span></div>
-<div class="card"><span class="card-t">决策方差高</span><span class="card-d">大量无判别力的特征淹没关键信息，Planner每轮的选择都不稳定</span></div>
-<div class="card"><span class="card-t">无效探索多</span><span class="card-d">看错方向要靠后续轮次纠正，链路被拉长、subagent调用增加</span></div>
+<div class="card"><span class="card-t">候选空间大，探索成本高</span><span class="card-d">候选动作与上下文信息繁杂，Planner难以识别高价值路径，容易产生无效探索与冗余调用。</span></div>
+<div class="card"><span class="card-t">决策链路长，策略不稳定</span><span class="card-d">多轮决策依赖前序证据与执行反馈，需要通过高质量轨迹训练，建立稳定的规划与选择能力。</span></div>
+<div class="card"><span class="card-t">业务持续变化，策略需要更新</span><span class="card-d">对抗行为与业务状态不断变化，需要从失败案例中定位问题，持续优化模型与Harness。</span></div>
 </div>
 
-## 我负责的部分
+## 工作目标：从决策约束到持续自进化
 
 <div class="claim" markdown="1">
-我负责**Planner模块**与其中一个**子决策模块**的优化，目标是**减少无效探索**：让Planner在一个受约束的候选集上做选择，而不是面对全部已确认特征。这样上下文规模与特征总数解耦，关键路径的命中率与多轮决策的稳定性也随之提升。
+我负责**Planner模块与子决策模块的优化**，围绕分析质量、执行效率与业务适应性，推进三项工作：**先约束决策空间，再完成策略冷启动，最后建立持续自进化闭环**。
 </div>
 
-具体做了三件事：
-
-1. **图谱约束智能体决策**
-2. **Planner模型后训练 (SFT + DPO)**
-3. **Skill自进化框架设计**
+1. **图谱增强决策**：为Planner提供高价值候选路径，减少无效探索与错误调用，降低任务耗时。
+2. **策略冷启动**：构建高质量轨迹数据，通过SFT + DPO两阶段后训练与图谱扰动，提升多轮规划能力及对业务变化的适应性。
+3. **双重帕累托前沿自进化机制**：建立失败定位、模型与Harness分路优化及版本筛选流程，兼顾正常与异常账户的分析质量。
 
 </div>
 
