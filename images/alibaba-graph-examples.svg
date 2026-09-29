@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="440" viewBox="0 0 1080 440" role="img" aria-labelledby="title desc">
+<title id="title">图谱构建与逐轮候选选择</title>
+<desc id="desc">三个示意图分别展示特征图谱、首轮候选和后续轮次。图谱节点对应特征，连接表示额外判断价值，候选由Planner选择执行。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10" fill="#527aa4"/></marker><marker id="green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10" fill="#2b796a"/></marker></defs>
+<style>text{font-family:'Microsoft YaHei','PingFang SC',sans-serif;fill:#1c3a5b;font-size:20px}.heading{font-size:24px;font-weight:700}.small{font-size:18px;fill:#64748b}.node{fill:#f4f8fc;stroke:#96aec6;stroke-width:2;rx:5}.edge{fill:none;stroke:#527aa4;stroke-width:2.5;marker-end:url(#arrow)}.selected{fill:#eaf5f0;stroke:#2b796a;stroke-width:2.5;rx:5}</style>
+<rect width="1080" height="440" fill="white"/>
+<path d="M360 32V400M720 32V400" stroke="#dde5ed" stroke-width="1.5"/>
+<text x="26" y="44" class="heading">① 历史数据形成图谱</text>
+<text x="26" y="76" class="small">节点是特征，边表示新增价值</text>
+<path class="edge" d="M186 140H211M186 155L217 272M119 170V247M213 280L189 155"/>
+<rect class="node" x="34" y="112" width="152" height="58"/><text x="110" y="148" text-anchor="middle">请求频率</text>
+<rect class="node" x="214" y="112" width="120" height="58"/><text x="274" y="148" text-anchor="middle">访问间隔</text>
+<rect class="node" x="34" y="250" width="152" height="58"/><text x="110" y="286" text-anchor="middle">频率相关指标</text>
+<rect class="node" x="214" y="250" width="120" height="58"/><text x="274" y="286" text-anchor="middle">设备特征</text>
+<text x="26" y="359" class="small">数据来源：历史全量轨迹</text><text x="26" y="389" class="small">结合事后标签，离线估计边权</text>
+
+<text x="386" y="44" class="heading">② 第一轮选择起点</text>
+<text x="386" y="76" class="small">按单项增益与成本筛选候选</text>
+<rect class="node" x="386" y="188" width="104" height="62"/><text x="438" y="227" text-anchor="middle">起始状态</text>
+<path class="edge" d="M490 219H516V139H554M516 219H554M516 219V299H554"/>
+<rect class="selected" x="558" y="110" width="136" height="58"/><text x="626" y="146" text-anchor="middle">请求频率</text>
+<rect class="selected" x="558" y="190" width="136" height="58"/><text x="626" y="226" text-anchor="middle">设备特征</text>
+<rect class="node" x="558" y="270" width="136" height="58"/><text x="626" y="306" text-anchor="middle">其他特征</text>
+<text x="386" y="359" class="small">绿色：进入Top-N候选集</text><text x="386" y="389" class="small">Planner从中选择并执行</text>
+
+<text x="746" y="44" class="heading">③ 后续轮次补充证据</text>
+<text x="746" y="76" class="small">已知请求频率，再看新增价值</text>
+<rect class="node" x="746" y="190" width="120" height="60"/><text x="806" y="215" text-anchor="middle" class="small">已检查</text><text x="806" y="240" text-anchor="middle">请求频率</text>
+<path d="M866 218H892V139H912" fill="none" stroke="#2b796a" stroke-width="3" marker-end="url(#green)"/>
+<path d="M866 222H892V299H912" fill="none" stroke="#96aec6" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+<rect class="selected" x="916" y="110" width="140" height="58"/><text x="986" y="146" text-anchor="middle">访问间隔</text>
+<rect class="node" x="916" y="270" width="140" height="58"/><text x="986" y="306" text-anchor="middle">重复频率指标</text>
+<text x="920" y="196" class="small">补充新证据</text><text x="920" y="356" class="small">信息较重复</text>
+<text x="746" y="405" class="small">结合调用成本，更新候选排序</text>
+</svg>

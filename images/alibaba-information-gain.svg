@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="390" viewBox="0 0 1080 390" role="img" aria-labelledby="title desc">
+<title id="title">新增信息与成本的计算示意</title>
+<desc id="desc">以下均为假设数值。已知请求频率后，平均不确定性为0.60 bit。检查重复频率指标后剩余0.55，增益0.05；检查访问间隔后剩余0.25，增益0.35。成本相同时优先后者。</desc>
+<style>text{font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-size:21px;fill:#1c3a5b}.heading{font-size:26px;font-weight:700}.small{font-size:18px;fill:#64748b}.em{font-weight:700;fill:#2b796a}</style>
+<rect width="1080" height="390" fill="#fff"/>
+<text x="28" y="43" class="heading">增益 = 检查前的不确定性 − 检查后的平均剩余不确定性</text>
+<text x="28" y="77" class="small">假设已知请求频率后为 0.60 bit；两项检查的相对成本均为 1</text>
+<text x="28" y="124" class="small">候选检查</text><text x="290" y="124" class="small">检查后剩余（蓝） / 消除的不确定性（绿）</text><text x="785" y="124" class="small">增益计算与单位成本收益</text>
+<path d="M28 140H1052M28 231H1052M28 322H1052" stroke="#dce5ee" stroke-width="1.5"/>
+<text x="28" y="190">重复频率指标</text>
+<rect x="290" y="163" width="385" height="42" fill="#dce8f5"/><rect x="675" y="163" width="35" height="42" fill="#3c907b"/>
+<text x="480" y="191" text-anchor="middle">0.55</text>
+<text x="785" y="181">0.60 − 0.55 = 0.05</text><text x="785" y="211" class="small">0.05 ÷ 1 = 0.05</text>
+<text x="28" y="280" class="em">访问间隔</text>
+<rect x="290" y="253" width="175" height="42" fill="#dce8f5"/><rect x="465" y="253" width="245" height="42" fill="#3c907b"/>
+<text x="377" y="281" text-anchor="middle">0.25</text><text x="587" y="281" text-anchor="middle" style="fill:white">增益 0.35</text>
+<text x="785" y="271" class="em">0.60 − 0.25 = 0.35</text><text x="785" y="301" class="small">0.35 ÷ 1 = 0.35</text>
+<text x="28" y="357" class="em">成本相同时，访问间隔提供更多新增信息，候选优先级更高。</text>
+<text x="28" y="383" class="small">示例数值，仅用于说明计算过程；增益由历史样本估计，不是真实业务指标。</text>
+</svg>
