@@ -207,49 +207,49 @@ $N$ 的性能峰值其实不在默认值上，但 $N$ 直接乘在 $O(N \cdot L)
 <div class="huggingr4-demo-grid" id="huggingr4-demos">
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-aerial-title">航拍建筑与车辆检测</h3><span>01</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-aerial-title" poster="{{ '/assets/videos/huggingr4/posters/aerial.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-aerial-title" poster="{{ '/assets/videos/huggingr4/posters/aerial.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">通过反思与窗口推进，寻找适合航拍场景的检测模型。</p>
   </article>
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-layout-title">论文版面分析</h3><span>02</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-layout-title" poster="{{ '/assets/videos/huggingr4/posters/layout.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-layout-title" poster="{{ '/assets/videos/huggingr4/posters/layout.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">解析论文页面，定位标题、正文、图表等版面区域。</p>
   </article>
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-ocr-title">法文书封 OCR</h3><span>03</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-ocr-title" poster="{{ '/assets/videos/huggingr4/posters/ocr.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-ocr-title" poster="{{ '/assets/videos/huggingr4/posters/ocr.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">结合书封场景与法语约束选择模型，提取图像中的文字。</p>
   </article>
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-video-title">车辆检测与跟踪</h3><span>04</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-video-title" poster="{{ '/assets/videos/huggingr4/posters/video.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-video-title" poster="{{ '/assets/videos/huggingr4/posters/video.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">上传交通视频，展示车辆检测、轨迹跟踪与双向计数。</p>
   </article>
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-depth-title">深度图</h3><span>05</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-depth-title" poster="{{ '/assets/videos/huggingr4/posters/depth.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-depth-title" poster="{{ '/assets/videos/huggingr4/posters/depth.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">区分深度估计与深度条件生成，为照片生成相对深度图。</p>
   </article>
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-edit-title">指令修图</h3><span>06</span></div>
-    <video controls playsinline preload="none" aria-labelledby="demo-edit-title" poster="{{ '/assets/videos/huggingr4/posters/edit.jpg' | relative_url }}">
-      <source src="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}" type="video/mp4">
-      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}">下载视频</a>。
+    <video controls playsinline preload="none" aria-labelledby="demo-edit-title" poster="{{ '/assets/videos/huggingr4/posters/edit.jpg' | relative_url }}?v=ready-24">
+      <source src="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}?v=ready-24" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}?v=ready-24">下载视频</a>。
     </video>
     <p class="huggingr4-demo-caption">根据文字指令将夏季木屋改为冬季，保留原有场景构图。</p>
   </article>
