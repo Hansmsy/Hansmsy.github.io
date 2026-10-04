@@ -201,12 +201,63 @@ $N$ 的性能峰值其实不在默认值上，但 $N$ 直接乘在 $O(N \cdot L)
 </div>
 
 <div class="slide" markdown="1">
-<span class="slide-no">05 ／ 局限</span>
-## 三个我自己认为还没解决的问题
+<span class="slide-no">05 ／ 演示</span>
+## 从输入到结果：六个任务演示
 
-- **多任务仍有明显回落** — 同一底座 (GPT-4o-mini) 下，多任务 85.03 / 75.73 对比单任务 92.03 / 82.46。瓶颈在任务规划与依赖编排，这块我们直接沿用了 HuggingGPT，没有改进。
-- **对底座的推理风格敏感** — Claude-Sonnet-4 在反思阶段**过度分析**，筛得太严而淘汰了本该合适的候选；Qwen3-235B 则在 Stage I **迭代过多难收敛**。反思的严格度目前由底座「性格」决定，而不是一个可控参数——这是我认为最值得形式化的问题。
-- **没有对大模型进行针对性微调**。
+手动输入中文任务并上传素材，展示逐步分析、模型检索与选择，以及最终结果。视频默认以 **1.25 倍速**播放，可全屏查看。
+
+<div class="huggingr4-demo-grid" id="huggingr4-demos">
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-aerial-title">航拍建筑与车辆检测</h3><span>01</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-aerial-title" poster="{{ '/assets/videos/huggingr4/posters/aerial.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/aerial.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">通过反思与窗口推进，寻找适合航拍场景的检测模型。</p>
+  </article>
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-layout-title">论文版面分析</h3><span>02</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-layout-title" poster="{{ '/assets/videos/huggingr4/posters/layout.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/layout.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">解析论文页面，定位标题、正文、图表等版面区域。</p>
+  </article>
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-ocr-title">法文书封 OCR</h3><span>03</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-ocr-title" poster="{{ '/assets/videos/huggingr4/posters/ocr.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/ocr.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">结合书封场景与法语约束选择模型，提取图像中的文字。</p>
+  </article>
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-video-title">车辆检测与跟踪</h3><span>04</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-video-title" poster="{{ '/assets/videos/huggingr4/posters/video.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/video.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">上传交通视频，展示车辆检测、轨迹跟踪与双向计数。</p>
+  </article>
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-depth-title">深度图</h3><span>05</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-depth-title" poster="{{ '/assets/videos/huggingr4/posters/depth.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/depth.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">区分深度估计与深度条件生成，为照片生成相对深度图。</p>
+  </article>
+  <article class="huggingr4-demo-card">
+    <div class="huggingr4-demo-heading"><h3 id="demo-edit-title">指令修图</h3><span>06</span></div>
+    <video controls playsinline preload="none" aria-labelledby="demo-edit-title" poster="{{ '/assets/videos/huggingr4/posters/edit.jpg' | relative_url }}">
+      <source src="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}" type="video/mp4">
+      您的浏览器不支持视频播放，<a href="{{ '/assets/videos/huggingr4/edit.mp4' | relative_url }}">下载视频</a>。
+    </video>
+    <p class="huggingr4-demo-caption">根据文字指令将夏季木屋改为冬季，保留原有场景构图。</p>
+  </article>
+</div>
+
+<script src="{{ '/assets/js/huggingr4-demos.js' | relative_url }}" defer></script>
 
 </div>
 

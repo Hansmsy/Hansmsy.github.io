@@ -346,3 +346,61 @@
     .slide h2 { font-size: 1.15em; }
   }
 }
+
+/* HuggingR⁴ 任务视频 */
+.talk .huggingr4-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2em;
+  margin-top: 1.2em;
+}
+
+.talk .huggingr4-demo-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.talk .huggingr4-demo-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75em;
+  padding: .85em 1em;
+}
+
+.talk .huggingr4-demo-heading h3 {
+  margin: 0;
+  font-size: .95em;
+  line-height: 1.5;
+}
+
+.talk .huggingr4-demo-heading span {
+  color: $info-color;
+  font-size: .78em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.talk .huggingr4-demo-card video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #f1f3ee;
+}
+
+.talk .huggingr4-demo-caption {
+  margin: 0;
+  padding: .85em 1.1em;
+  font-size: .82em;
+  line-height: 1.65;
+  color: #475569;
+}
+
+@media (max-width: 700px) {
+  .talk .huggingr4-demo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
