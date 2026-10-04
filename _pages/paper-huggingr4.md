@@ -204,8 +204,6 @@ $N$ 的性能峰值其实不在默认值上，但 $N$ 直接乘在 $O(N \cdot L)
 <span class="slide-no">05 ／ 演示</span>
 ## 从输入到结果：六个任务演示
 
-手动输入中文任务并上传素材，展示逐步分析、模型检索与选择，以及最终结果。**点击视频可弹出放大卡片**，默认以 **1.25 倍速**播放，也可全屏查看。
-
 <div class="huggingr4-demo-grid" id="huggingr4-demos">
   <article class="huggingr4-demo-card">
     <div class="huggingr4-demo-heading"><h3 id="demo-aerial-title">航拍建筑与车辆检测</h3><span>01</span></div>
