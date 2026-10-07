@@ -14,7 +14,7 @@ redirect_from:
 
 我在浙江大学[VIPA实验室](https://www.vipazoo.cn/)从事研究，导师为宋明黎教授与宋杰副教授。
 
-我目前的研究兴趣是：**开放动态空间下的大模型后训练**，特别是**多轮智能体强化学习（Multi-turn Agent RL）**与**智能体自进化**。
+我目前的研究兴趣是：**开放动态工具空间下的大模型后训练**，特别是**多轮智能体强化学习（Multi-turn Agent RL）**与**智能体自进化**。
 
 目前已发表NLP顶会一作×1 (EMNLP 2026 <span class="oral-badge">Oral</span>)、CCF-A共同一作×1 (ACM MM 2026)，另有CCF-A在审×2 (AAAI 2027、ICLR 2027)。
 
