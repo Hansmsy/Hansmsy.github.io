@@ -140,7 +140,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 <span class="slide-no">04 ／ 双重帕累托前沿自进化机制</span>
 
 <figure class="exp-overview">
-  <img src="{{ '/images/alibaba-self-evolution.png' | relative_url }}?v=20261009-v7" alt="自进化框架：失败定位后，Harness侧通过mini-batch积累、模块掩码与用户分组帕累托筛选迭代；模型侧通过轨迹增殖进行SFT，或自适应调整奖励进行RLHF">
+  <img src="{{ '/images/alibaba-self-evolution.png' | relative_url }}?v=20261009-v8" alt="自进化框架：失败定位后，Harness侧通过mini-batch积累、模块掩码与用户分组帕累托筛选迭代；模型侧通过轨迹增殖进行SFT，或自适应调整奖励进行RLHF">
 </figure>
 
 面向持续变化的业务场景，结合 [GEPA](https://arxiv.org/abs/2507.19457) 的反思与帕累托候选保留思想，以及 [SkillOpt](https://github.com/microsoft/SkillOpt) 的mini-batch更新机制，设计**失败定位、分路优化与版本筛选**的自进化闭环。
