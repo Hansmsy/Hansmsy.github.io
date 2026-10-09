@@ -154,7 +154,7 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 <h2 class="mechanism-heading">双时间尺度异步协同</h2>
 
 <figure class="exp-overview">
-  <img src="{{ '/images/alibaba-async-coordination.svg' | relative_url }}?v=2" alt="双时间线：Harness按小时迭代并逐步收紧修改幅度，模型基于固定Harness与奖励快照进行天级训练，最后组合评测并灰度发布，不兼容时补充采样与适配">
+  <img src="{{ '/images/alibaba-async-coordination.svg' | relative_url }}?v=20261009-v3" alt="双时间线：Harness按小时迭代并进行更新幅度退火，模型基于固定训练快照进行天级训练，最后组合评测并灰度发布，不兼容时补充采样与适配">
 </figure>
 
 Harness可在小时级完成更新，模型训练则通常需要天级周期。为减少异步迭代中的策略滞后与环境漂移，采用**训练快照固定、候选异步演进、组合验证后同步**的设计。
