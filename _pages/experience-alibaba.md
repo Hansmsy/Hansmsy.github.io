@@ -15,12 +15,6 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 **阿里安全部-账户行为算法团队** ｜ **2026.05 – 2026.09** ｜ 大模型算法实习生 ｜ 负责Planner模块与子决策模块的优化
 </div>
 
-**智能体用途：** 面向账户行为分析，根据被分析对象的多维行为信息和用户的具体分析要求，研判被分析对象的具体行为模式、意图等。
-
-**输入：** 被分析对象的多维信息以及使用者希望分析的具体问题。
-
-**输出：** 针对具体问题的一份分析报告。
-
 <div class="paper-tags"><span class="paper-tag">多轮智能体</span><span class="paper-tag">图谱增强决策</span><span class="paper-tag">策略冷启动</span><span class="paper-tag">双重帕累托自进化</span><span class="paper-tag">异步协同</span></div>
 
 </div>
@@ -37,6 +31,13 @@ description: "阿里巴巴集团大模型算法实习：多轮Planner-Subagent�
 <figure class="exp-overview">
   <img src="{{ '/images/alibaba-agent-architecture.png' | relative_url }}?v=df686b9" alt="用户信息与指令输入Planner，Planner按需调度多个Subagent，每个Subagent配置多个Skill与Tool，执行结果与证据回传用于多轮决策，满足终止条件后输出标签">
 </figure>
+
+**智能体用途：** 面向账户行为分析，根据被分析对象的多维行为信息和用户的具体分析要求，研判被分析对象的具体行为模式、意图等。
+
+**输入：** 被分析对象的多维信息以及使用者希望分析的具体问题。
+
+**输出：** 针对具体问题的一份分析报告。
+
 </div>
 
 <div class="slide" markdown="1">
