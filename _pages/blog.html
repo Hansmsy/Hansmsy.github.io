@@ -10,11 +10,11 @@ description: "马韶胤的论文阅读与智能体应用笔记。"
   {% for entry in entries %}
   <article class="paper-box blog-card">
     <div class="paper-box-image">
-      <a href="{{ entry.url | relative_url }}" target="_self" aria-label="阅读：{{ entry.title | escape }}"><img src="{{ entry.cover | relative_url }}" width="720" height="540" alt="任务笔记、个人目标和群体经验之间的关系"></a>
+      <a href="{{ entry.url | relative_url }}" target="_self" aria-label="阅读：{{ entry.title | escape }}"><img src="{{ entry.cover | relative_url }}" width="{{ entry.cover_width | default: 720 }}" height="{{ entry.cover_height | default: 540 }}" alt="{{ entry.cover_alt | default: '任务笔记、个人目标和群体经验之间的关系' | escape }}"></a>
     </div>
     <div class="paper-box-text">
       <p><a href="{{ entry.url | relative_url }}" target="_self"><strong>{{ entry.title }}</strong></a></p>
-      <div class="paper-tags"><span class="paper-tag">论文笔记</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">目标与记忆</span></div>
+      <div class="paper-tags">{% if entry.blog_tags %}{% for tag in entry.blog_tags %}<span class="paper-tag">{{ tag | escape }}</span>{% endfor %}{% else %}<span class="paper-tag">论文笔记</span><span class="paper-tag">Agentic RL</span><span class="paper-tag">目标与记忆</span>{% endif %}</div>
       <p>{{ entry.excerpt }}</p>
       <p><a class="blog-read" href="{{ entry.url | relative_url }}" target="_self"><b>阅读全文 ↗</b></a></p>
     </div>

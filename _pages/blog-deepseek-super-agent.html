@@ -1,0 +1,68 @@
+---
+layout: blog
+title: "DeepSeek Super-agent：从会话管理到持续任务协作"
+permalink: /blog/deepseek-super-agent/
+author_profile: false
+blog_entry: true
+blog_order: 2
+blog_tags: [技术阅读, Agent 架构, 主动协作]
+cover: /images/blog/deepseek-super-agent-architecture.jpg
+cover_width: 1440
+cover_height: 587
+cover_alt: "DeepSeek Super-agent 原文架构图：Router、Worker、事件驱动、异步交互与 Watchdog"
+excerpt: "双层架构如何兼顾上下文连续性与并发吞吐？事件驱动如何支持隐式需求识别？结合 DeepSeek 的设计，讨论协调成本、持续运行，以及用户对任务和权限的控制。"
+description: "DeepSeek Super-agent 阅读笔记：双层架构、任务耦合、事件批处理、主动协作、异步执行与安全边界。"
+---
+<article class="talk blog-post">
+  <nav class="blog-breadcrumb" aria-label="面包屑"><a href="/blog/" target="_self">← 博客</a> <span aria-hidden="true"> / </span> 技术阅读</nav>
+  <header class="talk-head">
+    <div class="paper-tags"><span class="paper-tag">Agent 架构</span><span class="paper-tag">Harness</span><span class="paper-tag">主动协作</span></div>
+    <h1>DeepSeek Super-agent：从会话管理到持续任务协作</h1>
+    <p><a href="https://zhuanlan.zhihu.com/p/2099987320443237060" target="_blank" rel="noopener">原文：Super-agent 设计探索：迈向更自主的 Agent 系统</a></p>
+    <div class="talk-authors">文 / 马韶胤 <span aria-hidden="true"> · </span> 技术阅读与应用思考</div>
+  </header>
+  <nav class="blog-toc" aria-label="文章目录"><strong>本文脉络</strong><ol><li><a href="#sessions" target="_self">从会话管理到任务管理</a></li><li><a href="#routing" target="_self">双层架构、耦合与协调成本</a></li><li><a href="#proactive" target="_self">事件驱动与隐式需求</a></li><li><a href="#runtime" target="_self">异步执行与持续运行</a></li><li><a href="#boundaries" target="_self">任务呈现与权限边界</a></li></ol></nav>
+  <div class="blog-body">
+    <p>上一篇阅读关注如何用外部笔记维护任务状态与长期目标。这篇 DeepSeek 技术文章进一步讨论：当 Agent 同时处理多个任务时，由谁维护上下文、接收变化并协调执行？它提出的是系统架构，没有报告新的强化学习算法或专门的 SFT／RL 训练流程；针对 Router 的专项训练被列为未来方向。本文聚焦架构与应用思考，不展开实验结果。</p>
+
+    <h2 id="sessions"><span class="blog-number">01</span>从会话管理到任务管理</h2>
+    <p>文章最吸引我的判断是：当模型越来越能独立执行任务时，多任务协作的瓶颈开始转向人的注意力。用户不仅需要切换会话，还要记住每个任务的目标、进展与依赖，再手动把相关信息传递到其他会话。作者观察到，一个人通常只能同时跟进 3—5 个活跃 Session；这是团队观察，不能作为普遍的认知上限。</p>
+    <p>Super-agent 希望把跨会话协调交给系统。同一个任务可以从群聊延续到代码评审，用户在不同入口提出的修改仍能关联到原有工作。对用户而言，交互对象具有连续性；底层则可以由多个 Session 共同支持。</p>
+    <p><strong>我的理解是：淡化用户层面的 Session，把管理对象转向目标、任务与结果。</strong>Session 继续承担上下文隔离与执行职责，但用户无需记住某条信息究竟位于哪个窗口。任务状态仍然必须可见，否则只是把管理负担变成了执行过程的不透明。</p>
+
+    <h2 id="routing"><span class="blog-number">02</span>双层架构、耦合与协调成本</h2>
+    <p>所有事件进入同一个 Session，便于保持上下文连续，却容易受到串行执行、任务阻塞与上下文混杂的限制。每条事件都新建独立 Session，可以增加并发，但相关任务缺少共同上下文，各自回复也容易造成混乱。双层架构将这两个要求分开承担。</p>
+    <figure class="exp-overview"><img src="/images/blog/deepseek-super-agent-architecture.jpg" width="1440" height="587" loading="lazy" alt="DeepSeek Super-agent 原文整体架构图，展示双层架构、事件驱动、面向人的交互、计算状态与环境分离以及 Watchdog。"><figcaption>图 1 · DeepSeek 原文的 Super-agent 整体架构图。</figcaption></figure>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">层级</th><th scope="col">职责</th><th scope="col">模型配置思路</th></tr></thead><tbody><tr><td>Router</td><td>接收交互、关联任务、分派工作、汇总状态并统一回复；不直接执行具体任务，甚至可以不配备 Bash</td><td>作者认为较轻量模型通常即可胜任</td></tr><tr><td>Worker</td><td>在隔离上下文中完成具体任务，可使用工具，也可进一步创建 Subagent 或 Agent Team</td><td>通常配置能力最强的模型</td></tr></tbody></table></div>
+    <p>与单个复杂任务的 Planner／Team Lead 相比，Router 主要处理任务之间的高层关联，避免深入每个任务内部的步骤规划。<strong>我认为这里的关键是协调粒度与耦合程度。</strong>如果任务可以相对独立推进，Router 只需了解目标、关键约束和状态；如果任务频繁共享中间结果或修改同一状态，协调负担就会上升。职责划分无法消除任务本身的依赖。</p>
+    <p>DeepSeek 还通过三个机制控制协调成本：</p>
+    <ul>
+      <li><strong>事件过滤：</strong>先用程序规则检查来源、范围等确定性条件，再让模型判断候选事件是否需要行动。</li>
+      <li><strong>订阅直通：</strong>首次分派后，Worker 订阅对应 Thread，例如一个 PR 的讨论。后续事件由程序直接交给订阅者，减少 Router 反复转发；Router 仍可观察全局事件。</li>
+      <li><strong>事件批处理：</strong>Router 推理期间新到达的事件先积压，下一轮合并进一次模型调用。消息稀疏时逐条处理，密集时自然形成批次。</li>
+    </ul>
+    <p>这里批量处理的是路由决策，实际任务仍交给 Worker 执行。批处理可以降低每个决定分摊的推理时间，但不意味着总 token 费用同比下降；事件内容仍需读取，实际费用还受历史上下文、缓存和输出长度影响。</p>
+    <p>上下文组织采用 <strong>Inline &amp; Spill</strong>：近期相关内容、摘要与 ID 放入窗口，长内容保留续读入口。Trigger、Thread 和 Worker Session 通过 ID 形成引用关系，模型沿引用逐步召回历史。它支持按需查找近期任务，但跨月的长期记忆仍被作者列为开放问题。</p>
+
+    <h2 id="proactive"><span class="blog-number">03</span>事件驱动与隐式需求</h2>
+    <p>Super-agent 的输入来自环境中的半结构化事件：群聊反馈、评审评论、CI 结果、邮件与日程提醒都可以成为 Trigger。系统通过过滤与语义判断决定是否介入，用户不必为每次行动重新输入一条指令。定时触发也属于事件来源之一。</p>
+    <p><strong>我尤其希望探索的是：结合已有目标与任务状态，识别用户尚未显式表达的需求，并主动推进有价值的工作。</strong>例如，用户在群聊里反馈某个问题，但没有明确要求 Agent 修复；系统可以先尝试复现，确认问题并形成可用方案后再反馈。文章将这种提前尝试称为投机执行：投入额外后台计算，换取更少的等待与人工介入。</p>
+    <p>延伸到电商场景，我设想的是：用户已有一项明确的选购目标，当候选商品缺货或价格变化时，Agent 可以更新比较结果、检查替代品，并在变化影响决策时提醒用户。这里的隐式需求以已知目标为依据，不能仅凭一次浏览就认定用户要购买。</p>
+    <p>这需要分别判断“用户可能需要什么”与“系统可以做什么”。查询资料、准备方案和修改订单具有不同的影响范围。主动性还包含反馈时机的选择：有可用结果或需要用户决策时再沟通，避免把环境噪音转化成通知负担。上述电商应用是我的设想；原文没有证明系统已具备通用、可靠的隐式意图识别能力。</p>
+
+    <h2 id="runtime"><span class="blog-number">04</span>异步执行与持续运行</h2>
+    <p>异步交互、云端运行与异常恢复解决的是三个不同的问题：</p>
+    <ul>
+      <li><strong>异步交互：</strong>耗时工具通过 <code>start()</code> 启动后立即返回，完成结果再作为事件投递。新输入在当前推理步结束后可以被处理，无需等待后台工具完成，也可以通过 <code>stop()</code> 终止任务。这降低交互等待，不直接缩短计算时间。</li>
+      <li><strong>计算、状态与环境分离：</strong>云端计算推进 Agent Loop，数据库持久化会话状态，代码与工具链可留在原设备，通过轻量 daemon 执行命令。计算进程可以替换，任务状态仍可恢复；依赖离线设备的操作则要等设备重新上线。</li>
+      <li><strong>独立 Watchdog：</strong>定时唤醒外部 Agent，检查基础设施故障，也判断 Worker 是否缺乏实质进展或偏离目标，发现异常后介入恢复。</li>
+    </ul>
+    <p>这些机制分别改善响应性、运行连续性和恢复能力。它们是文章的设计组成，不能据此认为公开原型已完整实现全部能力。</p>
+
+    <h2 id="boundaries"><span class="blog-number">05</span>任务呈现与权限边界</h2>
+    <p>隐藏底层 Session 后，用户仍需知道任务如何推进。文章提出，交互可以直接发生在 GitHub Issue、PR 等领域界面中，也可以保留聊天窗口；一个可见窗口不必对应一个底层 Session。</p>
+    <p>我的倾向是围绕任务呈现：目标、执行状态、阻塞原因、待决策事项与交付结果。用户应该能够中途修改目标、暂停或接管任务。持续自主执行与人的控制需要通过这些具体入口协调。</p>
+    <p>权限边界也必须跟随架构一起设计。持续接收群聊、邮件和评论，会增加接触不可信输入与提示词注入的风险；云端 Agent 连接多个设备后，一旦被攻破，影响可能扩展到各执行环境。即使没有入侵，本地凭据进入模型上下文也可能造成泄露。原文提出，需要让 Agent 能使用凭据，同时避免直接接触凭据本身。</p>
+    <p>个人与团队之间还存在上下文共享边界：共同任务可以共享必要信息，私人目标与资料需要隔离；多个实例跨边界协作时，也不能默认互相访问完整上下文。对我关注的主动协作而言，<strong>推断出需求不等于获得行动授权</strong>。系统应把推断依据、任务状态与必要的决策入口呈现给用户，使主动执行保持可理解、可干预。</p>
+  </div>
+</article>
