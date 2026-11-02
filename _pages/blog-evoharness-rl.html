@@ -9,13 +9,13 @@ cover: /images/blog/evoharness-notebooks.svg
 excerpt: "给 Agent 一本工作笔记之后，还需要教它何时读、何时写。从 SFT 与 GRPO 的训练细节，聊到电商中的任务进度、个人目标和群体经验。"
 description: "EvoHarness-RL 论文笔记：拆解 SFT、成本感知 GRPO 与批次间经验整理，并思考个人和群体笔记如何支持智能体的短期任务与长期目标。"
 ---
-<article class="blog-post">
+<article class="talk blog-post">
   <nav class="blog-breadcrumb" aria-label="面包屑"><a href="/blog/" target="_self">← 博客</a> <span aria-hidden="true"> / </span> 论文笔记</nav>
-  <header class="blog-post-head">
-    <div class="blog-tags"><span>Agentic RL</span><span>Harness</span><span>目标与记忆</span></div>
-    <h1>EvoHarness-RL<span>关于智能体短期目标与长期目标的思考</span></h1>
-    <p class="blog-deck">给 Agent 一本工作笔记之后，还需要教它何时读、何时写，以及如何让记录真正推动下一步行动。</p>
-    <div class="blog-byline">文 / 马韶胤 <span aria-hidden="true"> · </span> 论文阅读与应用思考</div>
+  <header class="talk-head">
+    <div class="paper-tags"><span class="paper-tag">Agentic RL</span><span class="paper-tag">Harness</span><span class="paper-tag">目标与记忆</span></div>
+    <h1>EvoHarness-RL：关于智能体短期目标与长期目标的思考</h1>
+    <p class="talk-meta">给 Agent 一本工作笔记之后，还需要教它何时读、何时写，以及如何让记录真正推动下一步行动。</p>
+    <div class="talk-authors">文 / 马韶胤 <span aria-hidden="true"> · </span> 论文阅读与应用思考</div>
   </header>
   <nav class="blog-toc" aria-label="文章目录"><strong>本文脉络</strong><ol><li><a href="#workspace" target="_self">01 外部工作空间</a></li><li><a href="#training" target="_self">02 如何训练</a></li><li><a href="#goals" target="_self">03 从任务到长期目标</a></li><li><a href="#notebooks" target="_self">04 个人与群体笔记</a></li></ol></nav>
   <div class="blog-body">
@@ -27,7 +27,7 @@ description: "EvoHarness-RL 论文笔记：拆解 SFT、成本感知 GRPO 与批
 
     <h2 id="training"><span class="blog-number">02</span>先学会接口，再学习调用时机</h2>
     <p>EvoHarness-RL 采用 <strong>SFT 冷启动 → on-policy GRPO</strong>。主实验的学生是 Qwen3-8B，教师是 Claude Opus 4.6。底层沿用 GRPO，重点在于动作空间、奖励设计和经验更新流程。<a class="blog-source" href="#ref-paper" target="_self">[1]</a></p>
-    <figure><img src="/images/blog/evoharness-training.svg" width="720" height="750" alt="训练流程：Claude 成功示范用于 Qwen 的 SFT；随后 Qwen 使用固定经验库采样，执行证据分别进入 GRPO 参数更新和 Claude 经验整理，二者共同支持下一批任务。"><figcaption>图 1 · 根据论文与公开实现重绘。参数更新和经验整理是两条不同的路径。<a href="/images/blog/evoharness-training.svg" target="_blank" rel="noopener">查看大图 ↗</a></figcaption></figure>
+    <figure class="exp-overview"><img src="/images/blog/evoharness-training.svg" width="720" height="750" alt="训练流程：Claude 成功示范用于 Qwen 的 SFT；随后 Qwen 使用固定经验库采样，执行证据分别进入 GRPO 参数更新和 Claude 经验整理，二者共同支持下一批任务。"><figcaption>图 1 · 根据论文与公开实现重绘。参数更新和经验整理是两条不同的路径。<a href="/images/blog/evoharness-training.svg" target="_blank" rel="noopener">查看大图 ↗</a></figcaption></figure>
 
     <h3>SFT：从成功轨迹学习下一步回复</h3>
     <p>教师实际进入环境执行任务，使用与学生相同的笔记接口。收集后保留成功轨迹，再拆成“当前输入 → 下一步回复”的监督样本。因此，训练覆盖业务操作，也覆盖查询状态、更新进度和检索经验的动作。</p>
@@ -41,28 +41,30 @@ description: "EvoHarness-RL 论文笔记：拆解 SFT、成本感知 GRPO 与批
     <p>论文的探索项统计四种 BPE 动作的覆盖率，权重按余弦退火到零。我的理解是：早期先给新接口一些尝试机会，后期由任务收益和执行成本决定保留哪些调用。<a class="blog-source" href="#ref-reward" target="_self">[4]</a></p>
 
     <details class="blog-details"><summary>展开：数据规模、训练参数与复现细节</summary>
+      <div class="details-body">
       <div class="blog-table-wrap"><table><thead><tr><th scope="col">设置</th><th scope="col">ALFWorld</th><th scope="col">WebShop</th><th scope="col">WebArena</th></tr></thead><tbody><tr><td>成功教师轨迹</td><td>87</td><td>423</td><td>187</td></tr><tr><td>SFT epoch</td><td>4</td><td>4</td><td>3</td></tr><tr><td>每次更新的任务数</td><td>16</td><td>16</td><td>32</td></tr><tr><td>每任务 rollout 数</td><td>8</td><td>8</td><td>4</td></tr><tr><td>每次更新轨迹数</td><td>128</td><td>128</td><td>128</td></tr><tr><td>RL 更新次数</td><td>150</td><td>150</td><td>300</td></tr><tr><td>训练交互上限</td><td>70 步</td><td>20 步</td><td>8 → 10 → 15 轮</td></tr></tbody></table></div>
       <p>SFT 使用 LoRA（rank 64、scaling 128），学习率 10<sup>−5</sup>；合并后进入全参数 GRPO。RL 学习率为 10<sup>−6</sup>，clipping 为 0.2，KL 系数为 0.01，参考策略是冻结的 SFT 模型。以上按论文附录 K 报告。<a class="blog-source" href="#ref-paper" target="_self">[1]</a></p>
       <p><strong>复现时要核对配置：</strong>论文探索奖励是 <code>bpe_coverage</code>；公开实现也提供 <code>verb_ratio</code>，共享配置默认使用后者。两者定义不同，复现论文公式时应检查最终生效配置。<a class="blog-source" href="#ref-config" target="_self">[5]</a></p>
+    </div>
     </details>
 
     <h3>Claude 在 RL 中：批次之间整理经验</h3>
     <p>学生执行一批任务时使用固定经验库，新的 notes 暂存。批次结束后，Claude 读取按任务类型组织的成功、失败动作摘要、notes 与旧经验，提出新增、修改、合并或删除等增量编辑。更新后的经验供下一批检索。<a class="blog-source" href="#ref-evolver" target="_self">[6]</a></p>
-    <div class="blog-callout"><p><strong>两种更新需要分开理解。</strong>GRPO 改变学生的参数；Claude 整理改变学生可读取的外部知识。经验编辑并不是直接给学生做新一轮 SFT，也不能当成每条轨迹的奖励评分。</p></div>
+    <div class="echo blog-callout"><p><strong>两种更新需要分开理解。</strong>GRPO 改变学生的参数；Claude 整理改变学生可读取的外部知识。经验编辑并不是直接给学生做新一轮 SFT，也不能当成每条轨迹的奖励评分。</p></div>
     <p>经验整理有额外推理成本，一轮整理还可能包含多个模型调用。另一个边界是：成功判定随环境变化，ALFWorld 和 WebShop 可从环境取得结果，WebArena 的部分语义匹配使用 LLM judge。评估整体收益时，要把这些成本与成功率一起看。<a class="blog-source" href="#ref-repo" target="_self">[7]</a></p>
 
     <h2 id="goals"><span class="blog-number">03</span>从当前任务，走向长期目标</h2>
     <p>我觉得这套思路很适合多轮电商场景。用户会补充信息、修改预算，也会暂时岔开话题。任务笔记可以帮助 Agent 在回答临时问题之后，继续推进原来的目标。</p>
-    <div class="blog-notebook"><strong>一个电商任务的笔记示意</strong><dl><dt>目标</dt><dd>选出适合宿舍的咖啡机。</dd><dt>约束</dt><dd>预算 500 元；宿舍功率限制待确认。</dd><dt>进度</dt><dd>比较三个候选，排除一个超预算型号。</dd><dt>下一步</dt><dd>核对功率，再比较使用成本。</dd></dl></div>
+    <div class="echo blog-notebook"><strong>一个电商任务的笔记示意</strong><dl><dt>目标</dt><dd>选出适合宿舍的咖啡机。</dd><dt>约束</dt><dd>预算 500 元；宿舍功率限制待确认。</dd><dt>进度</dt><dd>比较三个候选，排除一个超预算型号。</dd><dt>下一步</dt><dd>核对功率，再比较使用成本。</dd></dl></div>
     <p>用户问“胶囊机是什么”，并不意味着选购任务结束；用户把预算提高到 800 元，则需要更新约束，并重新考虑受影响的候选。笔记的价值，要通过后续行动体现出来。</p>
     <p><strong>长期目标与 Experience 也需要区分。</strong>“购买前核对最终价格”是经验；“分阶段完成宿舍采购”是持续目标。后者还需要阶段计划、剩余预算、依赖关系和完成条件。把经验库接上 Agent，并不自动解决长期目标管理。</p>
 
     <h2 id="notebooks"><span class="blog-number">04</span>给个人和群体定制笔记</h2>
     <p>沿着这个方向，我会把笔记分成三个范围。下面是应用设想，尚不是论文验证过的结论。</p>
-    <figure><img src="/images/blog/evoharness-notebooks.svg" width="720" height="540" loading="lazy" alt="应用设想：当前任务笔记保存约束与进度，个人笔记保存长期目标与确认偏好，群体笔记提供共性经验。三者共同支持下一步行动，当前用户需求优先。"><figcaption>图 2 · 我的应用设想。任务进度、个人目标与群体经验分别维护，再按需组合。</figcaption></figure>
+    <figure class="exp-overview"><img src="/images/blog/evoharness-notebooks.svg" width="720" height="540" loading="lazy" alt="应用设想：当前任务笔记保存约束与进度，个人笔记保存长期目标与确认偏好，群体笔记提供共性经验。三者共同支持下一步行动，当前用户需求优先。"><figcaption>图 2 · 我的应用设想。任务进度、个人目标与群体经验分别维护，再按需组合。</figcaption></figure>
     <div class="blog-table-wrap"><table><thead><tr><th scope="col">范围</th><th scope="col">适合保存的内容</th><th scope="col">电商例子</th></tr></thead><tbody><tr><td>当前任务</td><td>本次约束、候选比较、执行进度</td><td>哪些商品已核对功率，哪些仍待确认</td></tr><tr><td>个人</td><td>明确表达的长期目标、稳定偏好及变化</td><td>宿舍采购计划、已确认的功率限制</td></tr><tr><td>群体</td><td>共性关注点、选购流程和适用经验</td><td>宿舍用户通常需要先确认空间和功率</td></tr></tbody></table></div>
     <p>个人笔记帮助跨会话延续目标；群体笔记提供初始参考。群体经验不应覆盖个人的明确要求，一次购买行为也不足以确认稳定偏好。对于已过期或被用户修正的信息，还需要更新与失效机制。</p>
-    <div class="blog-callout idea"><p>我更关心的是一个闭环：<strong>用户表达或修改目标 → 更新笔记 → 调整计划 → 执行 → 根据结果核对进度。</strong>验证时可以重点看约束遗漏、重复执行，以及用户修改目标后是否真正改变了下一步行动。</p></div>
+    <div class="echo blog-callout"><p>我更关心的是一个闭环：<strong>用户表达或修改目标 → 更新笔记 → 调整计划 → 执行 → 根据结果核对进度。</strong>验证时可以重点看约束遗漏、重复执行，以及用户修改目标后是否真正改变了下一步行动。</p></div>
 
     <section class="blog-references" aria-labelledby="references-title"><h2 id="references-title">原文与实现</h2><ol>
       <li id="ref-paper"><a href="https://arxiv.org/html/2608.05446v2" target="_blank" rel="noopener">EvoHarness-RL: Learning Runtime Harness Coordination for Self-Evolving Agents</a>，方法部分与附录 I、K。</li>
@@ -73,6 +75,6 @@ description: "EvoHarness-RL 论文笔记：拆解 SFT、成本感知 GRPO 与批
       <li id="ref-evolver"><a href="https://github.com/EvoHarnessRL/EvoHarness-RL/blob/main/evoharness/evolver.py" target="_blank" rel="noopener">经验整理器</a>与<a href="https://github.com/EvoHarnessRL/EvoHarness-RL/blob/main/evoharness/experience.py" target="_blank" rel="noopener">经验库实现</a>。</li>
       <li id="ref-repo"><a href="https://github.com/EvoHarnessRL/EvoHarness-RL" target="_blank" rel="noopener">官方代码仓库</a>：训练、环境与评估说明。</li>
     </ol></section>
-    <nav class="blog-end-nav" aria-label="文章导航"><a href="/blog/" target="_self">← 返回全部文章</a></nav>
+    <nav class="talk-nav blog-end-nav" aria-label="文章导航"><a href="/blog/" target="_self">← 返回全部文章</a></nav>
   </div>
 </article>
