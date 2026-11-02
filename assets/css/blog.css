@@ -30,12 +30,12 @@
 .blog-breadcrumb { margin-bottom: 1em; font-size: .9em; }
 .talk.blog-post figure.exp-overview img {
   width: auto;
-  max-width: min(100%, 240px);
-  max-height: 240px;
+  max-width: min(100%, 280px);
+  max-height: 280px;
   height: auto;
 }
 @media (max-width: 600px) {
-  .talk.blog-post figure.exp-overview img { max-width: min(100%, 180px); max-height: 180px; }
+  .talk.blog-post figure.exp-overview img { max-width: min(100%, 210px); max-height: 210px; }
 }
 .blog-toc { margin: 1.4em 0; }
 .blog-toc ol { padding-left: 1.4em; }
