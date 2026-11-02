@@ -57,12 +57,9 @@
         width: 100%;
         order: 2;
         img {
-            width: 100%;
-            max-width: 360px;
-            max-height: 270px;
-            height: auto;
+            max-width: 400px;
             box-shadow: 3px 3px 6px #888;
-            object-fit: contain;
+            object-fit: cover;
         }
     }
     
@@ -75,14 +72,14 @@
         .paper-box-image{
             justify-content: left;
             min-width: 200px;
-            max-width: 36%;
+            max-width: 40%;
             order: 1;
         }
         
         .paper-box-text{
             justify-content: left;
             padding-left: 2em;
-            max-width: 64%;
+            max-width: 60%;
             order: 2;
         }
 
