@@ -58,8 +58,8 @@
         order: 2;
         img {
             width: 100%;
-            max-width: 240px;
-            max-height: 180px;
+            max-width: 360px;
+            max-height: 270px;
             height: auto;
             box-shadow: 3px 3px 6px #888;
             object-fit: contain;
@@ -75,14 +75,14 @@
         .paper-box-image{
             justify-content: left;
             min-width: 200px;
-            max-width: 28%;
+            max-width: 36%;
             order: 1;
         }
         
         .paper-box-text{
             justify-content: left;
             padding-left: 2em;
-            max-width: 72%;
+            max-width: 64%;
             order: 2;
         }
 
