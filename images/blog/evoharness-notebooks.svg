@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540" role="img" aria-labelledby="title desc">
+<title id="title">从任务笔记到个人目标与群体经验</title><desc id="desc">三种作用范围的笔记：当前任务的约束和进度、个人的长期目标和明确偏好、群体的共性方法和经验。以当前用户的明确需求为准，按需组合来指导下一步行动。这是应用设想。</desc>
+<rect width="720" height="540" rx="14" fill="#f5f8fc"/>
+<g font-family="Arial, 'Microsoft YaHei', sans-serif">
+<text x="44" y="48" font-size="13" letter-spacing="3" fill="#637084">GOALS / STATE / EXPERIENCE</text>
+<text x="44" y="95" font-size="32" font-weight="700" fill="#20314b">让笔记，接住下一步。</text>
+<text x="44" y="128" font-size="19" fill="#637084">任务进度、个人目标与群体经验，分别维护。</text>
+<rect x="44" y="162" width="632" height="86" rx="12" fill="#fff" stroke="#c4d4ea"/><rect x="44" y="162" width="7" height="86" rx="3" fill="#224b8d"/>
+<text x="76" y="197" font-size="25" font-weight="700" fill="#224b8d">任务笔记</text><text x="76" y="228" font-size="18" fill="#637084">这次要完成什么</text><text x="290" y="197" font-size="22" fill="#20314b">当前约束 · 候选比较</text><text x="290" y="228" font-size="21" fill="#637084">已完成 · 待确认 · 下一步</text>
+<rect x="44" y="262" width="632" height="86" rx="12" fill="#fff" stroke="#bed9d2"/><rect x="44" y="262" width="7" height="86" rx="3" fill="#18736c"/>
+<text x="76" y="297" font-size="25" font-weight="700" fill="#18736c">个人笔记</text><text x="76" y="328" font-size="18" fill="#637084">跨会话延续目标</text><text x="290" y="297" font-size="22" fill="#20314b">长期目标 · 已确认偏好</text><text x="290" y="328" font-size="21" fill="#637084">阶段计划 · 变化与修正</text>
+<rect x="44" y="362" width="632" height="86" rx="12" fill="#fff" stroke="#e3d4b8"/><rect x="44" y="362" width="7" height="86" rx="3" fill="#a87a30"/>
+<text x="76" y="397" font-size="25" font-weight="700" fill="#946921">群体笔记</text><text x="76" y="428" font-size="18" fill="#637084">提供初始经验</text><text x="290" y="397" font-size="22" fill="#20314b">共性关注点 · 选购方法</text><text x="290" y="428" font-size="21" fill="#637084">作为参考，按个体需求调整</text>
+<text x="44" y="494" font-size="19" font-weight="600" fill="#20314b">按需组合 → 调整计划 → 执行验证</text><text x="676" y="522" text-anchor="end" font-size="13" fill="#637084">应用设想 · 当前用户需求优先</text>
+</g></svg>

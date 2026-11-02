@@ -1,0 +1,27 @@
+---
+layout: blog
+title: "博客"
+permalink: /blog/
+author_profile: false
+description: "论文阅读、智能体实践，以及一些还在生长中的想法。马韶胤的研究笔记。"
+---
+<header class="blog-index-head">
+  <span class="blog-eyebrow">RESEARCH NOTES / 研究笔记</span>
+  <h1>读论文，也想一想<br><span>它能用在哪里。</span></h1>
+  <p>记录关于大模型、智能体与后训练的阅读和思考。<br>从一个具体机制出发，走向可以验证的应用。</p>
+</header>
+<section class="blog-list" aria-labelledby="blog-list-title">
+  <div class="blog-section-label"><h2 id="blog-list-title">文章</h2><span>论文阅读 · 方法拆解 · 应用思考</span></div>
+  {% assign entries = site.pages | where: 'blog_entry', true | sort: 'blog_order' %}
+  {% for entry in entries %}
+  <article class="blog-card">
+    <a class="blog-card-art" href="{{ entry.url | relative_url }}" target="_self" aria-label="阅读：{{ entry.title | escape }}"><img src="{{ entry.cover | relative_url }}" width="720" height="540" alt="任务笔记、个人目标和群体经验之间的关系"></a>
+    <div class="blog-card-copy">
+      <div class="blog-tags"><span>论文笔记</span><span>Agentic RL</span><span>目标与记忆</span></div>
+      <h2><a href="{{ entry.url | relative_url }}" target="_self">{{ entry.title }}</a></h2>
+      <p>{{ entry.excerpt }}</p>
+      <a class="blog-read" href="{{ entry.url | relative_url }}" target="_self">阅读全文 <span aria-hidden="true">↗</span></a>
+    </div>
+  </article>
+  {% endfor %}
+</section>

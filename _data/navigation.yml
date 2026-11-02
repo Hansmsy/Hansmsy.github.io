@@ -12,6 +12,9 @@ main:
   - title: "论文"
     url: "/#-论文"
 
+  - title: "博客"
+    url: "/blog/"
+
   - title: "实习经历"
     url: "/#-实习经历"
 
