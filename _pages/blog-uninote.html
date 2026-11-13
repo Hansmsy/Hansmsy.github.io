@@ -1,0 +1,172 @@
+---
+layout: blog
+title: "UniNote：从跨模态与局部整体匹配到笔记相关性排序"
+permalink: /blog/uninote/
+author_profile: false
+blog_entry: true
+blog_order: 3
+blog_tags: [论文笔记, 多模态嵌入, 相关性排序]
+cover: /images/blog/uninote-paper-pipeline.png
+cover_width: 1434
+cover_height: 685
+cover_alt: "UniNote 论文原始流程图：数据构造、对比训练与基于奖励的排序优化"
+excerpt: "如何从笔记自身的结构构造监督？梳理模态替换、困难负样本与内容重合度排序，并讨论第二阶段使用 GRPO 的动机与疑问。"
+description: "UniNote 阅读笔记：跨模态与局部整体匹配、正负样本构造、两阶段嵌入训练，以及对排序任务使用 GRPO 的思考。"
+---
+<article class="talk blog-post">
+  <nav class="blog-breadcrumb" aria-label="面包屑"><a href="/blog/" target="_self">← 博客</a> <span aria-hidden="true"> / </span> 论文笔记</nav>
+  <header class="talk-head">
+    <div class="paper-tags"><span class="paper-tag">多模态嵌入</span><span class="paper-tag">数据构造</span><span class="paper-tag">相关性排序</span></div>
+    <h1>UniNote：从跨模态与局部整体匹配到笔记相关性排序</h1>
+    <p><a href="https://arxiv.org/abs/2605.29287v2" target="_blank" rel="noopener">原论文：UniNote: A Unified Embedding Model for Multimodal Representation and Ranking</a></p>
+    <div class="talk-authors">文 / 马韶胤 <span aria-hidden="true"> · </span> 论文阅读与方法思考</div>
+  </header>
+  <nav class="blog-toc" aria-label="文章目录"><strong>本文脉络</strong><ol>
+    <li><a href="#motivation" target="_self">两阶段分别学习什么</a></li>
+    <li><a href="#source-data" target="_self">从原始笔记构造训练素材</a></li>
+    <li><a href="#positive-pairs" target="_self">第一阶段：正例与模态替换</a></li>
+    <li><a href="#hard-negatives" target="_self">困难负样本与软标签</a></li>
+    <li><a href="#contrastive-training" target="_self">把生成模型训练成嵌入模型</a></li>
+    <li><a href="#ranking-data" target="_self">第二阶段：构造相关性排序</a></li>
+    <li><a href="#ranking-reward" target="_self">排序奖励与组内优势</a></li>
+    <li><a href="#reflection" target="_self">我的思考：为什么使用 GRPO</a></li>
+  </ol></nav>
+  <div class="blog-body">
+    <p>UniNote 最值得参考的地方，是把笔记内部已有的结构转化为训练信号：图片与描述对应，图片属于某篇笔记，不同子笔记之间具有可控制的内容重合度。这些关系分别支持跨模态对齐、局部与整体匹配，以及笔记之间的相关性排序。本文依据论文 v2，聚焦数据构造和两阶段训练；示例用于解释方法，文末单独讨论我对优化目标的疑问。</p>
+
+    <h2 id="motivation"><span class="blog-number">01</span>两阶段分别学习什么</h2>
+    <p>一篇笔记通常同时包含标题、正文、多张图片和图片中的文字。把它压缩成一个向量后，既要保留整体主题，也要支持用其中一张图片或一段文字找回整篇笔记。进一步地，检索出多篇相关笔记以后，还希望向量相似度能够反映相关程度，而不只是区分“相关”和“不相关”。</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">训练阶段</th><th scope="col">希望获得的能力</th><th scope="col">主要监督来源</th></tr></thead><tbody>
+      <tr><td>第一阶段：Contrastive SFT</td><td>跨模态对齐，以及局部内容与整篇笔记的双向匹配</td><td>图文对应、OCR、笔记内部从属关系与困难负样本</td></tr>
+      <tr><td>第二阶段：Relative Reranking</td><td>让笔记之间的相似度进一步体现内容相关性的层次</td><td>通过拆分与逐步补充内容构造的排序标签</td></tr>
+    </tbody></table></div>
+    <p>例如，一张咖啡机图片应能找到包含相关内容的整篇选购笔记；当候选中既有同款机器的详细介绍，也有泛泛的咖啡制作记录时，还需要区分它们的相关程度。这只是应用示例，论文第二阶段具体使用的是<strong>内容重合度</strong>构造监督，不能直接等同于完整的用户兴趣或推荐价值。</p>
+    <figure class="exp-overview">
+      <a href="/images/blog/uninote-paper-pipeline.png" target="_blank" rel="noopener"><img src="/images/blog/uninote-paper-pipeline.png" width="1434" height="685" alt="UniNote 原论文图 2：左侧为正例与困难负样本构造，中间为最后一个 token 表示上的对比训练，右侧为基于候选排序奖励的优化。"></a>
+      <figcaption>UniNote 原论文图 2 · 数据构造与两阶段训练。来源：Zhao et al., <a href="https://arxiv.org/html/2605.29287v2#S3.F2" target="_blank" rel="noopener">UniNote</a>，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>；原图未改动。<a href="/images/blog/uninote-paper-pipeline.png" target="_blank" rel="noopener">查看大图 ↗</a></figcaption>
+    </figure>
+    <p>这里的“两阶段”指训练流程。推理时仍然分别编码查询和候选，再用向量相似度检索、排序；候选向量可以提前计算并建立索引。第二阶段没有额外接入一个逐对读取查询与候选、生成判断的重排大模型。</p>
+
+    <h2 id="source-data"><span class="blog-number">02</span>从原始笔记构造训练素材</h2>
+    <p>论文附录 A 给出的起点是：从小红书原始数据中筛选<strong>点赞数大于 100</strong>的笔记，并按主题和每篇笔记的图片数量做均衡处理。点赞门槛用于初步筛选素材，本身不是任意两个内容之间的相关性标签，也不意味着筛出的每篇笔记都具备严格验证过的内容质量。</p>
+    <p>对每张图片，再补充两类文本信息：</p>
+    <ul>
+      <li><strong>图片描述：</strong>用 Qwen3VL-8B-Instruct 生成 caption，表达图中的对象、场景等语义信息。</li>
+      <li><strong>图片文字：</strong>用专门的 OCR 模型提取图中文字。OCR 负责识别文字，caption 负责描述图像，两者提供不同的匹配线索。</li>
+    </ul>
+    <p>为方便后面的例子，记一篇笔记为 <code>N = {标题、正文、I₁、I₂、…、OCR₁、OCR₂、…}</code>，图片 Iᵢ 的描述记为 Cᵢ。论文中的视频也按图像序列处理。标题与正文来自原始笔记，caption 和 OCR 是补充的信息。</p>
+    <p>文中涉及的模型有三种职责，需要分清：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">职责</th><th scope="col">论文配置</th><th scope="col">输出或用途</th></tr></thead><tbody>
+      <tr><td>生成训练素材</td><td>Qwen3VL-8B-Instruct 与 OCR 模型</td><td>图片描述和图中文字</td></tr>
+      <tr><td>挖掘困难负样本</td><td>Qwen3VL-8B-Embedding</td><td>参考向量与相似度</td></tr>
+      <tr><td>实际训练的 UniNote</td><td>以 Qwen3VL-8B-Instruct 为底座，进行 LoRA 微调</td><td>统一的多模态 embedding</td></tr>
+    </tbody></table></div>
+    <p>第一阶段由此构造了 90 万条样本，覆盖除 Note2Note 以外的九种检索方向，每种 10 万条；第二阶段另行构造 6 万条笔记排序样本。模型配置见原文第 4.1 节，数据细节见附录 A、B。</p>
+
+    <h2 id="positive-pairs"><span class="blog-number">03</span>第一阶段：正例与模态替换</h2>
+    <h3>从笔记自身关系得到正例</h3>
+    <p>第一阶段的监督可以从同一篇笔记内部获得，不必先为大量任意笔记对逐一标注相关性。图片与它的描述对应，图片和描述属于原笔记，OCR 又来自某张图片。论文将这些关系组织成四类任务：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">任务</th><th scope="col">检索方向</th><th scope="col">正例依据</th></tr></thead><tbody>
+      <tr><td>原子级对齐</td><td>图片 ↔ 图片描述</td><td>Cᵢ 是对 Iᵢ 的描述</td></tr>
+      <tr><td>局部检索整体</td><td>图片／描述 → 笔记</td><td>局部内容来自该笔记</td></tr>
+      <tr><td>整体检索局部</td><td>笔记 → 图片／描述</td><td>笔记包含相应内容</td></tr>
+      <tr><td>OCR 感知</td><td>图片 ↔ OCR；OCR → 笔记</td><td>图中文字的来源与从属关系</td></tr>
+    </tbody></table></div>
+    <p>双向任务拆开计数后共有九个方向。它们既是训练组织方式，也对应实际检索能力；Note2Note 并不是唯一有用的最终任务。</p>
+
+    <h3>为什么还要做模态替换</h3>
+    <p>如果查询是一张图片 Iᵢ，正例笔记中又原封不动地包含 Iᵢ，模型可能依赖重复图片的局部特征完成匹配。这样获得的训练信号，未必足以要求模型理解“这张图表达的内容与整篇笔记有什么关系”。</p>
+    <p>论文为此引入 <strong>Modal Replacement</strong>：保留查询图片，从正例笔记中移除这张图片，再放入它的文字描述。</p>
+    <div class="blog-equation">\[q=I_i,\qquad N'=(N\setminus\{I_i\})\cup\{C_i\},\qquad (q,N')\text{ 为正例。}\]</div>
+    <p>举例说，查询是“咖啡机正面图”，原笔记包括机器图片、配件图片和选购正文。构造正例时，把机器图片替换成“银色半自动咖啡机，正面有压力表”等描述，其余内容保留。查询侧是视觉信息，候选侧通过文字保留对应语义，训练就需要建立跨模态匹配。</p>
+    <p>原文还给出了 <code>(Cᵢ, N)</code> 这种文字查询形式。这里值得借鉴的是<strong>保留目标语义，同时削弱直接复制带来的匹配捷径</strong>。原文明确展示的是上述图片与描述的替换，不应将其扩展成所有模态之间任意置换的完整实现。</p>
+
+    <h2 id="hard-negatives"><span class="blog-number">04</span>困难负样本与软标签</h2>
+    <h3>全局挖掘：挑选相似但需要区分的候选</h3>
+    <p>随机负例可能与查询相差太远，例如用咖啡机图片匹配完全无关的风景笔记。模型较容易区分这类内容，却未必能区分外观接近的机器或主题相近的笔记。</p>
+    <p>UniNote 使用参考编码器 φ 对查询和候选池编码，保留相似度落在指定区间的困难负样本：</p>
+    <div class="blog-equation">\[0.5\leq\cos\bigl(\phi(q),\phi(c^-)\bigr)\leq0.7.\]</div>
+    <p><strong>0.5–0.7 是余弦相似度区间</strong>，由作者通过人工抽样检查确定。其意图是避开过于容易的负例，同时减少把高度相关内容当成负例的风险。这是针对论文数据和参考模型选择的阈值；更换编码器或数据后，相似度分布会变化，不能机械照搬，也不能依靠这个区间保证没有假负例。</p>
+
+    <h3>局部 MaxSim：修正复合笔记的监督分数</h3>
+    <p>一篇笔记包含多张图和多段文字，整体向量可能掩盖某个局部的高度相关性。例如，一篇“厨房布置”笔记整体主题较宽，但其中恰好有一张与查询很接近的咖啡机图片。</p>
+    <p>对这类复合候选，论文用查询与候选各组成部分的最大相似度形成更细的软监督：</p>
+    <div class="blog-equation">\[s'(q,c^-)=\max_{e\in c^-}\operatorname{sim}(q,e).\]</div>
+    <p>它保留“这个候选的某个局部其实很接近查询”的信息，再用于训练中的分布对齐。这里的 MaxSim 是<strong>构造监督分数</strong>的步骤，不意味着部署时必须把每篇笔记存成一组局部向量并逐一比较。</p>
+
+    <h3>规则构造：从正例上下文中删除查询对应的内容</h3>
+    <p>另一类困难负例直接来自原笔记：查询仍然是 Iᵢ，候选改成删除 Iᵢ 后的笔记。</p>
+    <div class="blog-equation">\[(q,c^-_{\mathrm{rule}})=\bigl(I_i,N\setminus\{I_i\}\bigr).\]</div>
+    <p>这与前面的模态替换只有一个关键差别：<strong>删除图片后，不再补回它的描述。</strong>两种操作放在一起，才容易看清训练意图：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">查询</th><th scope="col">候选构造</th><th scope="col">论文中的标签</th></tr></thead><tbody>
+      <tr><td>图片 Iᵢ</td><td>原笔记删除 Iᵢ，再加入对应描述 Cᵢ</td><td>正例：换一种模态保留目标信息</td></tr>
+      <tr><td>图片 Iᵢ</td><td>原笔记仅删除 Iᵢ</td><td>规则负例：移除直接的从属关系</td></tr>
+    </tbody></table></div>
+    <p>这种构造保留了大量共同背景，要求模型关注目标信息是否存在。我的理解是，它适合训练细粒度的成员匹配，但需要注意语义冗余：即使删掉图片，正文、OCR 或其他图片仍可能表达同一内容。<strong>删除成员不必然使剩余笔记在语义上不相关。</strong>如果将这套方法迁移到业务中，我会额外检查这种假负例，而不直接把结构关系当作绝对语义标签。</p>
+
+    <h2 id="contrastive-training"><span class="blog-number">05</span>把生成模型训练成嵌入模型</h2>
+    <p>样本准备好后，查询、正例和负例分别输入同一个多模态模型。模型取最后一个 token 的隐藏状态作为表示，再计算查询与各候选的余弦相似度。训练调整的是表示空间；caption 生成发生在准备数据时，不能把这里的 Contrastive SFT 理解成让模型逐 token 生成检索答案。</p>
+    <p>对于同一候选集合 Ω，参考分数 s 经过 softmax 得到目标分布 Q，待训练模型的向量相似度经过 softmax 得到预测分布 P：</p>
+    <div class="blog-equation">\[Q(c_i\mid q)=\frac{\exp(s_{q,c_i}/\tau)}{\sum_{c_j\in\Omega}\exp(s_{q,c_j}/\tau)},\qquad P(c_i\mid q)=\frac{\exp(\cos(e_q,e_{c_i})/\tau)}{\sum_{c_j\in\Omega}\exp(\cos(e_q,e_{c_j})/\tau)}.\]</div>
+    <p>随后最小化两个分布的差异。这样，模型除了学习正负关系，还能保留候选之间的软相关性差异。图中的 MRL 则在多个嵌套维度上施加相同类型的训练目标，使向量截短后也受到监督；它服务于表示维度的选择，不改变前面的样本构造逻辑。</p>
+    <details class="blog-details"><summary>原文公式中一个需要留意的细节</summary><div class="details-body">
+      <p>论文式（8）将目标称为 JS 散度，但写出的表达式是 <code>½ KL(P‖Q) + ½ KL(Q‖P)</code>，即对称 KL 的一半。标准 JS 应引入混合分布 <code>M = (P + Q) / 2</code>，计算 <code>½ KL(P‖M) + ½ KL(Q‖M)</code>。因此，理解方法时可以先把这一目标视为分布对齐；具体复现时需要核对实际实现，不能仅依据名称认定用了标准 JS。</p>
+    </div></details>
+
+    <h2 id="ranking-data"><span class="blog-number">06</span>第二阶段：构造相关性排序</h2>
+    <p>第一阶段已经训练了多种匹配关系。第二阶段进一步把监督细化为：对同一个查询，哪些相关笔记应该排在更前面？论文通过人为控制<strong>内容重合度</strong>获得顺序，不依赖逐对人工排序，也不直接拿点赞量作为相关性标签。</p>
+    <ol>
+      <li>把一篇笔记的视觉和文字组成部分拆分成两个等份子笔记 N<sub>A</sub>、N<sub>B</sub>，两者的组成部分不重叠，合起来恢复原笔记。</li>
+      <li>令查询 q = N<sub>A</sub>，以 N<sub>B</sub> 为候选的起点。</li>
+      <li>逐步把 N<sub>A</sub> 中的内容加入 N<sub>B</sub>，生成与查询具有不同重合程度的候选。原文公式用逐个加入图像成员展示这个过程。</li>
+      <li>把加入内容更多的候选排在前面，再混入其他无关笔记作为噪声候选。</li>
+    </ol>
+    <p>下面用三个查询成员 A₁、A₂、A₃ 示意这一过程，B 表示另半篇笔记。表中顺序就是按该规则生成的监督顺序：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">查询</th><th scope="col">候选内容</th><th scope="col">监督顺序</th></tr></thead><tbody>
+      <tr><td rowspan="5">q = {A₁, A₂, A₃}</td><td>B + A₁ + A₂ + A₃</td><td>最靠前</td></tr>
+      <tr><td>B + A₁ + A₂</td><td>其次</td></tr>
+      <tr><td>B + A₁</td><td>再次</td></tr>
+      <tr><td>B</td><td>仍属相关集合，排在上述候选之后</td></tr>
+      <tr><td>其他无关笔记</td><td>排在相关候选之后</td></tr>
+    </tbody></table></div>
+    <p>这里有两个容易忽略的边界。首先，拆分后没有共享成员，不代表两个子笔记的语义完全无关；原文仍把 B 纳入相关集合。其次，内容重合度是这个训练设置中定义的相关性代理：它能提供可控制的排序梯度，但真实检索中的信息价值、事实一致性和用户需求，并不总随重复内容数量单调增加。</p>
+    <p><strong>我认为这部分最可迁移的思路，是通过控制一个因素的变化构造顺序监督。</strong>不必让模型凭空判断任意两篇笔记的精确相关分，而是从同一来源出发，逐步增加目标内容，使训练样本之间具有可解释的差异。</p>
+
+    <h2 id="ranking-reward"><span class="blog-number">07</span>排序奖励与组内优势</h2>
+    <p>模型先按向量相似度检索并排序，取 Top-G 候选组成一组。论文设定 G 大于相关候选数量 M，使这一组同时能够反映相关内容的召回和噪声混入情况。然后对<strong>组内每个候选</strong>分别计算奖励。</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">奖励项</th><th scope="col">计算意图</th></tr></thead><tbody>
+      <tr><td>无关内容惩罚</td><td>如果无关笔记排在任何相关笔记之前，就给予负奖励；越靠前惩罚越重。若它位于所有已检索相关笔记之后，则该项为零。</td></tr>
+      <tr><td>相关内容基础奖励</td><td>相关候选获得固定基础奖励，优先鼓励找到相关内容。</td></tr>
+      <tr><td>绝对位置奖励</td><td>候选的预测位置越接近标签位置，奖励越高。</td></tr>
+      <tr><td>相对顺序奖励</td><td>比较它与其他相关候选的前后关系，正确的成对顺序越多，奖励越高。</td></tr>
+    </tbody></table></div>
+    <p>这个设计把“相关内容是否被找到”和“找到后顺序是否正确”区分开来。单看位置距离，会遗漏候选之间的相对关系；单看成对顺序，又不能完整表达无关内容占据前排的代价。</p>
+    <p>得到每个候选的奖励 rᵢ 后，再在当前查询的候选组内标准化：</p>
+    <div class="blog-equation">\[A_i=\frac{r_i-\operatorname{mean}(r)}{\operatorname{std}(r)+\epsilon}.\]</div>
+    <p>论文接着用优势加权的策略对数概率项和 KL 约束更新模型，并将该过程称为 GRPO。其意图是增加高优势候选的策略概率，同时通过参考策略约束更新幅度。但向量相似度如何具体定义成策略概率，是阅读和复现时需要进一步明确的环节。</p>
+    <p>与常见语言模型 GRPO 相比，关键差异是：<strong>这里的一组是检索出的 G 个候选笔记，奖励分配到候选；常见设置是在同一问题下采样 G 条回答，再比较回答的奖励。</strong>也不能把它理解成采样 G 份完整排序列表。训练候选来自构造的数据，Top-G 的成员及其顺序则可能随模型更新而变化，不能笼统说成始终固定不变。</p>
+
+    <h2 id="reflection"><span class="blog-number">08</span>我的思考：为什么使用 GRPO</h2>
+    <p>我认可这篇论文的数据构造：先用跨模态和局部整体关系学习表示，再用可控制的内容变化学习相关性层次。但对于第二阶段的优化方法，我仍有一个疑问：<strong>既然已经构造出明确的排序标签，为什么选择 GRPO，而不是直接使用排序损失？</strong></p>
+
+    <h3>已有顺序，可以先直接监督相似度差异</h3>
+    <p>若候选 c<sub>w</sub> 应排在 c<sub>l</sub> 前，可以直接要求前者的相似度更大。例如，一个简单的 pairwise 目标是：</p>
+    <div class="blog-equation">\[\mathcal{L}_{\mathrm{pair}}=-\log\sigma\left(\frac{s_\theta(q,c_w)-s_\theta(q,c_l)}{\tau}\right).\]</div>
+    <p>也可以用 listwise 目标监督整组候选的顺序。这些方法能够通过相似度直接反向传播，不需要对离散排序操作本身求导。它们同样可以训练一个统一的 embedding 模型，因此，“减少独立 reranker”本身并不是选择 GRPO 的充分理由。</p>
+
+    <h3>DPO 是可以讨论的方向，但不等于普通成对排序</h3>
+    <p>我最初想到的是：既然有更相关和更不相关的候选，能否用 DPO？关键在于，<a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">DPO</a> 使用的是当前策略相对于参考策略的偏好概率关系，不能直接把任意两个余弦分数相减就称为 DPO。</p>
+    <p>若迁移到检索，可以考虑先在明确的候选集合上，通过相似度 softmax 定义候选选择概率，再引入参考策略构造偏好目标。这属于需要补充定义的改造方案，并不是 UniNote 已经给出的做法。对于这篇论文现成的排序标签，我会首先把直接 pairwise／listwise 训练作为比较起点，再判断是否需要额外的策略优化框架。</p>
+
+    <h3>组内奖励解释了动机，策略定义仍需要交代</h3>
+    <p>作者给出的理由是：排序天然包含一组候选，适合通过组内相对奖励进行优化。我的理解是，如果希望直接组合召回、前排噪声惩罚和顺序一致性等离散目标，奖励优化具有合理动机。不过，存在一组候选并进行奖励标准化，还不足以完整说明 GRPO 的实现。</p>
+    <p>参照 <a href="https://arxiv.org/abs/2402.03300" target="_blank" rel="noopener">DeepSeekMath 中的 GRPO</a>，我希望进一步明确以下问题：</p>
+    <ul>
+      <li><strong>动作和概率是什么？</strong>模型选择一个候选、生成一个排列，还是对连续相似度建模？原文式（13）写作相似度的策略概率，但没有明确其分布形式和归一化范围。</li>
+      <li><strong>检索如何对应策略采样？</strong>Top-G 检索被用于模拟组采样，但确定性的相似度截断与从策略分布采样并不相同；需要解释训练数据与策略梯度之间的对应关系。</li>
+      <li><strong>更新目标如何实现？</strong>式（13）呈现了优势加权 log-prob 与 KL 项，没有显式给出常见 GRPO 的新旧策略概率比和 clipping。实际实现是否包含这些机制，以及目标采用最大化还是负号转成最小化损失，都需要核对。</li>
+      <li><strong>收益具体来自哪里？</strong>可控的排序数据、层次奖励和优化算法都会影响学习。若要论证使用 GRPO 的必要性，需要在相同数据与编码器条件下，与直接排序损失进行比较。</li>
+    </ul>
+    <p>这些疑问不等于否定奖励优化，也不意味着排序任务只能使用 DPO。对我而言，UniNote 最值得吸收的是<strong>利用内容结构生成匹配监督，再利用可控制的内容差异生成排序监督</strong>。这套数据设计与采用哪一种优化算法可以分别讨论；至于 GRPO 的必要性，我希望看到更明确的策略定义和实现说明。</p>
+  </div>
+</article>
