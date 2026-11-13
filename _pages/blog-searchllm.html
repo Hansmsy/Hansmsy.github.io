@@ -1,0 +1,101 @@
+---
+layout: blog
+title: "SearchLLM：用几何平均守住底线，用加权平均优化体验"
+permalink: /blog/searchllm/
+author_profile: false
+blog_entry: true
+blog_order: 5
+blog_tags: [论文笔记, 奖励设计, GRPO]
+cover: /images/blog/searchllm-paper-framework.png
+cover_width: 1547
+cover_height: 942
+cover_alt: "SearchLLM 论文原始框架图：两层奖励、门控聚合与 GRPO 训练"
+excerpt: "底线与非底线指标为什么要分别聚合？从几何平均、加权算术平均和乘法门控出发，用数值例子理解奖励设计的取舍与边界。"
+description: "SearchLLM 奖励设计解读：底线约束、行为目标、平滑几何平均、加权平均与门控奖励，以及迁移到智能体训练时的思考。"
+---
+<article class="talk blog-post">
+  <nav class="blog-breadcrumb" aria-label="面包屑"><a href="/blog/" target="_self">← 博客</a> <span aria-hidden="true"> / </span> 论文笔记</nav>
+  <header class="talk-head">
+    <div class="paper-tags"><span class="paper-tag">奖励设计</span><span class="paper-tag">生成式搜索</span><span class="paper-tag">GRPO</span></div>
+    <h1>SearchLLM：用几何平均守住底线，用加权平均优化体验</h1>
+    <p><a href="https://arxiv.org/abs/2603.10473v1" target="_blank" rel="noopener">原论文：Aligning Large Language Models with Searcher Preferences</a></p>
+    <div class="talk-authors">文 / 马韶胤 <span aria-hidden="true"> · </span> 论文阅读与方法思考</div>
+  </header>
+  <nav class="blog-toc" aria-label="文章目录"><strong>本文脉络</strong><ol>
+    <li><a href="#layers" target="_self">先区分底线与行为目标</a></li>
+    <li><a href="#geometric" target="_self">底线：几何平均为什么突出短板</a></li>
+    <li><a href="#smoothing" target="_self">平滑项解决什么问题</a></li>
+    <li><a href="#utility" target="_self">行为目标：加权平均允许取舍</a></li>
+    <li><a href="#gate" target="_self">两层相乘：完整算一遍奖励</a></li>
+    <li><a href="#training" target="_self">评分如何进入 GRPO</a></li>
+    <li><a href="#reflection" target="_self">我的思考：可借鉴的设计与边界</a></li>
+  </ol></nav>
+  <div class="blog-body">
+    <p>SearchLLM 面向生成式搜索：根据用户问题、会话历史和检索证据，完成意图规划、证据选择与答案生成。我最关注的是它的奖励聚合方式：<strong>底线指标使用平滑几何平均，行为目标使用加权算术平均，最后将两层结果相乘。</strong>本文围绕这一设计展开；后面的算例与迁移讨论是我的解释，不涉及论文实验结果。</p>
+    <figure class="exp-overview">
+      <a href="/images/blog/searchllm-paper-framework.png" target="_blank" rel="noopener"><img src="/images/blog/searchllm-paper-framework.png" width="1547" height="942" alt="SearchLLM 原论文图 2：底线约束经几何平均得到门控因子，行为目标经加权算术平均得到效用，两者相乘作为 GRPO 的奖励。"></a>
+      <figcaption>SearchLLM 原论文图 2 · 来源：Wu et al., <a href="https://arxiv.org/html/2603.10473v1" target="_blank" rel="noopener">Aligning Large Language Models with Searcher Preferences</a>。原图未改动。<a href="/images/blog/searchllm-paper-framework.png" target="_blank" rel="noopener">查看大图 ↗</a></figcaption>
+    </figure>
+
+    <h2 id="layers"><span class="blog-number">01</span>先区分底线与行为目标</h2>
+    <p>论文将评分划为两层，并统一归一化到 [0, 1]：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">层级</th><th scope="col">主要内容</th><th scope="col">聚合方式</th></tr></thead><tbody>
+      <tr><td>底线约束</td><td>事实依据、基本回答质量、格式合规</td><td>平滑几何平均</td></tr>
+      <tr><td>行为目标</td><td>意图与证据鲁棒性、信息丰富度与多样性、简洁性与可用性</td><td>加权算术平均</td></tr>
+    </tbody></table></div>
+    <p>我的理解是，第一层关心“答案是否具备基本使用条件”，第二层关心“答案是否更好地满足用户”。这里的“非底线”不代表不重要，而是允许不同需求之间有一定取舍。</p>
+    <p>例如，简洁与全面经常需要平衡：查询一个事实时应短一些，比较多个方案时则需要展开。但事实错误不能简单用更多细节、更好的排版补偿。<strong>指标之间是否允许互相补偿，决定了它们应该如何聚合。</strong></p>
+
+    <h2 id="geometric"><span class="blog-number">02</span>底线：几何平均为什么突出短板</h2>
+    <p>先忽略平滑，设 m 个底线分数为 s₁、…、sₘ，几何平均为：</p>
+    <div class="blog-equation">\[B_0=\left(\prod_{i=1}^{m}s_i\right)^{1/m}.\]</div>
+    <p>看一个自拟的三维例子，三项都按“越高越好”定义：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">底线分数</th><th scope="col">算术平均</th><th scope="col">几何平均</th><th scope="col">含义</th></tr></thead><tbody>
+      <tr><td>(1.0, 1.0, 0.1)</td><td>0.700</td><td>约 0.464</td><td>两项很好，一项明显失守</td></tr>
+      <tr><td>(0.7, 0.7, 0.7)</td><td>0.700</td><td>0.700</td><td>三项较均衡</td></tr>
+      <tr><td>(1.0, 1.0, 0.0)</td><td>约 0.667</td><td>0.000</td><td>一项完全不满足</td></tr>
+    </tbody></table></div>
+    <p>前两行算术平均完全相同，几何平均却明显偏好均衡的一组。对非负分数，几何平均不大于算术平均；在均值固定时，各项相等才取等号。它因而不容易把“多数维度很好，但一个关键维度很差”掩盖成不错的总分。</p>
+    <p>这里的“突出弱点”也可以从局部敏感度理解：若其他分数固定，同样增加 0.01，把低分项从 0.10 提升到 0.11，比把高分项从 0.90 提升到 0.91 带来的相对改善更大。</p>
+    <p>但几何平均并不等于最小值。在第一行中，最小分只有 0.1，几何平均仍约为 0.464。因此，更准确的表述是<strong>强调均衡、提高低分项的影响</strong>，而不是完全由最差一项决定。</p>
+
+    <h2 id="smoothing"><span class="blog-number">03</span>平滑项解决什么问题</h2>
+    <p>SearchLLM 实际采用下面的平滑版本，原文设置 δ = 0.01：</p>
+    <div class="blog-equation">\[B_\delta=\exp\left(\frac{1}{m}\sum_{i=1}^{m}\log\frac{s_i+\delta}{1+\delta}\right)=\left(\prod_{i=1}^{m}\frac{s_i+\delta}{1+\delta}\right)^{1/m}.\]</div>
+    <p>这个变换有两个作用：分子加 δ，避免对零取对数；分母除以 1 + δ，使满分仍映射到 1。它把原来的零分变为一个很小的正数，保留软门控的连续性。</p>
+    <p>对上述公式直接求导，可以得到：</p>
+    <div class="blog-equation">\[\frac{\partial\log B_\delta}{\partial s_i}=\frac{1}{m(s_i+\delta)}\leq\frac{1}{m\delta}.\]</div>
+    <p>低分项仍然更敏感，但在接近零时不再无限放大。δ 越小，门控越接近原始几何平均；δ 越大，各项更接近 1，低分带来的惩罚也更柔和。这里分析的是<strong>评分聚合函数的敏感度</strong>，不意味着训练会穿过规则检查器或大模型裁判，对分数端到端反向传播。</p>
+
+    <h2 id="utility"><span class="blog-number">04</span>行为目标：加权平均允许取舍</h2>
+    <p>对行为层分数 s′ᵢ，论文用专家定义的权重 wᵢ 计算效用：</p>
+    <div class="blog-equation">\[U=\frac{\sum_{i=1}^{n}w_i s'_i}{\sum_{i=1}^{n}w_i}.\]</div>
+    <p>按加权平均的含义，权重应非负且总和为正。它允许一个维度的提升补偿另一个维度的适度下降，补偿程度由权重决定。</p>
+    <p>例如，我用“需求满足、证据利用、信息覆盖、简洁性”四项说明这种取舍，分别给出分数 (0.9, 0.8, 0.7, 0.6) 和权重 (4, 3, 2, 1)：</p>
+    <div class="blog-equation">\[U=\frac{4\times0.9+3\times0.8+2\times0.7+1\times0.6}{10}=0.8.\]</div>
+    <p>这是说明性的指标组合与权重，不是论文的实际配置。它表达的是：当前更看重需求满足与证据利用，可以接受答案略长一些。若把所有体验指标也改成几何平均，某个本来可接受的体验短板就可能压低整体评价。</p>
+    <p>因此，选择这两种平均方式，并不是因为一种普遍优于另一种，而是因为它们编码了不同的偏好：<strong>底线层减少短板被补偿，行为层允许有控制的取舍。</strong></p>
+
+    <h2 id="gate"><span class="blog-number">05</span>两层相乘：完整算一遍奖励</h2>
+    <p>论文最终使用乘法门控，而不是把两层分数再相加：</p>
+    <div class="blog-equation">\[R=B_\delta\cdot U.\]</div>
+    <p>由于两项都不超过 1，必有 R ≤ B<sub>δ</sub>。当底线分较低时，即使行为效用接近满分，总奖励也受到底线因子的限制；当底线较好时，行为层的改进能够更多地反映到总奖励。</p>
+    <p>下面用两份虚构回答演示，均取 δ = 0.01。为方便计算，假设底线和行为各有三项，行为项等权：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">回答</th><th scope="col">底线分</th><th scope="col">行为分</th><th scope="col">六项直接平均</th><th scope="col">门控奖励</th></tr></thead><tbody>
+      <tr><td>A：体验很好，一项底线很差</td><td>(1, 1, 0.1)</td><td>(1, 1, 1)</td><td>0.850</td><td>约 0.478 × 1 = 0.478</td></tr>
+      <tr><td>B：底线较好，体验尚可</td><td>(0.9, 0.9, 0.9)</td><td>(0.75, 0.75, 0.75)</td><td>0.825</td><td>约 0.901 × 0.75 = 0.676</td></tr>
+    </tbody></table></div>
+    <p>直接平均会更偏好 A；门控聚合则更偏好 B。这个例子体现了我认为最有价值的设计：<strong>通过奖励结构表达优先级，减少模型依靠容易提升的体验分来弥补底线缺陷。</strong></p>
+
+    <h2 id="training"><span class="blog-number">06</span>评分如何进入 GRPO</h2>
+    <p>原文以规则检查和经过人工校准的 LLM 裁判共同评分，评分上下文包含问题、历史和证据。对同一查询采样多份生成结果，每份得到一个 R，再进行 GRPO 的组内相对优势计算。</p>
+    <p>如果把这一设计用于实际训练，我会先统一每个指标的方向。例如，“幻觉率越高越差”不能直接当成一个越高越好的底线分；需要先转换为符合定义的分数，再做归一化。缺失或不适用的指标也需要明确处理，不能随手填零，否则会被当成底线失守。</p>
+    <p>还需要区分<strong>绝对奖励与组内优势</strong>：即便一组回答的绝对奖励都很低，其中相对较高的回答仍可能获得正优势。对于忽略数值稳定项的组内标准化，整组奖励同时乘以同一个正数，优势甚至不变。因此，“门控压低奖励”不能直接推导成“所有相关策略梯度都按比例减小”，更不意味着不合格回答绝不会被强化。</p>
+
+    <h2 id="reflection"><span class="blog-number">07</span>我的思考：可借鉴的设计与边界</h2>
+    <p>对我而言，可迁移的核心是先回答两个问题：<strong>哪些指标不希望相互补偿？哪些指标允许按业务偏好取舍？</strong>确定这两层以后，再选择聚合方式，比把所有指标直接塞进一个加权和更容易解释。</p>
+    <p>但“底线”是设计意图，软门控不是严格约束。根据公式自行计算，当 δ = 0.01、三项分数为 (0, 1, 1) 时，B<sub>δ</sub> 仍约为 0.215；若有十项，只有一项为零、其余全为一，B<sub>δ</sub> 约为 0.630。<strong>指标数量会影响短板的抑制程度。</strong>增加指标或重复计算相近指标，也会改变奖励偏好。</p>
+    <p>如果迁移到笔记打分或审核智能体，我会把证据可信度、明确的规则遵循要求，与有用性、清晰度等体验指标分别建模。对于确实不能接受的违规情况，再考虑独立的硬门槛或人工处理；这属于我的应用设计，不是上述几何平均自动提供的保证。</p>
+    <p>最后，聚合公式只能组合已有评分。如果裁判漏掉事实错误，或者把表面格式当成高质量，换一种平均方式也无法纠正错误监督。我会同时保留各维分数与失败案例，判断总奖励上升究竟来自底线改善，还是来自某个更容易获得的分数。</p>
+  </div>
+</article>
