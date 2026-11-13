@@ -1,0 +1,59 @@
+---
+layout: blog
+title: "CaseLaw：检索历史案例，用投票完成内容审核"
+permalink: /blog/caselaw/
+author_profile: false
+blog_entry: true
+blog_order: 4
+blog_tags: [论文笔记, 案例检索, 内容审核]
+cover: /images/blog/caselaw-paper-method.png
+cover_width: 1470
+cover_height: 526
+cover_alt: "CaseLaw 论文原始架构图：结构化语义提取、案例检索和标签投票"
+excerpt: "从相似历史案例中获得审核标签：理解带门槛的一案一票，以及通过维护案例库适应政策变化的思路。"
+description: "CaseLaw 简读：保留审核证据的结构化表示、历史案例检索、阈值投票，以及可更新案例库的价值与边界。"
+---
+<article class="talk blog-post">
+  <nav class="blog-breadcrumb" aria-label="面包屑"><a href="/blog/" target="_self">← 博客</a> <span aria-hidden="true"> / </span> 论文笔记</nav>
+  <header class="talk-head">
+    <div class="paper-tags"><span class="paper-tag">案例检索</span><span class="paper-tag">内容审核</span><span class="paper-tag">标签投票</span></div>
+    <h1>CaseLaw：检索历史案例，用投票完成内容审核</h1>
+    <p><a href="https://arxiv.org/abs/2611.11812v1" target="_blank" rel="noopener">原论文：CaseLaw: A Policy-Decoupled Framework for Training-Free Content Moderation</a></p>
+    <div class="talk-authors">文 / 马韶胤 <span aria-hidden="true"> · </span> 论文阅读与方法思考</div>
+  </header>
+  <nav class="blog-toc" aria-label="文章目录"><strong>本文脉络</strong><ol>
+    <li><a href="#idea" target="_self">从相似案例获得标签</a></li>
+    <li><a href="#pipeline" target="_self">先提取证据，再检索案例</a></li>
+    <li><a href="#voting" target="_self">带门槛的一案一票</a></li>
+    <li><a href="#reflection" target="_self">我认为值得参考的地方</a></li>
+  </ol></nav>
+  <div class="blog-body">
+    <h2 id="idea"><span class="blog-number">01</span>从相似案例获得标签</h2>
+    <p>CaseLaw 最吸引我的思路很直接：<strong>检索相似的历史审核案例，再根据这些案例的标签投票，得到当前内容的标签。</strong>审核政策变化时，更新外部案例库中的标签、门槛等信息，表示模型保持固定。</p>
+    <p>这里的 Training-Free 指后续政策适配无须重新训练模型；负责提取内容语义的 NoteCap 本身经过训练。最终决策由投票规则完成，检索后不再调用大模型分类器。</p>
+    <figure class="exp-overview">
+      <a href="/images/blog/caselaw-paper-method.png" target="_blank" rel="noopener"><img src="/images/blog/caselaw-paper-method.png" width="1470" height="526" alt="CaseLaw 原论文图 2：NoteCap 提取结构化证据，编码后检索案例，由达到相似度门槛的案例投票；政策更新作用于外部案例库。"></a>
+      <figcaption>CaseLaw 原论文图 2 · 来源：Lu et al., <a href="https://arxiv.org/html/2611.11812v1" target="_blank" rel="noopener">CaseLaw</a>。原图未改动，用于方法解读。<a href="/images/blog/caselaw-paper-method.png" target="_blank" rel="noopener">查看大图 ↗</a></figcaption>
+    </figure>
+
+    <h2 id="pipeline"><span class="blog-number">02</span>先提取证据，再检索案例</h2>
+    <p>NoteCap 将多模态内容整理为<strong>原文证据、核心观点、主题、子主题和表达方式</strong>。这些字段序列化后，交给冻结的编码器生成稠密向量，用于检索 Top-k 历史案例。保留原文证据，可以减少摘要改写时丢失关键措辞的问题。</p>
+    <p>案例库保存内容、结构化语义、向量、当前标签、判定理由和相似度门槛。门槛按案例在验证集上校准，权衡违规召回与安全内容误报；判定理由用于审计，不增加票数。</p>
+
+    <h2 id="voting"><span class="blog-number">03</span>带门槛的一案一票</h2>
+    <p>检索命中不等于有资格投票。对案例 i，只有查询与它的余弦相似度满足 <code>sᵢ ≥ τᵢ</code>，它才为自己的当前标签贡献一票。先比较各标签的票数，平票时比较支持案例的平均相似度；没有有效票，或两项都无法打破平局时，转人工审核。</p>
+    <p>下面是一个自拟示例，假设检索到四个案例：</p>
+    <div class="blog-table-wrap"><table><thead><tr><th scope="col">案例</th><th scope="col">当前标签</th><th scope="col">相似度</th><th scope="col">门槛</th><th scope="col">是否投票</th></tr></thead><tbody>
+      <tr><td>A</td><td>低风险</td><td>0.88</td><td>0.80</td><td>是</td></tr>
+      <tr><td>B</td><td>低风险</td><td>0.84</td><td>0.82</td><td>是</td></tr>
+      <tr><td>C</td><td>高风险</td><td>0.94</td><td>0.90</td><td>是</td></tr>
+      <tr><td>D</td><td>高风险</td><td>0.79</td><td>0.85</td><td>否</td></tr>
+    </tbody></table></div>
+    <p>结果是低风险两票、高风险一票，因此输出低风险。虽然 C 的相似度最高，但它仍只有一票。这个例子说明，相似度首先决定投票资格，并在平票时辅助决策；<strong>它不是给每张票直接加权的权重。</strong></p>
+
+    <h2 id="reflection"><span class="blog-number">04</span>我认为值得参考的地方</h2>
+    <p>我最想借鉴的是，把历史审核结论变成一个<strong>可检索、可修正的决策依据库</strong>。如果政策改变后，同一种表达应从低风险改判为中风险，可以先修正对应案例，后续相似内容的投票结果就有机会随之改变。这样，政策维护能够落实到具体案例，而不必每次都从模型参数入手。</p>
+    <p>但“相似”必须覆盖影响判定的证据。以我的理解，同样讨论一个争议话题，直接攻击、引用他人言论和反驳攻击，可能需要不同标签；仅仅主题接近并不足够。结构化提取是否保留立场、引用关系和关键措辞，会直接影响后续检索与投票。</p>
+    <p>如果把这套方法用于业务，我会优先检查三件事：案例标签是否符合当前政策，重复案例是否让某一类获得过多票，以及新风险是否缺少可参考的案例。它提供的是利用已有标注迁移判断的方法；案例覆盖不足时，仍然需要补充标注和人工复核。</p>
+  </div>
+</article>
