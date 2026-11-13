@@ -6,7 +6,7 @@ author_profile: false
 description: "马韶胤的论文阅读与智能体应用笔记。"
 ---
 <section class="blog-list" aria-label="博客文章">
-  {% assign entries = site.pages | where: 'blog_entry', true | sort: 'blog_order' %}
+  {% assign entries = site.pages | where: 'blog_entry', true | sort: 'blog_order' | reverse %}
   {% for entry in entries %}
   <article class="paper-box blog-card">
     <div class="paper-box-image">
